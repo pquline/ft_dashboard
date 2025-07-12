@@ -5,7 +5,6 @@ import { AttendanceData, type SourceType } from '@/types/attendance';
 import { parseISODuration, formatDuration, getPeriodMonthName, getUniqueSources, filterDailyAttendancesToMainMonth } from '@/lib/utils';
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { Header } from '@/components/Header';
-import { DashboardFilters } from '@/components/dashboard/DashboardFilters';
 import { DashboardSummaryCards } from '@/components/dashboard/DashboardSummaryCards';
 import { Footer } from '@/components/Footer';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
@@ -142,18 +141,15 @@ export default function Dashboard() {
         <Header
           login={data.login}
           imageUrl={data.image_url}
+          months={months}
+          selectedMonth={selectedMonth}
+          onMonthChange={setSelectedMonth}
+          sources={availableSources}
+          selectedSource={selectedSource}
+          onSourceChange={(value) => setSelectedSource(value as SourceType)}
         />
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="space-y-6 mt-6">
-            {/* Dashboard Filters */}
-            <DashboardFilters
-              months={months}
-              selectedMonth={selectedMonth}
-              onMonthChange={setSelectedMonth}
-              sources={availableSources}
-              selectedSource={selectedSource}
-              onSourceChange={(value) => setSelectedSource(value as SourceType)}
-            />
             <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
 
             {/* Daily Attendance Chart */}

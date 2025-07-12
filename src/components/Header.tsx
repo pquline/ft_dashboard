@@ -14,13 +14,29 @@ import {
 import { LogOut, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface HeaderProps {
   login: string;
   imageUrl: string;
+  months?: { value: string; label: string }[];
+  selectedMonth?: string;
+  onMonthChange?: (value: string) => void;
+  sources?: string[];
+  selectedSource?: string;
+  onSourceChange?: (value: string) => void;
 }
 
-export function Header({ login, imageUrl }: HeaderProps) {
+export function Header({
+  login,
+  imageUrl,
+  months,
+  selectedMonth,
+  onMonthChange,
+  sources,
+  selectedSource,
+  onSourceChange
+}: HeaderProps) {
   const { setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
@@ -40,7 +56,7 @@ export function Header({ login, imageUrl }: HeaderProps) {
   return (
     <header className="bg-white dark:bg-secondary/50 backdrop-blur-sm border-b w-full" suppressHydrationWarning>
       <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="flex items-center gap-3 w-full md:w-auto">
           <Link href="/">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm md:text-base">FT</span>
@@ -50,6 +66,37 @@ export function Header({ login, imageUrl }: HeaderProps) {
             <h1 className="text-2xl font-bold text-primary-900 dark:text-primary-100">ft_dashboard</h1>
           </Link>
         </div>
+
+        {/* Filters - only show if props are provided */}
+        {months && selectedMonth && onMonthChange && sources && selectedSource && onSourceChange && (
+          <div className="flex flex-row flex-wrap gap-2 sm:gap-4 items-center justify-center flex-1 md:justify-center">
+            <Select value={selectedMonth} onValueChange={onMonthChange}>
+              <SelectTrigger className="w-[120px] h-8 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month) => (
+                  <SelectItem key={month.value} value={month.value}>
+                    {month.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={selectedSource} onValueChange={onSourceChange}>
+              <SelectTrigger className="w-[120px] h-8 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Sources</SelectItem>
+                {sources.map((source) => (
+                  <SelectItem key={source} value={source}>
+                    {source.charAt(0).toUpperCase() + source.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <div className="flex items-center space-x-4">
           <DropdownMenu>
