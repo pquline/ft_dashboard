@@ -144,16 +144,14 @@ export default function Dashboard() {
           <div className="flex flex-col lg:flex-row gap-6 mt-6">
             {/* Sidebar Filters */}
             <div className="lg:w-80 flex-shrink-0">
-              <div className="sticky top-0">
-                <DashboardFilters
-                  months={months}
-                  selectedMonth={selectedMonth}
-                  onMonthChange={setSelectedMonth}
-                  sources={availableSources}
-                  selectedSource={selectedSource}
-                  onSourceChange={(value) => setSelectedSource(value as SourceType)}
-                />
-              </div>
+              <DashboardFilters
+                months={months}
+                selectedMonth={selectedMonth}
+                onMonthChange={setSelectedMonth}
+                sources={availableSources}
+                selectedSource={selectedSource}
+                onSourceChange={(value) => setSelectedSource(value as SourceType)}
+              />
             </div>
 
             {/* Main Content */}
