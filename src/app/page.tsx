@@ -162,7 +162,7 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <ChartContainer config={barChartConfig}>
+                    <ChartContainer config={barChartConfig} className="h-[280px]">
                       <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
@@ -201,7 +201,7 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardContent className="pt-0">
                       {sourceData.length > 0 ? (
-                        <ChartContainer config={pieChartConfig}>
+                        <ChartContainer config={pieChartConfig} className="h-[280px]">
                           <PieChart accessibilityLayer data={sourceData}>
                             <Pie
                               data={sourceData}
