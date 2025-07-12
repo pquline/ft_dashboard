@@ -1,5 +1,19 @@
+"use client";
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { LogOut, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import Link from 'next/link';
 
 interface DashboardHeaderProps {
   login: string;
@@ -7,18 +21,77 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ login, imageUrl }: DashboardHeaderProps) {
+  const { setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleLogout = () => {
+    console.log('Logout clicked');
+  };
+
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <div className="flex items-center justify-between py-2">
-      <div className="flex items-center gap-4">
-        <Avatar>
-            <AvatarFallback>LOGO</AvatarFallback>
-        </Avatar>
-        <h1 className="text-xl font-bold font-mono">ft_dashboard</h1>
+    <header className="bg-white dark:bg-secondary/50 backdrop-blur-sm border-b" suppressHydrationWarning>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <Link href="/">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm md:text-base">FT</span>
+            </div>
+          </Link>
+          <Link href="/" className="text-lg font-semibold font-mono">
+            <h1 className="text-2xl font-bold text-primary-900 dark:text-primary-100">ft_dashboard</h1>
+          </Link>
+        </div>
+        <div className="flex items-center space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                aria-label="User menu"
+                aria-haspopup="menu"
+                aria-expanded="false"
+                className="cursor-pointer"
+              >
+                <Avatar>
+                  <AvatarImage src={imageUrl} alt={login} />
+                  <AvatarFallback>{login.charAt(0).toUpperCase() + login.charAt(1).toUpperCase()}</AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-2 h-4 w-4" />
+                  <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-2 h-4 w-4" />
+                  <span>Theme</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                    Light
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    Dark
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                    System
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
-      <Avatar>
-        <AvatarImage src={imageUrl} alt={login} width={15} height={15} />
-        <AvatarFallback>{login.charAt(0).toUpperCase() + login.charAt(1).toUpperCase()}</AvatarFallback>
-      </Avatar>
-    </div>
+    </header>
   );
 }

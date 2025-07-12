@@ -11,7 +11,6 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts';
 import {
   ChartConfig,
@@ -109,12 +108,9 @@ export default function Dashboard() {
 
   const PIE_COLORS = [
     '#3b82f6', // Blue-500
-    '#10b981', // Emerald-500
     '#f59e0b', // Amber-500
-    '#ef4444', // Red-500
     '#8b5cf6', // Violet-500
-    '#06b6d4', // Cyan-500
-    '#84cc16', // Lime-500
+    '#ef4444', // Red-500
     '#f97316', // Orange-500
   ];
 
