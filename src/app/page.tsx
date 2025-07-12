@@ -143,7 +143,13 @@ export default function Dashboard() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
-                        <Tooltip formatter={(value) => [`${value} hours`, 'Attendance']} />
+                        <Tooltip
+                          formatter={(value: number) => {
+                            const hours = Math.floor(value);
+                            const minutes = Math.round((value - hours) * 60);
+                            return [`${hours}h ${minutes}m`, 'Attendance'];
+                          }}
+                        />
                         <Bar dataKey="attendance" fill="#8884d8" />
                       </BarChart>
                     </ResponsiveContainer>
@@ -180,7 +186,13 @@ export default function Dashboard() {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip formatter={(value) => [`${value} hours`, 'Duration']} />
+                            <Tooltip
+                              formatter={(value: number) => {
+                                const hours = Math.floor(value);
+                                const minutes = Math.round((value - hours) * 60);
+                                return [`${hours}h ${minutes}m`, 'Duration'];
+                              }}
+                            />
                           </PieChart>
                         </ResponsiveContainer>
                       ) : (
