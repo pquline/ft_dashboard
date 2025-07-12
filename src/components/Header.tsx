@@ -45,8 +45,10 @@ export function Header({
   }, []);
 
   const handleLogout = () => {
-    // Handle logout logic here
-    console.log('Logout clicked');
+    // Remove session cookie
+    document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    // Redirect to login page
+    window.location.href = '/login';
   };
 
   if (!mounted) {

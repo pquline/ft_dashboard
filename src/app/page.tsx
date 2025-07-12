@@ -28,12 +28,24 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/reponse.json')
-      .then(res => res.json())
+    fetch('/api/attendance')
+      .then(res => {
+        if (!res.ok) {
+          if (res.status === 401) {
+            // Redirect to login if not authenticated
+            window.location.href = '/login';
+            return;
+          }
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data: AttendanceData) => {
-        setData(data);
-        if (data.attendance.length > 0) {
-          setSelectedMonth(data.attendance[0].from_date);
+        if (data) {
+          setData(data);
+          if (data.attendance.length > 0) {
+            setSelectedMonth(data.attendance[0].from_date);
+          }
         }
         setLoading(false);
       })
