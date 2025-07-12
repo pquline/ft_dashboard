@@ -2,16 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { AttendanceData, type SourceType } from '@/types/attendance';
-import { parseISODuration, formatDuration, calculateTotalAttendance, calculateOnSiteAttendance, calculateOffSiteAttendance, getMonthName, getPeriodMonthName, getUniqueSources, getMainMonth, filterDailyAttendancesToMainMonth } from '@/lib/utils';
+import { parseISODuration, formatDuration, getPeriodMonthName, getUniqueSources, filterDailyAttendancesToMainMonth } from '@/lib/utils';
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DashboardFilters } from '@/components/dashboard/DashboardFilters';
 import { DashboardSummaryCards } from '@/components/dashboard/DashboardSummaryCards';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function Dashboard() {
@@ -127,19 +125,12 @@ export default function Dashboard() {
             {/* Summary Cards */}
             <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
 
-            {/* Charts and Tables (tabs) */}
-            <Tabs defaultValue="daily" className="space-y-3">
-              <TabsList>
-                <TabsTrigger value="daily">Daily Overview</TabsTrigger>
-                <TabsTrigger value="sources">Sources Breakdown</TabsTrigger>
-                <TabsTrigger value="table">Detailed Table</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="daily" className="space-y-4">
+            {/* Daily Attendance Chart */}
+            <div className="space-y-4">
                 <Card>
                   <CardHeader className="pb-3">
                     <CardTitle>Daily Attendance</CardTitle>
-                    <CardDescription>
+                                  <CardDescription>
                       {selectedSource === 'all'
                         ? 'Hours spent on campus per day (All sources)'
                         : `Hours spent on campus per day (${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source)`
@@ -158,9 +149,8 @@ export default function Dashboard() {
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>
-              </TabsContent>
 
-              <TabsContent value="sources" className="space-y-4">
+              {/* Sources Breakdown */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <Card>
                     <CardHeader className="pb-3">
@@ -250,9 +240,8 @@ export default function Dashboard() {
                     </CardContent>
                   </Card>
                 </div>
-              </TabsContent>
 
-              <TabsContent value="table" className="space-y-4">
+              {/* Daily Attendance Table */}
                 <Card>
                   <CardHeader className="pb-3">
                     <CardTitle>Daily Attendance Details</CardTitle>
@@ -283,8 +272,7 @@ export default function Dashboard() {
                     </Table>
                   </CardContent>
                 </Card>
-              </TabsContent>
-            </Tabs>
+            </div>
           </div>
         </div>
       </div>
