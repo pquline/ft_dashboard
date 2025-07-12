@@ -137,10 +137,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <TooltipProvider>
-        <div className="container mx-auto px-4 py-6">
-          {/* Header */}
-          <DashboardHeader login={data.login} imageUrl={data.image_url} />
+        {/* Header */}
+        <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
+        <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col lg:flex-row gap-6 mt-6">
             {/* Sidebar Filters */}
             <div className="lg:w-80 flex-shrink-0">
