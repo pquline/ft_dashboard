@@ -12,7 +12,13 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts';
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart';
 
 export default function Dashboard() {
   const [data, setData] = useState<AttendanceData | null>(null);
@@ -101,6 +107,21 @@ export default function Dashboard() {
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
+  // Chart configurations
+  const barChartConfig = {
+    attendance: {
+      label: "Attendance",
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig;
+
+  const pieChartConfig = {
+    value: {
+      label: "Duration",
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <TooltipProvider>
@@ -141,14 +162,28 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <ResponsiveContainer width="100%" height={280}>
-                      <BarChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Bar dataKey="attendance" fill="#8884d8" />
+                    <ChartContainer config={barChartConfig}>
+                      <BarChart accessibilityLayer data={chartData}>
+                        <CartesianGrid vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tickLine={false}
+                          tickMargin={10}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          tickLine={false}
+                          tickMargin={10}
+                          axisLine={false}
+                          tickFormatter={(value) => `${value}h`}
+                        />
+                        <ChartTooltip
+                          cursor={false}
+                          content={<ChartTooltipContent />}
+                        />
+                        <Bar dataKey="attendance" fill="var(--color-attendance)" radius={4} />
                       </BarChart>
-                    </ResponsiveContainer>
+                    </ChartContainer>
                   </CardContent>
                 </Card>
 
@@ -166,8 +201,8 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardContent className="pt-0">
                       {sourceData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={280}>
-                          <PieChart>
+                        <ChartContainer config={pieChartConfig}>
+                          <PieChart accessibilityLayer data={sourceData}>
                             <Pie
                               data={sourceData}
                               cx="50%"
@@ -175,15 +210,18 @@ export default function Dashboard() {
                               labelLine={false}
                               label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                               outerRadius={80}
-                              fill="#8884d8"
+                              fill="var(--color-value)"
                               dataKey="value"
                             >
                               {sourceData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
+                            <ChartTooltip
+                              content={<ChartTooltipContent />}
+                            />
                           </PieChart>
-                        </ResponsiveContainer>
+                        </ChartContainer>
                       ) : (
                         <div className="flex items-center justify-center h-[300px] text-muted-foreground">
                           No data available for the selected source in this month
