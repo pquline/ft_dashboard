@@ -103,181 +103,190 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <div className="container mx-auto px-4 py-6 space-y-4">
-      {/* Header */}
-      <DashboardHeader login={data.login} imageUrl={data.image_url} />
+      <div className="container mx-auto px-4 py-6">
+        {/* Header */}
+        <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
-      {/* Filters */}
-      <DashboardFilters
-        months={months}
-        selectedMonth={selectedMonth}
-        onMonthChange={setSelectedMonth}
-        sources={availableSources}
-        selectedSource={selectedSource}
-        onSourceChange={(value) => setSelectedSource(value as SourceType)}
-      />
-
-      {/* Summary Cards */}
-      <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
-
-      {/* Charts and Tables (tabs) - unchanged for now */}
-      <Tabs defaultValue="daily" className="space-y-3">
-        <TabsList>
-          <TabsTrigger value="daily">Daily Overview</TabsTrigger>
-          <TabsTrigger value="sources">Sources Breakdown</TabsTrigger>
-          <TabsTrigger value="table">Detailed Table</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="daily" className="space-y-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Daily Attendance</CardTitle>
-                            <CardDescription>
-                {selectedSource === 'all'
-                  ? 'Hours spent on campus per day (All sources)'
-                  : `Hours spent on campus per day (${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source)`
-                }
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => [`${value} hours`, 'Attendance']} />
-                  <Bar dataKey="attendance" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="sources" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Sources Distribution</CardTitle>
-                <CardDescription>
-                  {selectedSource === 'all'
-                    ? 'Time spent by source type (All sources)'
-                    : `Time spent by ${selectedSource} source`
-                  }
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {sourceData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={280}>
-                    <PieChart>
-                      <Pie
-                        data={sourceData}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {sourceData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={(value) => [`${value} hours`, 'Duration']} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                    No data available for the selected source in this month
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Sources Details</CardTitle>
-                <CardDescription>
-                  {selectedSource === 'all'
-                    ? 'All sources'
-                    : `${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source only`
-                  }
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Duration</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentPeriod?.detailed_attendance
-                      .filter(detail => {
-                        if (detail.name === 'locations') return false;
-                        if (selectedSource === 'all') return true;
-                        return detail.name === selectedSource;
-                      })
-                      .map((detail, index) => (
-                        <TableRow key={index}>
-                          <TableCell className="font-medium">{detail.name}</TableCell>
-                          <TableCell>
-                            <Badge variant={detail.type === 'on_site' ? 'secondary' : 'outline'}>
-                              {detail.type === 'on_site' ? 'On Campus' : 'Remote'}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{formatDuration(parseISODuration(detail.duration))}</TableCell>
-                        </TableRow>
-                      ))}
-                    {sourceData.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={3} className="text-center text-muted-foreground">
-                          No data available for the selected source in this month
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+        <div className="flex flex-col lg:flex-row gap-6 mt-6">
+          {/* Sidebar Filters */}
+          <div className="lg:w-80 flex-shrink-0">
+            <div className="sticky top-6">
+              <DashboardFilters
+                months={months}
+                selectedMonth={selectedMonth}
+                onMonthChange={setSelectedMonth}
+                sources={availableSources}
+                selectedSource={selectedSource}
+                onSourceChange={(value) => setSelectedSource(value as SourceType)}
+              />
+            </div>
           </div>
-        </TabsContent>
 
-        <TabsContent value="table" className="space-y-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Daily Attendance Details</CardTitle>
-              <CardDescription>Showing all sources attendance per day</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Day</TableHead>
-                    <TableHead>Total</TableHead>
-                    <TableHead>On-Site</TableHead>
-                    <TableHead>Off-Site</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredDailyData.map((day, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{day.date}</TableCell>
-                      <TableCell>{day.day}</TableCell>
-                      <TableCell>{formatDuration(day.total)}</TableCell>
-                      <TableCell>{formatDuration(day.onSite)}</TableCell>
-                      <TableCell>{formatDuration(day.offSite)}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          {/* Main Content */}
+          <div className="flex-1 space-y-4">
+            {/* Summary Cards */}
+            <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
+
+            {/* Charts and Tables (tabs) */}
+            <Tabs defaultValue="daily" className="space-y-3">
+              <TabsList>
+                <TabsTrigger value="daily">Daily Overview</TabsTrigger>
+                <TabsTrigger value="sources">Sources Breakdown</TabsTrigger>
+                <TabsTrigger value="table">Detailed Table</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="daily" className="space-y-4">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle>Daily Attendance</CardTitle>
+                    <CardDescription>
+                      {selectedSource === 'all'
+                        ? 'Hours spent on campus per day (All sources)'
+                        : `Hours spent on campus per day (${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source)`
+                      }
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <ResponsiveContainer width="100%" height={280}>
+                      <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip formatter={(value) => [`${value} hours`, 'Attendance']} />
+                        <Bar dataKey="attendance" fill="#8884d8" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="sources" className="space-y-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle>Sources Distribution</CardTitle>
+                      <CardDescription>
+                        {selectedSource === 'all'
+                          ? 'Time spent by source type (All sources)'
+                          : `Time spent by ${selectedSource} source`
+                        }
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      {sourceData.length > 0 ? (
+                        <ResponsiveContainer width="100%" height={280}>
+                          <PieChart>
+                            <Pie
+                              data={sourceData}
+                              cx="50%"
+                              cy="50%"
+                              labelLine={false}
+                              label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                              outerRadius={80}
+                              fill="#8884d8"
+                              dataKey="value"
+                            >
+                              {sourceData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip formatter={(value) => [`${value} hours`, 'Duration']} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                          No data available for the selected source in this month
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle>Sources Details</CardTitle>
+                      <CardDescription>
+                        {selectedSource === 'all'
+                          ? 'All sources'
+                          : `${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source only`
+                        }
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Source</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Duration</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {currentPeriod?.detailed_attendance
+                            .filter(detail => {
+                              if (detail.name === 'locations') return false;
+                              if (selectedSource === 'all') return true;
+                              return detail.name === selectedSource;
+                            })
+                            .map((detail, index) => (
+                              <TableRow key={index}>
+                                <TableCell className="font-medium">{detail.name}</TableCell>
+                                <TableCell>
+                                  <Badge variant={detail.type === 'on_site' ? 'secondary' : 'outline'}>
+                                    {detail.type === 'on_site' ? 'On Campus' : 'Remote'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>{formatDuration(parseISODuration(detail.duration))}</TableCell>
+                              </TableRow>
+                            ))}
+                          {sourceData.length === 0 && (
+                            <TableRow>
+                              <TableCell colSpan={3} className="text-center text-muted-foreground">
+                                No data available for the selected source in this month
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="table" className="space-y-4">
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle>Daily Attendance Details</CardTitle>
+                    <CardDescription>Showing all sources attendance per day</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Day</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead>On-Site</TableHead>
+                          <TableHead>Off-Site</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredDailyData.map((day, index) => (
+                          <TableRow key={index}>
+                            <TableCell className="font-medium">{day.date}</TableCell>
+                            <TableCell>{day.day}</TableCell>
+                            <TableCell>{formatDuration(day.total)}</TableCell>
+                            <TableCell>{formatDuration(day.onSite)}</TableCell>
+                            <TableCell>{formatDuration(day.offSite)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );
