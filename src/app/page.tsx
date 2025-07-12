@@ -141,21 +141,19 @@ export default function Dashboard() {
         <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-6 mt-6">
-            {/* Sidebar Filters */}
-            <div className="lg:w-80 flex-shrink-0">
-              <DashboardFilters
-                months={months}
-                selectedMonth={selectedMonth}
-                onMonthChange={setSelectedMonth}
-                sources={availableSources}
-                selectedSource={selectedSource}
-                onSourceChange={(value) => setSelectedSource(value as SourceType)}
-              />
-            </div>
+          <div className="space-y-6 mt-6">
+            {/* Filters at Top */}
+            <DashboardFilters
+              months={months}
+              selectedMonth={selectedMonth}
+              onMonthChange={setSelectedMonth}
+              sources={availableSources}
+              selectedSource={selectedSource}
+              onSourceChange={(value) => setSelectedSource(value as SourceType)}
+            />
 
             {/* Main Content */}
-            <div className="flex-1 space-y-6">
+            <div className="space-y-6">
               {/* Summary Cards */}
               <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
 
