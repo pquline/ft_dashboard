@@ -198,11 +198,11 @@ export default function Dashboard() {
                             const value = entry.attendance;
                             let color;
                             // Beautiful color gradient from cool to hot based on attendance value
-                            if (value < 4) color = '#10b981'; // Emerald-500 for low attendance (cool green)
-                            else if (value < 6) color = '#f59e0b'; // Amber-500 for medium-low (warm yellow)
-                            else if (value < 8) color = '#f97316'; // Orange-500 for medium (orange)
-                            else if (value < 12) color = '#ef4444'; // Red-500 for medium-high (red)
-                            else color = '#7c2d12'; // Red-900 for high attendance (deep red)
+                            if (value < 4) color = '#84cc16'; // Lime-500 for low attendance (cool green)
+                            else if (value < 6) color = '#eab308'; // Yellow-500 for medium-low (warm yellow)
+                            else if (value < 8) color = '#f59e0b'; // Amber-500 for medium (orange)
+                            else if (value < 12) color = '#f97316'; // Orange-500 for medium-high (red)
+                            else color = '#ef4444'; // Red for high attendance (deep red)
 
                             return <Cell key={`cell-${index}`} fill={color} />;
                           })}
