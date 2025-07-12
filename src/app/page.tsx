@@ -107,11 +107,10 @@ export default function Dashboard() {
     })) || [];
 
   const PIE_COLORS = [
-    '#3b82f6', // Blue-500
-    '#f59e0b', // Amber-500
-    '#8b5cf6', // Violet-500
-    '#ef4444', // Red-500
+    '#ea580c', // Orange-600
+    '#fb923c', // Orange-400
     '#f97316', // Orange-500
+    '#c2410c', // Orange-700
   ];
 
   // Chart configurations
@@ -195,11 +194,10 @@ export default function Dashboard() {
                         {chartData.map((entry, index) => {
                           const value = entry.attendance;
                           let color;
-                          if (value < 4) color = '#fb923c'; // Orange-400 for low attendance
-                          else if (value < 6) color = '#f97316'; // Orange-500 for medium-low
-                          else if (value < 8) color = '#ea580c'; // Orange-600 for medium
-                          else if (value < 12) color = '#c2410c'; // Orange-700 for medium-high
-                          else color = '#9a3412'; // Orange-800 for high attendance
+                          if (value < 4) color = '#fdba74'; // Orange-300 for low attendance
+                          else if (value < 8) color = '#fb923c'; // Orange-400 for medium-low
+                          else if (value < 12) color = '#f97316'; // Orange-500 for medium
+                          else color = '#ea580c'; // Orange-600 for high attendance
 
                           return <Cell key={`cell-${index}`} fill={color} />;
                         })}
