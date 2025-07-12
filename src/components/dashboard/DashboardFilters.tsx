@@ -1,6 +1,5 @@
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface DashboardFiltersProps {
   months: { value: string; label: string }[];
@@ -20,49 +19,32 @@ export function DashboardFilters({
   onSourceChange,
 }: DashboardFiltersProps) {
   return (
-    <Card className="border shadow-sm bg-card">
-      <CardContent className="p-4">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Filters:</span>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 flex-1">
-            <div className="flex items-center gap-2 min-w-0">
-              <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">Month</label>
-              <Select value={selectedMonth} onValueChange={onMonthChange}>
-                <SelectTrigger className="w-[180px] h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {months.map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
-                      {month.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center gap-2 min-w-0">
-              <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">Source</label>
-              <Select value={selectedSource} onValueChange={onSourceChange}>
-                <SelectTrigger className="w-[140px] h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
-                  {sources.map((source) => (
-                    <SelectItem key={source} value={source}>
-                      {source.charAt(0).toUpperCase() + source.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-row flex-wrap gap-2 sm:gap-4 items-center justify-center">
+      <Select value={selectedMonth} onValueChange={onMonthChange}>
+        <SelectTrigger className="w-[120px] h-8 text-sm">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {months.map((month) => (
+            <SelectItem key={month.value} value={month.value}>
+              {month.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select value={selectedSource} onValueChange={onSourceChange}>
+        <SelectTrigger className="w-[120px] h-8 text-sm">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Sources</SelectItem>
+          {sources.map((source) => (
+            <SelectItem key={source} value={source}>
+              {source.charAt(0).toUpperCase() + source.slice(1)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
