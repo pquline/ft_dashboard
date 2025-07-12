@@ -141,10 +141,10 @@ export default function Dashboard() {
         <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-6 mt-6">
             {/* Sidebar Filters */}
             <div className="lg:w-80 flex-shrink-0">
-              <div className="sticky top-6">
+              <div className="sticky top-0">
                 <DashboardFilters
                   months={months}
                   selectedMonth={selectedMonth}
