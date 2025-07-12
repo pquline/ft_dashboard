@@ -239,7 +239,11 @@ export default function Dashboard() {
                       {sourceData.length > 0 ? (
                         <ChartContainer config={pieChartConfig} className="mx-auto aspect-square max-h-[300px]">
                           <PieChart>
-                            <Pie data={sourceData} dataKey="value" />
+                            <Pie data={sourceData} dataKey="value">
+                              {sourceData.map((entry, index) => (
+                                <Cell key={`cell-${entry.name}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                              ))}
+                            </Pie>
                             <ChartLegend
                               content={<ChartLegendContent nameKey="name" payload={sourceData} />}
                               className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
