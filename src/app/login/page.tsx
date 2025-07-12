@@ -49,13 +49,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-lg">FT</span>
-          </div>
-          <CardTitle className="text-2xl">Login to ft_dashboard</CardTitle>
-          <CardDescription>
-            Enter your 42 session cookie to access your attendance data
-          </CardDescription>
+          <CardTitle className="text-2xl">ft_dashboard</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -64,7 +58,7 @@ export default function LoginPage() {
               <Input
                 id="session"
                 type="text"
-                placeholder="O8ZOFwfcgq4iwtAC5cpVYsunZYKwDjtnD6nwNsmgjzw"
+                placeholder="C00k13fcgq4iwtAC5cpVYsunZYKwDjtnD6nwNsmgjzw"
                 value={sessionCookie}
                 onChange={(e) => setSessionCookie(e.target.value)}
                 required
@@ -90,7 +84,7 @@ export default function LoginPage() {
               </AlertDescription>
             </Alert>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" variant="outline" className="w-full bg-orange-500 hover:bg-orange-600 font-bold" disabled={isLoading}>
               {isLoading ? 'Authenticating...' : 'Login'}
             </Button>
           </form>

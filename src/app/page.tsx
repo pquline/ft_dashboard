@@ -6,6 +6,7 @@ import { parseISODuration, formatDuration, getPeriodMonthName, getUniqueSources,
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { Header } from '@/components/Header';
 import { DashboardSummaryCards } from '@/components/DashboardSummaryCards';
+import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Footer } from '@/components/Footer';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -66,17 +67,16 @@ export default function Dashboard() {
   }, [data, selectedMonth, selectedSource]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading attendance data...</div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg text-red-600">Failed to load attendance data</div>
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg text-red-600 mb-2">Failed to load attendance data</div>
+          <div className="text-sm text-muted-foreground">Please check your session cookie and try again</div>
+        </div>
       </div>
     );
   }
