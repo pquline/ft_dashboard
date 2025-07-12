@@ -10,15 +10,24 @@ import { DashboardSummaryCards } from '@/components/dashboard/DashboardSummaryCa
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import dynamic from 'next/dynamic';
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+
+// Dynamically import Recharts components to avoid module resolution issues
+const BarChart = dynamic(() => import('recharts').then((mod) => mod.BarChart), { ssr: false });
+const Bar = dynamic(() => import('recharts').then((mod) => mod.Bar), { ssr: false });
+const CartesianGrid = dynamic(() => import('recharts').then((mod) => mod.CartesianGrid), { ssr: false });
+const XAxis = dynamic(() => import('recharts').then((mod) => mod.XAxis), { ssr: false });
+const YAxis = dynamic(() => import('recharts').then((mod) => mod.YAxis), { ssr: false });
+const PieChart = dynamic(() => import('recharts').then((mod) => mod.PieChart), { ssr: false });
+const Pie = dynamic(() => import('recharts').then((mod) => mod.Pie), { ssr: false });
+const Cell = dynamic(() => import('recharts').then((mod) => mod.Cell), { ssr: false });
 
 export default function Dashboard() {
   const [data, setData] = useState<AttendanceData | null>(null);
