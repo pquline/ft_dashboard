@@ -195,12 +195,11 @@ export default function Dashboard() {
                         {chartData.map((entry, index) => {
                           const value = entry.attendance;
                           let color;
-                          // Beautiful color gradient from cool to hot based on attendance value
-                          if (value < 4) color = '#84cc16'; // Lime-500 for low attendance (cool green)
-                          else if (value < 6) color = '#eab308'; // Yellow-500 for medium-low (warm yellow)
-                          else if (value < 8) color = '#f59e0b'; // Amber-500 for medium (orange)
-                          else if (value < 12) color = '#f97316'; // Orange-500 for medium-high (red)
-                          else color = '#ef4444'; // Red for high attendance (deep red)
+                          if (value < 4) color = '#84cc16'; // Orange-400 for low attendance
+                          else if (value < 6) color = '#eab308'; // Orange-500 for medium-low
+                          else if (value < 8) color = '#f59e0b'; // Orange-600 for medium
+                          else if (value < 12) color = '#f97316'; // Orange-700 for medium-high
+                          else color = '#ef4444'; // Orange-800 for high attendance
 
                           return <Cell key={`cell-${index}`} fill={color} />;
                         })}
