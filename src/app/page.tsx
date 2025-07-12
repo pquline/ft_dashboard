@@ -6,6 +6,7 @@ import { parseISODuration, formatDuration, getPeriodMonthName, getUniqueSources,
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DashboardSummaryCards } from '@/components/dashboard/DashboardSummaryCards';
+import { Footer } from '@/components/Footer';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -328,6 +329,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+        <Footer />
       </TooltipProvider>
     </div>
   );
