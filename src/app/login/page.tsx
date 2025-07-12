@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, Key } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
@@ -21,24 +21,17 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // Store the session cookie
       document.cookie = `session=${sessionCookie}; path=/; max-age=86400`; // 24 hours
-
-      // Test the API call
       const response = await fetch('/api/attendance');
-
       if (response.ok) {
-        // Success! Redirect to dashboard
         router.push('/');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to authenticate');
-        // Remove invalid cookie
         document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again.');
-      // Remove invalid cookie
       document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     } finally {
       setIsLoading(false);
@@ -76,10 +69,10 @@ export default function LoginPage() {
               <AlertDescription>
                 <strong>How to get your session cookie:</strong>
                 <ol className="mt-2 list-decimal list-inside space-y-1 text-sm">
-                  <li>Go to <a href="https://dashboard.42paris.fr/attendance" target="_blank" rel="noopener noreferrer" className="underline">42 Dashboard</a></li>
-                  <li>Open Developer Tools (F12)</li>
-                  <li>Go to Application/Storage → Cookies</li>
-                  <li>Copy the value of the "session" cookie</li>
+                                  <li>Go to <a href="https://dashboard.42paris.fr/attendance" target="_blank" rel="noopener noreferrer" className="underline">42 Dashboard</a></li>
+                <li>Open Developer Tools (F12)</li>
+                <li>Go to Application/Storage → Cookies</li>
+                <li>Copy the value of the &quot;session&quot; cookie</li>
                 </ol>
               </AlertDescription>
             </Alert>

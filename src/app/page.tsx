@@ -115,7 +115,7 @@ export default function Dashboard() {
     .map(detail => ({
       name: detail.name,
       value: parseISODuration(detail.duration) / 3600,
-      type: detail.type,
+      type: 'none' as const,
     })) || [];
 
   const PIE_COLORS = [
@@ -194,8 +194,8 @@ export default function Dashboard() {
                       <ChartTooltip
                         cursor={false}
                         content={<ChartTooltipContent
-                          formatter={(value: any) => {
-                            const numValue = typeof value === 'number' ? value : parseFloat(value);
+                          formatter={(value: unknown) => {
+                            const numValue = typeof value === 'number' ? value : parseFloat(String(value));
                             const hours = Math.floor(numValue);
                             const minutes = Math.round((numValue - hours) * 60);
                             return `${hours}h ${minutes}m`;

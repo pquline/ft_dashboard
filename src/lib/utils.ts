@@ -204,7 +204,7 @@ export function getMainMonth(period: AttendancePeriod): { year: number; month: n
   }
 }
 
-export function filterDailyAttendancesToMainMonth(period: AttendancePeriod, daily: any[]) {
+export function filterDailyAttendancesToMainMonth(period: AttendancePeriod, daily: Array<{ date: string; total: number; onSite: number; offSite: number; day: string; total_attendance: string; total_on_site_attendance: string; total_off_site_attendance: string }>) {
   const { year, month } = getMainMonth(period);
   return daily.filter(day => {
     const d = new Date(day.date);

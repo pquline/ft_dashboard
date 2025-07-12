@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -126,7 +126,9 @@ export function DashboardSkeleton() {
         </div>
       </div>
 
-      <Footer />
+      <div className="mt-6">
+        <Footer />
+      </div>
     </div>
   );
 }
