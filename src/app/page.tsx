@@ -5,7 +5,7 @@ import { AttendanceData, type SourceType } from '@/types/attendance';
 import { parseISODuration, formatDuration, getPeriodMonthName, getUniqueSources, filterDailyAttendancesToMainMonth } from '@/lib/utils';
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { Header } from '@/components/Header';
-import { DashboardSummaryCards } from '@/components/dashboard/DashboardSummaryCards';
+import { DashboardSummaryCards } from '@/components/DashboardSummaryCards';
 import { Footer } from '@/components/Footer';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -329,7 +329,9 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        <Footer />
+        <div className="mt-6">
+          <Footer />
+        </div>
       </TooltipProvider>
     </div>
   );

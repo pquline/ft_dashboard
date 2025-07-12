@@ -67,10 +67,10 @@ export function Header({
           </Link>
         </div>
 
-                <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           {/* Filters - only show if props are provided */}
           {months && selectedMonth && onMonthChange && sources && selectedSource && onSourceChange && (
-            <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-row gap-4 items-center">
               <Select value={selectedMonth} onValueChange={onMonthChange}>
                 <SelectTrigger className="w-[120px] h-8 text-sm">
                   <SelectValue />
