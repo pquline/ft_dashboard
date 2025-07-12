@@ -102,7 +102,8 @@ export default function Dashboard() {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      <div className="container mx-auto px-4 py-6 space-y-4">
       {/* Header */}
       <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
@@ -120,7 +121,7 @@ export default function Dashboard() {
       <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
 
       {/* Charts and Tables (tabs) - unchanged for now */}
-      <Tabs defaultValue="daily" className="space-y-4">
+      <Tabs defaultValue="daily" className="space-y-3">
         <TabsList>
           <TabsTrigger value="daily">Daily Overview</TabsTrigger>
           <TabsTrigger value="sources">Sources Breakdown</TabsTrigger>
@@ -129,7 +130,7 @@ export default function Dashboard() {
 
         <TabsContent value="daily" className="space-y-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle>Daily Attendance</CardTitle>
                             <CardDescription>
                 {selectedSource === 'all'
@@ -138,8 +139,8 @@ export default function Dashboard() {
                 }
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+            <CardContent className="pt-0">
+              <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
@@ -153,9 +154,9 @@ export default function Dashboard() {
         </TabsContent>
 
         <TabsContent value="sources" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-3">
                 <CardTitle>Sources Distribution</CardTitle>
                 <CardDescription>
                   {selectedSource === 'all'
@@ -164,9 +165,9 @@ export default function Dashboard() {
                   }
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 {sourceData.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={300}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <PieChart>
                       <Pie
                         data={sourceData}
@@ -194,7 +195,7 @@ export default function Dashboard() {
             </Card>
 
             <Card>
-              <CardHeader>
+              <CardHeader className="pb-3">
                 <CardTitle>Sources Details</CardTitle>
                 <CardDescription>
                   {selectedSource === 'all'
@@ -203,7 +204,7 @@ export default function Dashboard() {
                   }
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -246,11 +247,11 @@ export default function Dashboard() {
 
         <TabsContent value="table" className="space-y-4">
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <CardTitle>Daily Attendance Details</CardTitle>
               <CardDescription>Showing all sources attendance per day</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -277,6 +278,7 @@ export default function Dashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }
