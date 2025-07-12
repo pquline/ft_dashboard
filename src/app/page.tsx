@@ -194,15 +194,15 @@ export default function Dashboard() {
                           />}
                         />
                                                 <Bar dataKey="attendance" radius={4}>
-                                                                              {chartData.map((entry, index) => {
+                                                                                                        {chartData.map((entry, index) => {
                             const value = entry.attendance;
                             let color;
                             // Color gradient from yellow to red based on attendance value (hotter = more hours)
-                            if (value < 2) color = '#ffeb3b'; // Yellow for low attendance
-                            else if (value < 4) color = '#ffcc02'; // Dark yellow for medium-low
-                            else if (value < 6) color = '#ffb74d'; // Orange for medium
-                            else if (value < 8) color = '#ff8a65'; // Orange-red for medium-high
-                            else color = '#ff6b6b'; // Red for high attendance
+                            if (value < 2) color = '#fbbf24'; // Yellow-400 for low attendance
+                            else if (value < 4) color = '#f59e0b'; // Yellow-500 for medium-low
+                            else if (value < 6) color = '#f97316'; // Orange-500 for medium
+                            else if (value < 8) color = '#ef4444'; // Red-500 for medium-high
+                            else color = '#dc2626'; // Red-600 for high attendance
 
                             return <Cell key={`cell-${index}`} fill={color} />;
                           })}
