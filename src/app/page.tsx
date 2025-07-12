@@ -111,15 +111,18 @@ export default function Dashboard() {
   const barChartConfig = {
     attendance: {
       label: "Attendance",
-      color: "var(--chart-1)",
+      color: "#8884d8",
     },
   } satisfies ChartConfig;
 
   const pieChartConfig = {
-    value: {
-      label: "Duration",
-      color: "var(--chart-1)",
-    },
+    ...sourceData.reduce((config, item, index) => ({
+      ...config,
+      [item.name]: {
+        label: item.name.charAt(0).toUpperCase() + item.name.slice(1),
+        color: COLORS[index % COLORS.length],
+      },
+    }), {}),
   } satisfies ChartConfig;
 
   return (
@@ -217,11 +220,11 @@ export default function Dashboard() {
                               labelLine={false}
                               label={({ name, percent }: { name: string; percent?: number }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                               outerRadius={80}
-                              fill="var(--color-value)"
+                              fill="var(--color-sipass)"
                               dataKey="value"
                             >
-                              {sourceData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              {sourceData.map((entry) => (
+                                <Cell key={`cell-${entry.name}`} fill={`var(--color-${entry.name})`} />
                               ))}
                             </Pie>
                             <ChartTooltip
