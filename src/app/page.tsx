@@ -10,7 +10,9 @@ import { DashboardSummaryCards } from '@/components/dashboard/DashboardSummaryCa
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 export default function Dashboard() {
   const [data, setData] = useState<AttendanceData | null>(null);
@@ -101,32 +103,33 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
-        <DashboardHeader login={data.login} imageUrl={data.image_url} />
+      <TooltipProvider>
+        <div className="container mx-auto px-4 py-6">
+          {/* Header */}
+          <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
-        <div className="flex flex-col lg:flex-row gap-6 mt-6">
-          {/* Sidebar Filters */}
-          <div className="lg:w-80 flex-shrink-0">
-            <div className="sticky top-6">
-              <DashboardFilters
-                months={months}
-                selectedMonth={selectedMonth}
-                onMonthChange={setSelectedMonth}
-                sources={availableSources}
-                selectedSource={selectedSource}
-                onSourceChange={(value) => setSelectedSource(value as SourceType)}
-              />
+          <div className="flex flex-col lg:flex-row gap-6 mt-6">
+            {/* Sidebar Filters */}
+            <div className="lg:w-80 flex-shrink-0">
+              <div className="sticky top-6">
+                <DashboardFilters
+                  months={months}
+                  selectedMonth={selectedMonth}
+                  onMonthChange={setSelectedMonth}
+                  sources={availableSources}
+                  selectedSource={selectedSource}
+                  onSourceChange={(value) => setSelectedSource(value as SourceType)}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Main Content */}
-          <div className="flex-1 space-y-4">
-            {/* Summary Cards */}
-            <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
+            {/* Main Content */}
+            <div className="flex-1 space-y-4">
+              {/* Summary Cards */}
+              <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
 
-            {/* Daily Attendance Chart */}
-            <div className="space-y-4">
+              {/* Daily Attendance Chart */}
+              <div className="space-y-4">
                 <Card>
                   <CardHeader className="pb-3">
                     <CardTitle>Daily Attendance</CardTitle>
@@ -143,20 +146,13 @@ export default function Dashboard() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
-                        <Tooltip
-                          formatter={(value: number) => {
-                            const hours = Math.floor(value);
-                            const minutes = Math.round((value - hours) * 60);
-                            return [`${hours}h ${minutes}m`, 'Attendance'];
-                          }}
-                        />
                         <Bar dataKey="attendance" fill="#8884d8" />
                       </BarChart>
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>
 
-              {/* Sources Breakdown */}
+                {/* Sources Breakdown */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <Card>
                     <CardHeader className="pb-3">
@@ -186,13 +182,6 @@ export default function Dashboard() {
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                               ))}
                             </Pie>
-                            <Tooltip
-                              formatter={(value: number) => {
-                                const hours = Math.floor(value);
-                                const minutes = Math.round((value - hours) * 60);
-                                return [`${hours}h ${minutes}m`, 'Duration'];
-                              }}
-                            />
                           </PieChart>
                         </ResponsiveContainer>
                       ) : (
@@ -253,7 +242,7 @@ export default function Dashboard() {
                   </Card>
                 </div>
 
-              {/* Daily Attendance Table */}
+                {/* Daily Attendance Table */}
                 <Card>
                   <CardHeader className="pb-3">
                     <CardTitle>Daily Attendance Details</CardTitle>
@@ -284,10 +273,11 @@ export default function Dashboard() {
                     </Table>
                   </CardContent>
                 </Card>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </TooltipProvider>
     </div>
   );
 }
