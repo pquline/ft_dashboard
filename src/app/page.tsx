@@ -179,7 +179,14 @@ export default function Dashboard() {
                         />
                         <ChartTooltip
                           cursor={false}
-                          content={<ChartTooltipContent />}
+                          content={<ChartTooltipContent
+                            formatter={(value: any) => {
+                              const numValue = typeof value === 'number' ? value : parseFloat(value);
+                              const hours = Math.floor(numValue);
+                              const minutes = Math.round((numValue - hours) * 60);
+                              return `${hours}h ${minutes}m`;
+                            }}
+                          />}
                         />
                         <Bar dataKey="attendance" fill="var(--color-attendance)" radius={4} />
                       </BarChart>
@@ -218,7 +225,14 @@ export default function Dashboard() {
                               ))}
                             </Pie>
                             <ChartTooltip
-                              content={<ChartTooltipContent />}
+                              content={<ChartTooltipContent
+                                formatter={(value: any) => {
+                                  const numValue = typeof value === 'number' ? value : parseFloat(value);
+                                  const hours = Math.floor(numValue);
+                                  const minutes = Math.round((numValue - hours) * 60);
+                                  return `${hours}h ${minutes}m`;
+                                }}
+                              />}
                             />
                           </PieChart>
                         </ChartContainer>
