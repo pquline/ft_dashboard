@@ -20,7 +20,7 @@ export function DashboardFilters({
   onSourceChange,
 }: DashboardFiltersProps) {
   return (
-    <Card className="border-0 shadow-sm bg-background/50 backdrop-blur-sm">
+    <Card className="border shadow-sm bg-card">
       <CardContent className="p-4">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div className="flex items-center gap-2">
