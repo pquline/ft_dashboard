@@ -1,6 +1,6 @@
-# FT Dashboard
+# ft_dashboard
 
-A modern dashboard application for 42 students to view their attendance and progress data. Built with Next.js 15, TypeScript, and shadcn/ui components.
+A modern dashboard application for 42 students to view their attendance data. Built with Next.js 15, TypeScript, and shadcn/ui components.
 
 ## Features
 
@@ -40,23 +40,11 @@ cd ft_dashboard
 2. Install dependencies:
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
-# or
-bun install
 ```
 
 3. Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -65,10 +53,10 @@ bun dev
 
 To access the dashboard, you need to authenticate with your 42 session:
 
-1. Go to [42.fr](https://42.fr) and log in to your account
+1. Go to [dashboard.42paris.fr/](https://dashboard.42paris.fr/) and log in to your account
 2. Open your browser's developer tools (F12)
 3. Go to the Application/Storage tab
-4. Find the session cookie (usually named `session` or similar)
+4. Find the session cookie
 5. Copy the cookie value
 6. Go to the login page in the dashboard
 7. Paste the session cookie value and submit
@@ -80,15 +68,15 @@ The dashboard will then fetch your data from the 42 API using your session.
 ```
 src/
 ├── app/                    # Next.js App Router pages
-│   ├── api/               # API routes
-│   ├── login/             # Login page
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Dashboard page
-├── components/            # React components
-│   ├── dashboard/         # Dashboard-specific components
-│   └── ui/               # shadcn/ui components
-├── lib/                  # Utility functions
-└── types/                # TypeScript type definitions
+│   ├── api/                # API routes
+│   ├── login/              # Login page
+│   ├── layout.tsx          # Root layout
+│   └── page.tsx            # Dashboard page
+├── components/             # React components
+│   ├── dashboard/          # Dashboard-specific components
+│   └── ui/                 # shadcn/ui components
+├── lib/                    # Utility functions
+└── types/                  # TypeScript type definitions
 ```
 
 ## Available Scripts
@@ -100,7 +88,6 @@ src/
 
 ## API Routes
 
-- `/api/42/*` - Proxy routes to 42 API with session authentication
 - `/api/auth/logout` - Logout endpoint to clear session
 
 ## Middleware
