@@ -10,7 +10,7 @@ export function Footer() {
           <span className="text-red-500">&lt;3</span>
           <span> on </span>
           <Link
-            href="https://github.com/pquline/ft_portal"
+            href="https://github.com/pquline/ft_dashboard"
             target="_blank"
             rel="noopener noreferrer"
             className="text-foreground hover:underline"
