@@ -1,4 +1,5 @@
 import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface DashboardHeaderProps {
   login: string;
@@ -9,14 +10,13 @@ export function DashboardHeader({ login, imageUrl }: DashboardHeaderProps) {
   return (
     <div className="flex items-center justify-between py-2">
       <div className="flex items-center gap-3">
-        <img
-          src={imageUrl}
-          alt={`${login} avatar`}
-          className="w-10 h-10 rounded-full ring-2 ring-primary/10"
-        />
+        <Avatar>
+          <AvatarImage src={imageUrl} />
+          <AvatarFallback>{login.charAt(0).toUpperCase()}</AvatarFallback>
+        </Avatar>
         <div>
-          <h1 className="text-xl font-semibold">Attendance Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Welcome back, {login}</p>
+          <h1 className="text-xl font-semibold">ft_dashboard</h1>
+          <p className="text-sm text-muted-foreground">{login}</p>
         </div>
       </div>
       <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
