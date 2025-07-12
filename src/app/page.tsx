@@ -202,7 +202,7 @@ export default function Dashboard() {
                             else if (value < 4) color = '#f59e0b'; // Yellow-500 for medium-low
                             else if (value < 6) color = '#f97316'; // Orange-500 for medium
                             else if (value < 8) color = '#ef4444'; // Red-500 for medium-high
-                            else color = '#dc2626'; // Red-600 for high attendance
+                            else color = '#ef4444'; // Red-500 for high attendance
 
                             return <Cell key={`cell-${index}`} fill={color} />;
                           })}
