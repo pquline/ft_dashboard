@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { AttendanceData, type SourceType } from '@/types/attendance';
-import { parseISODuration, formatDuration, calculateTotalAttendance, calculateOnSiteAttendance, calculateOffSiteAttendance, getMonthName, getPeriodMonthName, getUniqueSources } from '@/lib/utils';
+import { parseISODuration, formatDuration, calculateTotalAttendance, calculateOnSiteAttendance, calculateOffSiteAttendance, getMonthName, getPeriodMonthName, getUniqueSources, getMainMonth, filterDailyAttendancesToMainMonth } from '@/lib/utils';
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DashboardFilters } from '@/components/dashboard/DashboardFilters';
@@ -71,13 +71,14 @@ export default function Dashboard() {
     label: getPeriodMonthName(period.from_date, period.to_date),
   }));
 
-  // Prepare summary card values
   const total = currentPeriod ? formatDuration(calculateTotalAttendanceForSource(currentPeriod, selectedSource)) : '0h 0m';
   const onSite = currentPeriod ? formatDuration(calculateOnSiteAttendanceForSource(currentPeriod, selectedSource)) : '0h 0m';
   const offSite = currentPeriod ? formatDuration(calculateOffSiteAttendanceForSource(currentPeriod, selectedSource)) : '0h 0m';
 
-  // Prepare daily data for chart and table
-  const filteredDailyData = currentPeriod ? getDailyAttendanceForSource(currentPeriod, selectedSource) : [];
+  let filteredDailyData = currentPeriod ? getDailyAttendanceForSource(currentPeriod, selectedSource) : [];
+  if (currentPeriod) {
+    filteredDailyData = filterDailyAttendancesToMainMonth(currentPeriod, filteredDailyData);
+  }
 
   const chartData = filteredDailyData.map(day => ({
     date: new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
@@ -88,7 +89,7 @@ export default function Dashboard() {
 
   const sourceData = currentPeriod?.detailed_attendance
     .filter(detail => {
-      if (detail.name === 'locations') return false; // Exclude locations
+      if (detail.name === 'locations') return false;
       if (selectedSource === 'all') return true;
       return detail.name === selectedSource;
     })

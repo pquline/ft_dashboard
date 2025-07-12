@@ -183,3 +183,31 @@ export function getDailyAttendanceForSource(period: AttendancePeriod, source: st
     };
   });
 }
+
+export function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
+  const from = new Date(period.from_date);
+  const to = new Date(period.to_date);
+
+  const fromMonth = from.getMonth();
+  const toMonth = to.getMonth();
+  const fromYear = from.getFullYear();
+  const toYear = to.getFullYear();
+
+  const daysInFromMonth = new Date(fromYear, fromMonth + 1, 0).getDate();
+  const daysFromFromDate = daysInFromMonth - from.getDate() + 1;
+  const daysToToDate = to.getDate();
+
+  if (daysFromFromDate < daysToToDate) {
+    return { year: toYear, month: toMonth };
+  } else {
+    return { year: fromYear, month: fromMonth };
+  }
+}
+
+export function filterDailyAttendancesToMainMonth(period: AttendancePeriod, daily: any[]) {
+  const { year, month } = getMainMonth(period);
+  return daily.filter(day => {
+    const d = new Date(day.date);
+    return d.getFullYear() === year && d.getMonth() === month;
+  });
+}
