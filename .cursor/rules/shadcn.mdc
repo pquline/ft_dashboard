@@ -1,0 +1,5 @@
+---
+description: use shadcn/ui components
+globs:
+alwaysApply: false
+---
