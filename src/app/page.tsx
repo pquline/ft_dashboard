@@ -18,6 +18,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from '@/components/ui/chart';
 
 export default function Dashboard() {
@@ -226,31 +228,12 @@ export default function Dashboard() {
                     </CardHeader>
                     <CardContent className="pt-0">
                       {sourceData.length > 0 ? (
-                        <ChartContainer config={pieChartConfig} className="h-[280px] !aspect-auto">
-                          <PieChart accessibilityLayer data={sourceData}>
-                            <Pie
-                              data={sourceData}
-                              cx="50%"
-                              cy="50%"
-                              labelLine={false}
-                              label={({ name, percent }: { name: string; percent?: number }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
-                              outerRadius={80}
-                              fill="var(--color-sipass)"
-                              dataKey="value"
-                            >
-                              {sourceData.map((entry) => (
-                                <Cell key={`cell-${entry.name}`} fill={`var(--color-${entry.name})`} />
-                              ))}
-                            </Pie>
-                            <ChartTooltip
-                              content={<ChartTooltipContent
-                                formatter={(value: any) => {
-                                  const numValue = typeof value === 'number' ? value : parseFloat(value);
-                                  const hours = Math.floor(numValue);
-                                  const minutes = Math.round((numValue - hours) * 60);
-                                  return `${hours}h ${minutes}m`;
-                                }}
-                              />}
+                        <ChartContainer config={pieChartConfig} className="mx-auto aspect-square max-h-[300px]">
+                          <PieChart>
+                            <Pie data={sourceData} dataKey="value" />
+                            <ChartLegend
+                              content={<ChartLegendContent nameKey="name" payload={sourceData} />}
+                              className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
                             />
                           </PieChart>
                         </ChartContainer>
