@@ -107,7 +107,16 @@ export default function Dashboard() {
       type: detail.type,
     })) || [];
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+  const PIE_COLORS = [
+    '#3b82f6', // Blue-500
+    '#10b981', // Emerald-500
+    '#f59e0b', // Amber-500
+    '#ef4444', // Red-500
+    '#8b5cf6', // Violet-500
+    '#06b6d4', // Cyan-500
+    '#84cc16', // Lime-500
+    '#f97316', // Orange-500
+  ];
 
   // Chart configurations
   const barChartConfig = {
@@ -115,7 +124,7 @@ export default function Dashboard() {
       label: "Attendance",
       color: selectedSource === 'all'
         ? "#8884d8"
-        : COLORS[availableSources.indexOf(selectedSource) % COLORS.length],
+        : PIE_COLORS[availableSources.indexOf(selectedSource) % PIE_COLORS.length],
     },
   } satisfies ChartConfig;
 
@@ -124,7 +133,7 @@ export default function Dashboard() {
       ...config,
       [item.name]: {
         label: item.name.charAt(0).toUpperCase() + item.name.slice(1),
-        color: COLORS[index % COLORS.length],
+        color: PIE_COLORS[index % PIE_COLORS.length],
       },
     }), {}),
   } satisfies ChartConfig;
