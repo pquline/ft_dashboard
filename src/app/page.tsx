@@ -140,8 +140,8 @@ export default function Dashboard() {
         {/* Header */}
         <DashboardHeader login={data.login} imageUrl={data.image_url} />
 
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col lg:flex-row gap-6 mt-6">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <div className="flex flex-col lg:flex-row gap-6">
             {/* Sidebar Filters */}
             <div className="lg:w-80 flex-shrink-0">
               <div className="sticky top-6">
@@ -157,12 +157,12 @@ export default function Dashboard() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 space-y-4">
+            <div className="flex-1 space-y-6">
               {/* Summary Cards */}
               <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
 
               {/* Daily Attendance Chart */}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <Card>
                   <CardHeader className="pb-3">
                     <CardTitle>Daily Attendance</CardTitle>
@@ -220,7 +220,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Sources Breakdown */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <Card>
                     <CardHeader className="pb-3">
                       <CardTitle>Sources Distribution</CardTitle>

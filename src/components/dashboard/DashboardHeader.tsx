@@ -38,7 +38,7 @@ export function DashboardHeader({ login, imageUrl }: DashboardHeaderProps) {
 
   return (
     <header className="bg-white dark:bg-secondary/50 backdrop-blur-sm border-b w-full" suppressHydrationWarning>
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
           <Link href="/">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex items-center justify-center">
