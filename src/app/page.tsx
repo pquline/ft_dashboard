@@ -111,7 +111,9 @@ export default function Dashboard() {
   const barChartConfig = {
     attendance: {
       label: "Attendance",
-      color: "#8884d8",
+      color: selectedSource === 'all'
+        ? "#8884d8"
+        : COLORS[availableSources.indexOf(selectedSource) % COLORS.length],
     },
   } satisfies ChartConfig;
 
