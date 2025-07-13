@@ -222,19 +222,16 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   React.useEffect(() => {
     const currentMonthKey = `${month.getFullYear()}-${month.getMonth()}`;
 
-    // Only run this effect if the month has actually changed
     if (currentMonthKey === lastMonthRef.current) {
       return;
     }
 
     lastMonthRef.current = currentMonthKey;
 
-    // Check if we're in the current month
     const today = new Date();
     const isCurrentMonth = today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth();
 
     if (isCurrentMonth) {
-      // For current month, try to select today, or first day with sessions, or first day of month
       const todayInCalendar = calendarData.find(day =>
         day.date.getDate() === today.getDate()
       );
@@ -250,7 +247,6 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
         }
       }
     } else {
-      // For other months, always start with the 1st day of the month
       setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
     }
   }, [month, calendarData]);

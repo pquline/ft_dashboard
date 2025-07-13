@@ -131,14 +131,28 @@ export function getDailyAttendanceForSource(period: AttendancePeriod, source: st
       sum + parseISODuration(day.total_attendance), 0
     );
 
-    const scaleFactor = totalWithLocations > 0 ? totalWithoutLocations / totalWithLocations : 0;
+    // Only apply scaling if there's a significant difference and we have data
+    const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
+      ? Math.min(totalWithoutLocations / totalWithLocations, 1) // Don't scale up, only down
+      : 1;
 
-    return period.daily_attendances.map(day => ({
-      ...day,
-      total: parseISODuration(day.total_attendance) * scaleFactor,
-      onSite: parseISODuration(day.total_on_site_attendance) * scaleFactor,
-      offSite: parseISODuration(day.total_off_site_attendance) * scaleFactor,
-    }));
+    return period.daily_attendances.map(day => {
+      const rawTotal = parseISODuration(day.total_attendance);
+      const rawOnSite = parseISODuration(day.total_on_site_attendance);
+      const rawOffSite = parseISODuration(day.total_off_site_attendance);
+
+      // If the day has actual attendance data, ensure it's not scaled to zero
+      const scaledTotal = rawTotal > 0 ? Math.max(rawTotal * scaleFactor, rawTotal * 0.1) : 0;
+      const scaledOnSite = rawOnSite > 0 ? Math.max(rawOnSite * scaleFactor, rawOnSite * 0.1) : 0;
+      const scaledOffSite = rawOffSite > 0 ? Math.max(rawOffSite * scaleFactor, rawOffSite * 0.1) : 0;
+
+      return {
+        ...day,
+        total: scaledTotal,
+        onSite: scaledOnSite,
+        offSite: scaledOffSite,
+      };
+    });
   }
 
   const sourceDetail = period.detailed_attendance.find(detail => detail.name === source);
@@ -236,6 +250,11 @@ export const devLog = {
   info: (...args: unknown[]) => {
     if (process.env.NODE_ENV === 'development') {
       console.info(`[${getTimestamp()}] [INFO]:`, ...args);
+    }
+  },
+  debug: (...args: unknown[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`[${getTimestamp()}] [DEBUG]:`, ...args);
     }
   }
 };

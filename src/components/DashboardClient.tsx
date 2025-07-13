@@ -60,12 +60,20 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     filteredDailyData = filterDailyAttendancesToMainMonth(currentPeriod, filteredDailyData);
   }
 
+
+
   const chartData = filteredDailyData.map(day => ({
     date: new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     attendance: day.total / 3600,
     onSite: day.onSite / 3600,
     offSite: day.offSite / 3600,
   }));
+
+
+
+  devLog.debug('Chart data length:', chartData.length);
+  devLog.debug('Chart data dates:', chartData.map(d => d.date));
+  devLog.debug('Chart data with attendance > 0:', chartData.filter(d => d.attendance > 0));
 
   const sourceData = currentPeriod?.detailed_attendance
     .filter(detail => {
@@ -83,10 +91,9 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     '#ea580c', // Orange-600
     '#fb923c', // Orange-400
     '#f97316', // Orange-500
-    '#c2410c', // Orange-700
+    '#c2410c', // Orange-600
   ];
 
-  // Chart configurations
   const barChartConfig = {
     attendance: {
       label: "Attendance",
@@ -190,7 +197,6 @@ return (
                     return new Date(year, month, 1);
                   })()}
                   onMonthChange={(date) => {
-                    // Find the period whose main month matches the selected date
                     const newMonthStr = data.attendance.find(period => {
                       const { year, month } = getMainMonth(period);
                       return year === date.getFullYear() && month === date.getMonth();
