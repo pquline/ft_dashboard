@@ -308,19 +308,13 @@ function ChartLegendContent({
         if (typeof color === 'string' && color.startsWith('url(')) {
           // Map url(#pie-glass-*) to a matching CSS linear-gradient for legend swatch
           if (color.includes('pie-glass-blue')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #2563eb 0%, #60a5fa 100%)' };
+            swatchStyle = { background: 'linear-gradient(180deg, #00c6fb 0%, #005bea 100%)' };
           } else if (color.includes('pie-glass-orange')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #ff8000 0%, #ffb347 100%)' };
-          } else if (color.includes('pie-glass-teal')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #14b8a6 0%, #f0fdfa 100%)' };
-          } else if (color.includes('pie-glass-slate')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #64748b 0%, #f8fafc 100%)' };
+            swatchStyle = { background: 'linear-gradient(180deg, #ff9900 0%, #ffea00 100%)' };
+          } else if (color.includes('pie-glass-green')) {
+            swatchStyle = { background: 'linear-gradient(180deg, #00ff99 0%, #00e676 100%)' };
           } else if (color.includes('pie-glass-indigo')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #6366f1 0%, #eef2ff 100%)' };
-          } else if (color.includes('pie-glass-cyan')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #06b6d4 0%, #ecfeff 100%)' };
-          } else if (color.includes('pie-glass-gray')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #6b7280 0%, #f9fafb 100%)' };
+            swatchStyle = { background: 'linear-gradient(180deg, #a18cd1 0%, #fbc2eb 100%)' };
           }
         } else if (color) {
           swatchStyle = { background: color };
