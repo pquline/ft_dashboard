@@ -188,7 +188,6 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   }
 
   function parseISODuration(duration: string): number {
-    // Handle formats like P1D (1 day), P1DT2H (1 day 2 hours), PT2H30M (2 hours 30 minutes), etc.
     const match = duration.match(/P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/)
     if (!match) return 0
 
@@ -255,8 +254,8 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               onMonthChange={onMonthChange}
               className="rounded-md border"
               classNames={{
-                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                day_today: "bg-accent text-accent-foreground",
+                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md",
+                day_today: "bg-accent text-accent-foreground rounded-md",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
               components={{
