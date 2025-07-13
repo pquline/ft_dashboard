@@ -54,15 +54,6 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
 
   const currentPeriod = data.attendance.find(period => period.from_date === selectedMonth);
 
-  // Debug currentPeriod changes on client side
-  console.log('=== CURRENT PERIOD DEBUG ===');
-  console.log('Selected month:', selectedMonth);
-  console.log('Current period:', currentPeriod ? {
-    from_date: currentPeriod.from_date,
-    to_date: currentPeriod.to_date,
-    label: getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date)
-  } : 'NOT FOUND');
-
   devLog.debug('Available months:', data.attendance.map(p => ({
     from_date: p.from_date,
     to_date: p.to_date,
@@ -95,10 +86,8 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     filteredDailyData = filterDailyAttendancesToMainMonth(currentPeriod, filteredDailyData);
   }
 
-
-
   const chartData = filteredDailyData.map(day => ({
-    date: new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    date: new Date(day.date).toLocaleDateString('en-US', { day: 'numeric' }),
     attendance: day.total / 3600,
     onSite: day.onSite / 3600,
     offSite: day.offSite / 3600,
@@ -107,8 +96,6 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   devLog.debug('Chart data length:', chartData.length);
   devLog.debug('Chart data dates:', chartData.map(d => d.date));
   devLog.debug('Chart data with attendance > 0:', chartData.filter(d => d.attendance > 0));
-
-
 
   const sourceData = currentPeriod?.detailed_attendance
     .filter(detail => {
@@ -164,13 +151,13 @@ return (
           />
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="space-y-6 mt-6">
-            <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
+            <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} currentPeriod={currentPeriod} />
 
             {/* Daily Attendance Chart */}
             <div className="space-y-6">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle>Daily Attendance</CardTitle>
+                  <CardTitle>Daily Attendance in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
                   <CardDescription>
                     {selectedSource === 'all'
                       ? 'Hours spent on campus per day (All sources)'
@@ -245,7 +232,7 @@ return (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle>Sources Distribution</CardTitle>
+                    <CardTitle>Sources Distribution in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
                     <CardDescription>
                       {selectedSource === 'all'
                         ? 'Time spent by source type (All sources)'
@@ -270,7 +257,7 @@ return (
                       </ChartContainer>
                     ) : (
                       <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                        No data available for the selected source in this month
+                        No data available for the selected source in selected month
                       </div>
                     )}
                   </CardContent>
@@ -278,7 +265,7 @@ return (
 
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle>Sources Details</CardTitle>
+                    <CardTitle>Sources Details in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
                     <CardDescription>
                       {selectedSource === 'all'
                         ? 'All sources'
@@ -287,6 +274,7 @@ return (
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
+                    {sourceData.length > 0 ? (
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -313,15 +301,13 @@ return (
                               <TableCell>{formatDuration(parseISODuration(detail.duration))}</TableCell>
                             </TableRow>
                           ))}
-                        {sourceData.length === 0 && (
-                          <TableRow>
-                            <TableCell colSpan={3} className="text-center text-muted-foreground">
-                              No data available for the selected source in this month
-                            </TableCell>
-                          </TableRow>
-                        )}
                       </TableBody>
                     </Table>
+                    ) : (
+                      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                        No data available for the selected source in selected month
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>

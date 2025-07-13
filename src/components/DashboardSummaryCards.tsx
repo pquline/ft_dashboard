@@ -1,31 +1,34 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, MapPin, Wifi } from 'lucide-react';
+import { getPeriodMonthName } from '@/lib/utils';
+import { AttendancePeriod } from '@/types/attendance';
 
 interface DashboardSummaryCardsProps {
   total: string;
   onSite: string;
   offSite: string;
+  currentPeriod?: AttendancePeriod;
 }
 
-export function DashboardSummaryCards({ total, onSite, offSite }: DashboardSummaryCardsProps) {
+export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }: DashboardSummaryCardsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total</CardTitle>
-          <Clock className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total hours in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{total}</div>
           <p className="text-xs text-muted-foreground">
-            Total hours this month
+            Total hours
           </p>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">On Campus</CardTitle>
+          <CardTitle className="text-sm font-medium">On Campus in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
           <MapPin className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -37,7 +40,7 @@ export function DashboardSummaryCards({ total, onSite, offSite }: DashboardSumma
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Remote</CardTitle>
+          <CardTitle className="text-sm font-medium">Remote in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
           <Wifi className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
