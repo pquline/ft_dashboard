@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Heart } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,9 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <span className="font-mono">
-              <span className="text-primary">{"$>"}</span> ./made with{' '}
-              <Heart className="inline-block text-red-500 animate-pulse mx-1" size={16} />
-              on{' '}
+              <span className="text-primary">{"$>"}</span> ./made with{' '}{"<3"}{' '}on{' '}
               <Link
                 href="https://github.com/pquline/ft_dashboard"
                 target="_blank"
