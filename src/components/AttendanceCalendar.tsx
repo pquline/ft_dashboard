@@ -252,23 +252,15 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               onSelect={setSelectedDate}
               month={month}
               onMonthChange={onMonthChange}
-              className="rounded-md border"
-              classNames={{
-                day_selected: "bg-primary text-primary-foreground rounded-full",
-                day_today: "",
-                day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
-              }}
               components={{
                 DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
                   const dayData = calendarData.find(day =>
                     day.date.toDateString() === date.toDateString()
                   );
-                  if (!dayData) return <span {...props}>{date.getDate()}</span>;
-
                   return (
-                    <span {...props} className="relative w-full h-full flex items-center justify-center">
+                    <span {...props} className="relative">
                       {date.getDate()}
-                      {dayData.hasSessions && (
+                      {dayData?.hasSessions && (
                         <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
                       )}
                     </span>
