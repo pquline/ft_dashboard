@@ -121,20 +121,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* Fix for react-day-picker: make today+selected always fully rounded and primary background */
-button[data-selected][data-day] {
-  border-radius: 9999px !important;
-}
-button[data-selected][data-day].bg-primary,
-button[data-selected][data-day][class*="bg-primary"] {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-}
-
-/* Strongest possible fix for react-day-picker today+selected square issue */
-button[data-selected][data-day][class*="bg-accent"] {
-  background-color: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-  border-radius: 9999px !important;
-}
