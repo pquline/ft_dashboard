@@ -175,7 +175,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {/* Calendar Card */}
       <div className="lg:col-span-2">
-        <Card className="card-modern group overflow-hidden">
+        <Card className="card-modern group overflow-hidden h-[450px]">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <CardHeader className="pb-4 relative z-10">
             <div className="flex items-center space-x-2">
@@ -215,7 +215,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
       {/* Sessions Card */}
       <div className="lg:col-span-3">
-        <Card className="card-modern group overflow-hidden">
+        <Card className="card-modern group overflow-hidden h-[450px]">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <CardHeader className="pb-4 relative z-10">
             <div className="flex items-center space-x-2">

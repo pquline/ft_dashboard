@@ -86,37 +86,28 @@ export function Header({
                 aria-label="User menu"
                 aria-haspopup="menu"
                 aria-expanded="false"
-                className="cursor-pointer group focus-ring"
+                className="cursor-pointer"
               >
-                <div className="relative">
-                  <Avatar className="w-10 h-10 ring-2 ring-border/30 group-hover:ring-primary/50 transition-all duration-300 group-hover:scale-105">
-                    <AvatarImage src={imageUrl} alt={login} />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold">
-                      {login.charAt(0).toUpperCase() + login.charAt(1).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background"></div>
-                </div>
+                <Avatar>
+                  <AvatarImage src={imageUrl} alt={login} />
+                  <AvatarFallback>{login.charAt(0).toUpperCase() + login.charAt(1).toUpperCase()}</AvatarFallback>
+                </Avatar>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="glass border-border/50 backdrop-blur-xl animate-slide-in-right">
+            <DropdownMenuContent>
               {/* Month Selector */}
               {months && selectedMonth && onMonthChange && (
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="focus-ring">
-                    <Calendar className="mr-3 h-4 w-4" />
+                  <DropdownMenuSubTrigger>
+                    <Calendar className="mr-4 h-4 w-4" />
                     <span>Month</span>
                   </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="glass border-border/50 backdrop-blur-xl">
+                  <DropdownMenuSubContent>
                     {months.map((month) => (
                       <DropdownMenuItem
                         key={month.value}
                         onClick={() => onMonthChange(month.value)}
-                        className={`focus-ring transition-all duration-200 ${
-                          selectedMonth === month.value
-                            ? "bg-primary/10 text-primary border-l-2 border-primary"
-                            : "hover:bg-accent/50"
-                        }`}
+                        className={selectedMonth === month.value ? "bg-accent" : ""}
                       >
                         {month.label}
                       </DropdownMenuItem>
@@ -128,18 +119,14 @@ export function Header({
               {/* Source Selector */}
               {sources && selectedSource && onSourceChange && (
                 <DropdownMenuSub>
-                  <DropdownMenuSubTrigger className="focus-ring">
-                    <Server className="mr-3 h-4 w-4" />
+                  <DropdownMenuSubTrigger>
+                    <Server className="mr-4 h-4 w-4" />
                     <span>Source</span>
                   </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="glass border-border/50 backdrop-blur-xl">
+                  <DropdownMenuSubContent>
                     <DropdownMenuItem
                       onClick={() => onSourceChange("all")}
-                      className={`focus-ring transition-all duration-200 ${
-                        selectedSource === "all"
-                          ? "bg-primary/10 text-primary border-l-2 border-primary"
-                          : "hover:bg-accent/50"
-                      }`}
+                      className={selectedSource === "all" ? "bg-accent" : ""}
                     >
                       All Sources
                     </DropdownMenuItem>
@@ -147,11 +134,7 @@ export function Header({
                       <DropdownMenuItem
                         key={source}
                         onClick={() => onSourceChange(source)}
-                        className={`focus-ring transition-all duration-200 ${
-                          selectedSource === source
-                            ? "bg-primary/10 text-primary border-l-2 border-primary"
-                            : "hover:bg-accent/50"
-                        }`}
+                        className={selectedSource === source ? "bg-accent" : ""}
                       >
                         {source}
                       </DropdownMenuItem>
@@ -161,37 +144,19 @@ export function Header({
               )}
 
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger className="focus-ring">
-                  <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-3 h-4 w-4" />
-                  <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-3 h-4 w-4" />
+                <DropdownMenuSubTrigger>
+                  <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-4 h-4 w-4" />
+                  <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-4 h-4 w-4" />
                   <span>Theme</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="glass border-border/50 backdrop-blur-xl">
-                  <DropdownMenuItem
-                    onClick={() => setTheme("light")}
-                    className="focus-ring hover:bg-accent/50 transition-all duration-200"
-                  >
-                    Light
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setTheme("dark")}
-                    className="focus-ring hover:bg-accent/50 transition-all duration-200"
-                  >
-                    Dark
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setTheme("system")}
-                    className="focus-ring hover:bg-accent/50 transition-all duration-200"
-                  >
-                    System
-                  </DropdownMenuItem>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-              <DropdownMenuItem
-                onClick={handleLogout}
-                className="focus-ring hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
-              >
-                <LogOut className="mr-3 h-4 w-4" />
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4 text-foreground" />
                 <span>Log Out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

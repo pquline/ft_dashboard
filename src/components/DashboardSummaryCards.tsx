@@ -46,7 +46,9 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
             <div className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               {total}
             </div>
-            <TrendingUp className="h-4 w-4 text-green-500" />
+            <div className="text-xs text-muted-foreground mt-1 text-primary">
+              {((totalHours / 140) * 100).toFixed(0)}% of 140 hours
+            </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'Selected month'}
