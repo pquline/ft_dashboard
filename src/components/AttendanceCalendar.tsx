@@ -30,23 +30,13 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     const { year, month } = getMainMonth(period);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    const totalWithoutLocations = period.detailed_attendance
-      .filter(detail => detail.name !== 'locations')
-      .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
-
-    const totalWithLocations = period.daily_attendances.reduce((sum, day) =>
-      sum + parseISODuration(day.total_attendance), 0
-    );
-
-    const scaleFactor = totalWithLocations > 0 ? totalWithoutLocations / totalWithLocations : 0;
-
     const attendanceMap = new Map<string, { total: number; onSite: number; offSite: number }>();
 
     period.daily_attendances.forEach(day => {
       const d = new Date(day.date);
       if (d.getFullYear() === year && d.getMonth() === month) {
-        const totalOnSite = parseISODuration(day.total_on_site_attendance) * scaleFactor;
-        const totalOffSite = parseISODuration(day.total_off_site_attendance) * scaleFactor;
+        const totalOnSite = parseISODuration(day.total_on_site_attendance);
+        const totalOffSite = parseISODuration(day.total_off_site_attendance);
         attendanceMap.set(day.date, {
           total: totalOnSite + totalOffSite,
           onSite: totalOnSite,
@@ -138,21 +128,11 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
   function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
     if (source === 'all') {
-      const totalWithoutLocations = period.detailed_attendance
-        .filter(detail => detail.name !== 'locations')
-        .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
-
-      const totalWithLocations = period.daily_attendances.reduce((sum, day) =>
-        sum + parseISODuration(day.total_attendance), 0
-      );
-
-      const scaleFactor = totalWithLocations > 0 ? totalWithoutLocations / totalWithLocations : 0;
-
       return period.daily_attendances.map(day => ({
         ...day,
-        total: parseISODuration(day.total_attendance) * scaleFactor,
-        onSite: parseISODuration(day.total_on_site_attendance) * scaleFactor,
-        offSite: parseISODuration(day.total_off_site_attendance) * scaleFactor,
+        total: parseISODuration(day.total_attendance),
+        onSite: parseISODuration(day.total_on_site_attendance),
+        offSite: parseISODuration(day.total_off_site_attendance),
       }));
     }
 
@@ -208,7 +188,8 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   }
 
   function parseISODuration(duration: string): number {
-    const match = duration.match(/P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?/)
+    // Handle formats like P1D (1 day), P1DT2H (1 day 2 hours), PT2H30M (2 hours 30 minutes), etc.
+    const match = duration.match(/P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/)
     if (!match) return 0
 
     const days = parseInt(match[1] || '0')
