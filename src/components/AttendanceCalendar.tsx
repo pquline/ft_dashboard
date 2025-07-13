@@ -90,42 +90,34 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
 
     if (!rawDayData) return [];
 
-    // Calculate scaling factor to exclude locations source (same logic as utils)
-    const totalWithoutLocations = period.detailed_attendance
-      .filter(detail => detail.name !== 'locations')
-      .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
-
-    const totalWithLocations = period.daily_attendances.reduce((sum, day) =>
+    const dayTotal = parseISODuration(rawDayData.total_attendance);
+    const monthTotal = period.daily_attendances.reduce((sum, day) =>
       sum + parseISODuration(day.total_attendance), 0
     );
 
-    const scaleFactor = totalWithLocations > 0 ? totalWithoutLocations / totalWithLocations : 0;
+    if (dayTotal === 0 || monthTotal === 0) return [];
 
-    const totalOnSite = parseISODuration(rawDayData.total_on_site_attendance) * scaleFactor;
-    const totalOffSite = parseISODuration(rawDayData.total_off_site_attendance) * scaleFactor;
+    const dayRatio = dayTotal / monthTotal;
 
-    if (totalOnSite === 0 && totalOffSite === 0) return [];
+    const filteredDetails = period.detailed_attendance.filter(detail => {
+      if (detail.name === 'locations') return false;
+      if (selectedSource === 'all') return true;
+      return detail.name === selectedSource;
+    });
 
-    const sessions = [];
+    const sessions = filteredDetails.map(detail => {
+      const sessionDuration = parseISODuration(detail.duration) * dayRatio;
 
-    if (totalOnSite > 0) {
-      sessions.push({
-        type: 'on_site' as const,
-        duration: totalOnSite,
-        source: selectedSource === 'all' ? 'Multiple sources' : selectedSource,
-      });
-    }
-
-    if (totalOffSite > 0) {
-      sessions.push({
-        type: 'off_site' as const,
-        duration: totalOffSite,
-        source: selectedSource === 'all' ? 'Multiple sources' : selectedSource,
-      });
-    }
+      return {
+        type: detail.type,
+        duration: sessionDuration,
+        source: detail.name,
+        campusId: detail.campus_id,
+      };
+    }).filter(session => session.duration > 0);
 
     return sessions;
-  }, [selectedDate, period.daily_attendances, selectedSource]);
+  }, [selectedDate, period.daily_attendances, period.detailed_attendance, selectedSource]);
 
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
     const from = new Date(period.from_date);
@@ -323,18 +315,23 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
             {selectedDateSessions.length > 0 ? (
               <div className="space-y-3">
                 {selectedDateSessions.map((session, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Badge variant={session.type === 'on_site' ? 'secondary' : 'outline'}>
-                        {session.type === 'on_site' ? 'On Campus' : 'Remote'}
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">
-                        {session.source}
+                  <div key={index} className="p-3 border rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-3">
+                        <Badge variant={session.type === 'on_site' ? 'secondary' : 'outline'}>
+                          {session.type === 'on_site' ? 'On Campus' : 'Remote'}
+                        </Badge>
+                        <span className="font-medium text-sm">
+                          {session.source.charAt(0).toUpperCase() + session.source.slice(1)}
+                        </span>
+                      </div>
+                      <span className="font-medium">
+                        {formatDuration(session.duration)}
                       </span>
                     </div>
-                    <span className="font-medium">
-                      {formatDuration(session.duration)}
-                    </span>
+                    <div className="text-xs text-muted-foreground">
+                      Campus ID: {session.campusId}
+                    </div>
                   </div>
                 ))}
               </div>
