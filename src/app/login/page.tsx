@@ -48,12 +48,11 @@ export default function LoginPage() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent mb-2">
             ft_dashboard
           </h1>
-          <p className="text-muted-foreground">Your 42 Paris attendance analytics</p>
         </div>
 
         <Card className="card-modern group overflow-hidden">
           {/* Lighter glassy hover overlay for dark mode */}
-          <div className="absolute inset-0 bg-white/30 dark:bg-[rgba(40,40,60,0.25)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-white/10 dark:bg-[rgba(40,40,60,0.25)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <CardContent className="relative z-10">
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-3">
@@ -77,7 +76,7 @@ export default function LoginPage() {
                 </Alert>
               )}
 
-              <Alert className="border-blue-500/20 bg-blue-500/10">
+              <Alert className="border-orange-500/20 bg-orange-500/10">
                 <Info className="h-4 w-4 text-foreground" />
                 <AlertDescription className="text-foreground">
                   <strong className="text-foreground">How to get your session cookie:</strong>
@@ -117,11 +116,6 @@ export default function LoginPage() {
             </form>
           </CardContent>
         </Card>
-
-        {/* Footer */}
-        <div className="text-center mt-8 text-xs text-muted-foreground">
-          <p>Secure • Private • Open Source</p>
-        </div>
       </div>
     </div>
   );
