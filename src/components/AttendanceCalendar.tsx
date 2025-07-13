@@ -247,9 +247,9 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
           {/* Calendar */}
-          <div>
+          <div className="lg:col-span-2">
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -290,7 +290,7 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
           </div>
 
           {/* Selected Day Sessions */}
-          <div>
+          <div className="lg:col-span-3">
             <h3 className="font-semibold mb-3">
               {selectedDate ? (
                 <>
@@ -306,7 +306,7 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
               )}
             </h3>
 
-                        {selectedDateSessions.length > 0 ? (
+            {selectedDateSessions.length > 0 ? (
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -321,7 +321,7 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
                     <TableRow key={index}>
                       <TableCell>
                         <Badge variant="outline">
-                          {session.source.charAt(0).toUpperCase() + session.source.slice(1)}
+                          {session.source}
                         </Badge>
                       </TableCell>
                       <TableCell>
