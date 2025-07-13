@@ -172,7 +172,19 @@ return (
 
             {/* Daily Attendance Calendar */}
             {currentPeriod && (
-                <AttendanceCalendar period={currentPeriod} selectedSource={selectedSource} />
+                <AttendanceCalendar
+                  period={currentPeriod}
+                  selectedSource={selectedSource}
+                  month={new Date(currentPeriod.from_date)}
+                  onMonthChange={(date) => {
+                    // Find the period whose from_date matches the selected month
+                    const newMonthStr = data.attendance.find(period => {
+                      const d = new Date(period.from_date);
+                      return d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth();
+                    })?.from_date;
+                    if (newMonthStr) setSelectedMonth(newMonthStr);
+                  }}
+                />
             )}
 
               {/* Sources Breakdown */}

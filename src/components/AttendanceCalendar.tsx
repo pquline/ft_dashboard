@@ -10,6 +10,8 @@ import { AttendancePeriod, IndividualSession } from '@/types/attendance';
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
   selectedSource: string;
+  month: Date;
+  onMonthChange: (date: Date) => void;
 }
 
 interface DayData {
@@ -20,7 +22,7 @@ interface DayData {
   hasSessions: boolean;
 }
 
-export function AttendanceCalendar({ period, selectedSource }: AttendanceCalendarProps) {
+export function AttendanceCalendar({ period, selectedSource, month, onMonthChange }: AttendanceCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
   const calendarData = useMemo(() => {
@@ -216,9 +218,6 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     return days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds
   }
 
-  const { year, month } = getMainMonth(period);
-  const calendarMonth = new Date(year, month, 1);
-
   React.useEffect(() => {
     if (!selectedDate) {
       const firstDayWithSessions = calendarData.find(day => day.hasSessions);
@@ -226,14 +225,14 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
         setSelectedDate(firstDayWithSessions.date);
       } else {
         const today = new Date();
-        if (today.getFullYear() === year && today.getMonth() === month) {
+        if (today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth()) {
           setSelectedDate(today);
         } else {
-          setSelectedDate(new Date(year, month, 1));
+          setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
         }
       }
     }
-  }, [calendarData, selectedDate, year, month]);
+  }, [calendarData, selectedDate, month]);
 
   return (
     <Card>
@@ -254,38 +253,39 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
-              month={calendarMonth}
+              month={month}
+              onMonthChange={onMonthChange}
               className="rounded-md border"
               classNames={{
                 day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                 day_today: "bg-accent text-accent-foreground",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
-                             components={{
-                 DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
-                   const dayData = calendarData.find(day =>
-                     day.date.toDateString() === date.toDateString()
-                   );
+              components={{
+                DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
+                  const dayData = calendarData.find(day =>
+                    day.date.toDateString() === date.toDateString()
+                  );
 
-                   if (!dayData) return <div {...props} />;
+                  if (!dayData) return <div {...props} />;
 
-                   return (
-                     <div
-                       {...props}
-                       className={`relative h-9 w-9 flex items-center justify-center ${
-                         dayData.hasSessions
-                           ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
-                           : ''
-                       }`}
-                     >
-                       {date.getDate()}
-                       {dayData.hasSessions && (
-                         <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
-                       )}
-                     </div>
-                   );
-                 }
-               }}
+                  return (
+                    <div
+                      {...props}
+                      className={`relative h-9 w-9 flex items-center justify-center ${
+                        dayData.hasSessions
+                          ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
+                          : ''
+                      }`}
+                    >
+                      {date.getDate()}
+                      {dayData.hasSessions && (
+                        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
+                      )}
+                    </div>
+                  );
+                }
+              }}
             />
           </div>
 
