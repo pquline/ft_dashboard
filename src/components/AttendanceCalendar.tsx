@@ -3,6 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDuration } from '@/lib/utils';
 import { AttendancePeriod, IndividualSession } from '@/types/attendance';
 
@@ -77,12 +78,7 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
-    console.log('Debug - Selected date:', dateString);
-    console.log('Debug - Period entries:', period.entries);
-    console.log('Debug - Period keys:', Object.keys(period));
-
-    if (!period.entries) {
-      console.log('Debug - No entries data available');
+        if (!period.entries) {
       return [];
     }
 
@@ -91,19 +87,14 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
       const sessionDateString = sessionDate.getFullYear() + '-' +
         String(sessionDate.getMonth() + 1).padStart(2, '0') + '-' +
         String(sessionDate.getDate()).padStart(2, '0');
-      console.log('Debug - Session date:', sessionDateString, 'vs target:', dateString);
       return sessionDateString === dateString;
     });
-
-    console.log('Debug - Day sessions found:', daySessions.length);
 
     const filteredSessions = daySessions.filter(session => {
       if (session.source === 'locations') return false;
       if (selectedSource === 'all') return true;
       return session.source === selectedSource;
     });
-
-    console.log('Debug - Filtered sessions:', filteredSessions.length);
 
     const sessions = filteredSessions.map(session => {
       const beginAt = new Date(session.time_period.begin_at);
@@ -119,8 +110,6 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
         endAt: session.time_period.end_at,
       };
     }).filter(session => session.duration > 0);
-
-    console.log('Debug - Final sessions:', sessions.length);
     return sessions;
   }, [selectedDate, period.entries, selectedSource]);
 
@@ -317,38 +306,45 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
               )}
             </h3>
 
-            {selectedDateSessions.length > 0 ? (
-              <div className="space-y-3">
-                {selectedDateSessions.map((session, index) => (
-                  <div key={index} className="p-3 border rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-3">
-                        <Badge variant={session.type === 'on_site' ? 'secondary' : 'outline'}>
-                          {session.type === 'on_site' ? 'On Campus' : 'Remote'}
-                        </Badge>
-                        <span className="font-medium text-sm">
+                        {selectedDateSessions.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Source</TableHead>
+                    <TableHead>Begin</TableHead>
+                    <TableHead>End</TableHead>
+                    <TableHead>Duration</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {selectedDateSessions.map((session, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Badge variant="outline">
                           {session.source.charAt(0).toUpperCase() + session.source.slice(1)}
-                        </span>
-                      </div>
-                      <span className="font-medium">
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(session.beginAt).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false
+                        })}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(session.endAt).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false
+                        })}
+                      </TableCell>
+                      <TableCell className="font-medium">
                         {formatDuration(session.duration)}
-                      </span>
-                    </div>
-                    <div className="text-xs text-muted-foreground space-y-1">
-                      <div>Begin: {new Date(session.beginAt).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })}</div>
-                      <div>End: {new Date(session.endAt).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 {selectedDate ? 'No sessions on this day' : 'Select a day to view sessions'}
