@@ -197,23 +197,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                 day_today: "",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
-              components={{
-                Day: ({ day, ...props }: { day: { date: Date } } & React.HTMLAttributes<HTMLDivElement>) => {
-                  const dayData = calendarData.find(d =>
-                    d.date.toDateString() === day.date.toDateString()
-                  );
-                  return (
-                    <div {...props}>
-                      <span className="relative w-full h-full flex items-center justify-center">
-                        {day.date.getDate()}
-                        {dayData?.hasSessions && (
-                          <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
-                        )}
-                      </span>
-                    </div>
-                  );
-                }
-              }}
+              // No custom components, use default Calendar from shadcn
             />
           </CardContent>
         </Card>
