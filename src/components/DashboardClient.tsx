@@ -114,6 +114,8 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     '#fb923c', // Orange-400
     '#f97316', // Orange-500
     '#c2410c', // Orange-600
+    '#f59e0b', // Amber-500
+    '#d97706', // Amber-600
   ];
 
   const barChartConfig = {
@@ -136,7 +138,7 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
 } satisfies ChartConfig;
 
 return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen gradient-bg">
       <TooltipProvider>
         {/* Header */}
         <Header
@@ -150,36 +152,41 @@ return (
           onSourceChange={(value) => setSelectedSource(value as SourceType)}
           />
         <div className="container mx-auto px-6 max-w-7xl">
-          <div className="space-y-6 mt-6">
+          <div className="space-y-8 mt-8">
             <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} currentPeriod={currentPeriod} />
 
             {/* Daily Attendance Chart */}
-            <div className="space-y-6">
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle>Daily Attendance in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
-                  <CardDescription>
+            <div className="space-y-8">
+              <Card className="card-modern group overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <CardHeader className="pb-4 relative z-10">
+                  <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                    Daily Attendance in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground/80">
                     {selectedSource === 'all'
                       ? 'Hours spent on campus per day (All sources)'
                       : `Hours spent on campus per day (${selectedSource} source)`
                     }
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <ChartContainer config={barChartConfig} className="h-[280px] !aspect-auto">
+                <CardContent className="pt-0 relative z-10">
+                  <ChartContainer config={barChartConfig} className="h-[320px] !aspect-auto">
                     <BarChart accessibilityLayer data={chartData}>
-                      <CartesianGrid vertical={false} />
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="currentColor" opacity={0.1} />
                       <XAxis
                         dataKey="date"
                         tickLine={false}
-                        tickMargin={10}
+                        tickMargin={12}
                         axisLine={false}
+                        tick={{ fontSize: 12, fill: 'currentColor', opacity: 0.7 }}
                         />
                       <YAxis
                         tickLine={false}
-                        tickMargin={10}
+                        tickMargin={12}
                         axisLine={false}
                         tickFormatter={(value: number) => `${value}h`}
+                        tick={{ fontSize: 12, fill: 'currentColor', opacity: 0.7 }}
                         />
                       <ChartTooltip
                         cursor={false}
@@ -192,7 +199,7 @@ return (
                         }}
                         />}
                         />
-                      <Bar dataKey="attendance" radius={4}>
+                      <Bar dataKey="attendance" radius={[4, 4, 0, 0]} className="transition-all duration-300">
                         {chartData.map((entry, index) => {
                             const value = entry.attendance;
                             let color;
@@ -201,7 +208,7 @@ return (
                             else if (value < 12) color = '#f97316'; // Orange-500 for medium
                             else color = '#ea580c'; // Orange-600 for high attendance
 
-                            return <Cell key={`cell-${index}`} fill={color} />;
+                            return <Cell key={`cell-${index}`} fill={color} className="transition-all duration-300 hover:opacity-80" />;
                         })}
                       </Bar>
                     </BarChart>
@@ -211,101 +218,141 @@ return (
 
             {/* Daily Attendance Calendar */}
             {currentPeriod && (
-                <AttendanceCalendar
-                  period={currentPeriod}
-                  selectedSource={selectedSource}
-                  month={(() => {
-                    const { year, month } = getMainMonth(currentPeriod);
-                    return new Date(year, month, 1);
-                  })()}
-                  onMonthChange={(date) => {
-                    const newMonthStr = data.attendance.find(period => {
-                      const { year, month } = getMainMonth(period);
-                      return year === date.getFullYear() && month === date.getMonth();
-                    })?.from_date;
-                    if (newMonthStr) setSelectedMonth(newMonthStr);
-                  }}
-                />
+                <Card className="card-modern group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10">
+                    <AttendanceCalendar
+                      period={currentPeriod}
+                      selectedSource={selectedSource}
+                      month={(() => {
+                        const { year, month } = getMainMonth(currentPeriod);
+                        return new Date(year, month, 1);
+                      })()}
+                      onMonthChange={(date) => {
+                        const newMonthStr = data.attendance.find(period => {
+                          const { year, month } = getMainMonth(period);
+                          return year === date.getFullYear() && month === date.getMonth();
+                        })?.from_date;
+                        if (newMonthStr) setSelectedMonth(newMonthStr);
+                      }}
+                    />
+                  </div>
+                </Card>
             )}
 
               {/* Sources Breakdown */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle>Sources Distribution in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
-                    <CardDescription>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="card-modern group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <CardHeader className="pb-4 relative z-10">
+                    <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                      Sources Distribution in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground/80">
                       {selectedSource === 'all'
                         ? 'Time spent by source type (All sources)'
                         : `Time spent by ${selectedSource} source`
                       }
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className="pt-0 relative z-10">
                     {sourceData.length > 0 ? (
-                      <ChartContainer config={pieChartConfig} className="mx-auto aspect-square max-h-[300px]">
+                      <ChartContainer config={pieChartConfig} className="mx-auto aspect-square max-h-[320px]">
                         <PieChart>
-                          <Pie data={sourceData} dataKey="value">
+                          <Pie
+                            data={sourceData}
+                            dataKey="value"
+                            innerRadius={60}
+                            outerRadius={120}
+                            paddingAngle={2}
+                          >
                             {sourceData.map((entry, index) => (
-                                <Cell key={`cell-${entry.name}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                                <Cell
+                                  key={`cell-${entry.name}`}
+                                  fill={PIE_COLORS[index % PIE_COLORS.length]}
+                                  className="transition-all duration-300 hover:opacity-80"
+                                />
                             ))}
                           </Pie>
                           <ChartLegend
                             content={<ChartLegendContent nameKey="name" payload={sourceData} />}
-                            className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+                            className="-translate-y-2 flex-wrap gap-3 *:basis-1/3 *:justify-center"
                           />
                         </PieChart>
                       </ChartContainer>
                     ) : (
-                      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                        No data available for the selected source in selected month
+                      <div className="flex items-center justify-center h-[320px] text-muted-foreground">
+                        <div className="text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/50 flex items-center justify-center">
+                            <span className="text-2xl">📊</span>
+                          </div>
+                          <p>No data available for the selected source in selected month</p>
+                        </div>
                       </div>
                     )}
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle>Sources Details in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
-                    <CardDescription>
+                <Card className="card-modern group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <CardHeader className="pb-4 relative z-10">
+                    <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                      Sources Details in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}
+                    </CardTitle>
+                    <CardDescription className="text-muted-foreground/80">
                       {selectedSource === 'all'
                         ? 'All sources'
                         : `${selectedSource} source only`
                       }
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="pt-0">
+                  <CardContent className="pt-0 relative z-10">
                     {sourceData.length > 0 ? (
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Source</TableHead>
-                          <TableHead>Type</TableHead>
-                          <TableHead>Duration</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {currentPeriod?.detailed_attendance
-                          .filter(detail => {
-                            if (detail.name === 'locations') return false;
-                            if (selectedSource === 'all') return true;
-                            return detail.name === selectedSource;
-                          })
-                          .map((detail, index) => (
-                            <TableRow key={index}>
-                              <TableCell className="font-medium">{detail.name}</TableCell>
-                              <TableCell>
-                                <Badge variant={detail.type === 'on_site' ? 'secondary' : 'outline'}>
-                                  {detail.type === 'on_site' ? 'On Campus' : 'Remote'}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{formatDuration(parseISODuration(detail.duration))}</TableCell>
-                            </TableRow>
-                          ))}
-                      </TableBody>
-                    </Table>
+                    <div className="overflow-hidden rounded-lg border border-border/30">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-muted/30">
+                            <TableHead className="font-semibold">Source</TableHead>
+                            <TableHead className="font-semibold">Type</TableHead>
+                            <TableHead className="font-semibold">Duration</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {currentPeriod?.detailed_attendance
+                            .filter(detail => {
+                              if (detail.name === 'locations') return false;
+                              if (selectedSource === 'all') return true;
+                              return detail.name === selectedSource;
+                            })
+                            .map((detail, index) => (
+                              <TableRow key={index} className="hover:bg-muted/20 transition-colors duration-200">
+                                <TableCell className="font-medium">{detail.name}</TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant={detail.type === 'on_site' ? 'secondary' : 'outline'}
+                                    className={`${
+                                      detail.type === 'on_site'
+                                        ? 'bg-green-500/10 text-green-600 border-green-500/20'
+                                        : 'bg-blue-500/10 text-blue-600 border-blue-500/20'
+                                    }`}
+                                  >
+                                    {detail.type === 'on_site' ? 'On Campus' : 'Remote'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="font-mono">{formatDuration(parseISODuration(detail.duration))}</TableCell>
+                              </TableRow>
+                            ))}
+                        </TableBody>
+                      </Table>
+                    </div>
                     ) : (
-                      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                        No data available for the selected source in selected month
+                      <div className="flex items-center justify-center h-[320px] text-muted-foreground">
+                        <div className="text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/50 flex items-center justify-center">
+                            <span className="text-2xl">📋</span>
+                          </div>
+                          <p>No data available for the selected source in selected month</p>
+                        </div>
                       </div>
                     )}
                   </CardContent>
@@ -314,7 +361,7 @@ return (
             </div>
           </div>
         </div>
-        <div className="mt-6">
+        <div className="mt-12">
           <Footer />
         </div>
       </TooltipProvider>
