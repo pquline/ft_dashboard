@@ -13,15 +13,7 @@ export function DashboardSkeleton() {
             <Skeleton className="w-8 h-8 md:w-10 md:h-10 rounded-lg" />
             <Skeleton className="h-8 w-32" />
           </div>
-          <div className="flex items-center space-x-6">
-            {/* Skeleton Filters */}
-            <div className="flex flex-row gap-4 items-center">
-              <Skeleton className="w-[120px] h-8" />
-              <Skeleton className="w-[120px] h-8" />
-            </div>
-            {/* Skeleton Avatar */}
-            <Skeleton className="w-10 h-10 rounded-full" />
-          </div>
+          <Skeleton className="w-10 h-10 rounded-full" />
         </div>
       </header>
 
