@@ -6,6 +6,7 @@ import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, 
 import { Header } from '@/components/Header';
 import { DashboardSummaryCards } from '@/components/DashboardSummaryCards';
 import { Footer } from '@/components/Footer';
+import { AttendanceCalendar } from '@/components/AttendanceCalendar';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -253,37 +254,10 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
                 </Card>
               </div>
 
-              {/* Daily Attendance Table */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle>Daily Attendance Details</CardTitle>
-                  <CardDescription>Showing all sources attendance per day</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Day</TableHead>
-                        <TableHead>Total</TableHead>
-                        <TableHead>On-Site</TableHead>
-                        <TableHead>Off-Site</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredDailyData.map((day, index) => (
-                        <TableRow key={index}>
-                          <TableCell className="font-medium">{day.date}</TableCell>
-                          <TableCell>{day.day}</TableCell>
-                          <TableCell>{formatDuration(day.total)}</TableCell>
-                          <TableCell>{formatDuration(day.onSite)}</TableCell>
-                          <TableCell>{formatDuration(day.offSite)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+              {/* Daily Attendance Calendar */}
+              {currentPeriod && (
+                <AttendanceCalendar period={currentPeriod} selectedSource={selectedSource} />
+              )}
             </div>
           </div>
         </div>
