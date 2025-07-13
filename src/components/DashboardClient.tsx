@@ -127,10 +127,12 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
       console.log('October 22nd 2024 hours:', oct22Data.total / 3600);
     }
 
+    // Check if this is October 2024 period
     if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
       console.log('=== OCTOBER 2024 PERIOD DETECTED ===');
       console.log('Raw daily attendances for October:', currentPeriod.daily_attendances);
 
+      // Find October 22nd in raw data
       const oct22Raw = currentPeriod.daily_attendances.find(day => {
         const date = new Date(day.date);
         return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
@@ -145,6 +147,31 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
           output: rawTotal,
           hours: rawTotal / 3600
         });
+
+        // Debug scaling for October 2024
+        if (selectedSource === 'all') {
+          const totalWithoutLocations = currentPeriod.detailed_attendance
+            .filter(detail => detail.name !== 'locations')
+            .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
+
+          const totalWithLocations = currentPeriod.daily_attendances.reduce((sum, day) =>
+            sum + parseISODuration(day.total_attendance), 0
+          );
+
+          const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
+            ? Math.min(totalWithoutLocations / totalWithLocations, 1)
+            : 1;
+
+          console.log('October 2024 scaling debug:', {
+            totalWithoutLocations,
+            totalWithLocations,
+            scaleFactor,
+            rawTotal,
+            scaledTotal: rawTotal * scaleFactor,
+            rawHours: rawTotal / 3600,
+            scaledHours: (rawTotal * scaleFactor) / 3600
+          });
+        }
       }
     }
   }
