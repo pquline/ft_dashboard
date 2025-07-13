@@ -88,8 +88,8 @@ export function DailyAttendanceChart({
             {/* Solid vibrant color per step, no gradients or highlights */}
             <defs>
               <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fb923c" stop-opacity="1" />
-                <stop offset="100%" stop-color="#fb923c" stop-opacity="1" />
+                <stop offset="0%" stop-color="#ff8000" stop-opacity="1" />
+                <stop offset="100%" stop-color="#ff8000" stop-opacity="1" />
               </linearGradient>
               <linearGradient id="bar-glass-blue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#2563eb" stop-opacity="1" />
