@@ -34,13 +34,6 @@ export function SourcesDetailsTable({
       return detail.name === selectedSource;
     }) || [];
 
-  const getRows = () => {
-    if (!currentPeriod || !currentPeriod.detailed_attendance) return [];
-    return currentPeriod.detailed_attendance.map((detail: AttendancePeriod['detailed_attendance'][number]) => ({
-      ...detail,
-    }));
-  };
-
   return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
