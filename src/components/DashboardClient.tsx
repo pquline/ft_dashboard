@@ -175,12 +175,12 @@ return (
                 <AttendanceCalendar
                   period={currentPeriod}
                   selectedSource={selectedSource}
-                  month={new Date(Date.UTC(
-                    new Date(currentPeriod.from_date).getUTCFullYear(),
-                    new Date(currentPeriod.from_date).getUTCMonth(),
-                    1
-                  ))}
+                  month={(() => {
+                    const d = new Date(currentPeriod.from_date);
+                    return new Date(d.getFullYear(), d.getMonth(), 1);
+                  })()}
                   onMonthChange={(date) => {
+                    // Find the period whose from_date is in the same local year and month as the selected date
                     const newMonthStr = data.attendance.find(period => {
                       const d = new Date(period.from_date);
                       return d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth();
