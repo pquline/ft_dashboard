@@ -115,7 +115,7 @@ export function SourcesDistributionChart({
                 {sourceData.map((entry, index) => (
                   <Cell
                     key={`cell-${entry.name}`}
-                    fill={selectedSource === 'all' ? 'url(#pie-glass-orange)' : 'url(#pie-glass-blue)'}
+                    fill={CHART_COLORS.PIE_COLORS[index % CHART_COLORS.PIE_COLORS.length]}
                     className="transition-all duration-300"
                   />
                 ))}
