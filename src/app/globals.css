@@ -44,7 +44,7 @@
 }
 
 :root {
-  --radius: 1.25rem;
+  --radius: 1rem;
   --background: oklch(0.99 0.005 285.823);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0 / 0.8);
@@ -371,3 +371,107 @@
 .btn-modern {
   @apply relative transition-all duration-300 ease-out;
 }
+
+.dropdown-glass {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 1.5px 4px 0 rgba(0,0,0,0.08);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dropdown-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.dark .dropdown-glass {
+  background: rgba(20, 20, 30, 0.65);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.32), 0 1.5px 4px 0 rgba(0,0,0,0.18);
+}
+
+.dark .dropdown-glass::before {
+  background: linear-gradient(135deg, rgba(40,40,60,0.10) 0%, rgba(20,20,30,0.18) 100%);
+}
+
+.btn-glass {
+  background: rgba(20, 20, 30, 0.45);
+  border: 1.5px solid rgba(255,255,255,0.10);
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  color: #fff;
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(20,20,30,0.18) 100%);
+  border-radius: inherit;
+  z-index: 1;
+}
+.btn-glass:hover, .btn-glass:focus {
+  background: rgba(20, 20, 30, 0.60);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.22);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-glass {
+  background: linear-gradient(90deg, rgba(40,40,60,0.18) 25%, rgba(80,80,120,0.22) 50%, rgba(40,40,60,0.18) 75%);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  animation: skeleton-shimmer 1.6s linear infinite;
+  background-size: 200% 100%;
+  opacity: 0.85;
+}
+
+.card-glass {
+  background: rgba(20, 20, 30, 0.55);
+  border: 1.5px solid rgba(255,255,255,0.10);
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.card-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(40,40,60,0.10) 0%, rgba(20,20,30,0.18) 100%);
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 2px #818cf888) drop-shadow(0 0 1px #fff5);
+}
+
+/* TEMP: Force pure black background for color vibrancy test */
+body { background: #000 !important; }
