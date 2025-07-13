@@ -142,7 +142,7 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     ...sourceData.reduce((config, item, index) => ({
       ...config,
       [item.name]: {
-        label: item.name.charAt(0).toUpperCase() + item.name.slice(1),
+        label: item.name,
         color: PIE_COLORS[index % PIE_COLORS.length],
       },
     }), {}),
@@ -174,7 +174,7 @@ return (
                   <CardDescription>
                     {selectedSource === 'all'
                       ? 'Hours spent on campus per day (All sources)'
-                      : `Hours spent on campus per day (${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source)`
+                      : `Hours spent on campus per day (${selectedSource} source)`
                     }
                   </CardDescription>
                 </CardHeader>
@@ -282,7 +282,7 @@ return (
                     <CardDescription>
                       {selectedSource === 'all'
                         ? 'All sources'
-                        : `${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source only`
+                        : `${selectedSource} source only`
                       }
                     </CardDescription>
                   </CardHeader>

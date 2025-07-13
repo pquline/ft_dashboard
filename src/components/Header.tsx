@@ -93,7 +93,7 @@ export function Header({
                   <SelectItem value="all">All Sources</SelectItem>
                   {sources.map((source) => (
                     <SelectItem key={source} value={source}>
-                      {source.charAt(0).toUpperCase() + source.slice(1)}
+                      {source}
                     </SelectItem>
                   ))}
                 </SelectContent>
