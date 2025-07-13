@@ -10,10 +10,10 @@ export function DashboardSkeleton() {
       <header className="card-glass border-b border-white/10 shadow-lg w-full rounded-b-xl mb-6">
         <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-3 w-full md:w-auto">
-            <Skeleton className="w-8 h-8 md:w-10 md:h-10 rounded-lg skeleton-glass bg-white/60 dark:bg-[rgba(24,28,40,0.55)]" />
-            <Skeleton className="h-8 w-32 skeleton-glass bg-white/60 dark:bg-[rgba(24,28,40,0.55)]" />
+            <Skeleton className="w-8 h-8 md:w-10 md:h-10 rounded-lg card-modern glass-hover border border-white/10 shadow-sm" />
+            <Skeleton className="h-8 w-32 rounded-lg card-modern glass-hover border border-white/10 shadow-sm" />
           </div>
-          <Skeleton className="w-10 h-10 rounded-full skeleton-glass bg-white/60 dark:bg-[rgba(24,28,40,0.55)]" />
+          <Skeleton className="w-10 h-10 rounded-full card-modern glass-hover border border-white/10 shadow-sm" />
         </div>
       </header>
 
