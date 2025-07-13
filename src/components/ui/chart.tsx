@@ -314,7 +314,7 @@ function ChartLegendContent({
           } else if (color.includes('pie-glass-green')) {
             swatchStyle = { background: '#00ff99' };
           } else if (color.includes('pie-glass-indigo')) {
-            swatchStyle = { background: '#a18cd1' };
+            swatchStyle = { background: '#4f46e5' };
           }
         } else if (color) {
           swatchStyle = { background: color };

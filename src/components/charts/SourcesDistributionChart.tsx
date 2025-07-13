@@ -85,8 +85,8 @@ export function SourcesDistributionChart({
                   <stop offset="100%" stop-color="#005bea" stop-opacity="0.95" />
                 </linearGradient>
                 <linearGradient id="pie-glass-indigo" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#a18cd1" stop-opacity="1" />
-                  <stop offset="100%" stop-color="#fbc2eb" stop-opacity="0.95" />
+                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="1" />
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.95" />
                 </linearGradient>
                 <linearGradient id="pie-glass-green" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#00ff99" stop-opacity="1" />
