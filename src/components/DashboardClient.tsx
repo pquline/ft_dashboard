@@ -350,9 +350,6 @@ export function DashboardClient({
 
             {/* Daily Attendance Calendar */}
             {currentPeriod && (
-              <Card className="card-modern group overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative z-10">
                   <AttendanceCalendar
                     period={currentPeriod}
                     selectedSource={selectedSource}
@@ -370,8 +367,6 @@ export function DashboardClient({
                       if (newMonthStr) setSelectedMonth(newMonthStr);
                     }}
                   />
-                </div>
-              </Card>
             )}
 
             {/* Sources Breakdown */}

@@ -6,7 +6,6 @@ import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDuration, getPeriodMonthName } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
-import { CalendarDays, Clock, MapPin } from 'lucide-react';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
@@ -175,38 +174,28 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {/* Calendar Card */}
       <div className="lg:col-span-2">
-        <Card className="card-modern group overflow-hidden h-[450px]">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <CardHeader className="pb-4 relative z-10">
-            <div className="flex items-center space-x-2">
-              <CalendarDays className="h-5 w-5 text-green-500" />
-              <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                Attendance Calendar
-              </CardTitle>
-            </div>
-            <CardDescription className="text-muted-foreground/80">
+        <Card className="h-[450px] flex flex-col">
+          <CardHeader className="pb-3">
+            <CardTitle>Attendance Calendar in {getPeriodMonthName(period.from_date, period.to_date)}</CardTitle>
+            <CardDescription>
               {selectedSource === 'all'
                 ? 'Click on any day to view session details (All sources)'
                 : `Click on any day to view session details (${selectedSource} source)`
               }
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex-1 flex items-center justify-center h-full relative z-10">
+          <CardContent className="flex-1 flex items-center justify-center h-full">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
               month={month}
               onMonthChange={onMonthChange}
-              className="rounded-lg border border-border/30 bg-card/50 backdrop-blur-sm"
+              className="rounded-md border"
               classNames={{
-                day_selected: "bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-all duration-200",
-                day_today: "bg-accent text-accent-foreground rounded-full border-2 border-primary/50",
-                day: "h-10 w-10 p-0 font-normal aria-selected:opacity-100 hover:bg-accent/50 transition-all duration-200 rounded-full",
-                head_cell: "text-muted-foreground font-medium",
-                nav_button: "hover:bg-accent/50 transition-all duration-200",
-                nav_button_previous: "hover:bg-accent/50 transition-all duration-200",
-                nav_button_next: "hover:bg-accent/50 transition-all duration-200",
+                day_selected: "bg-primary text-primary-foreground rounded-full",
+                day_today: "",
+                day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
             />
           </CardContent>
@@ -215,16 +204,10 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
       {/* Sessions Card */}
       <div className="lg:col-span-3">
-        <Card className="card-modern group overflow-hidden h-[450px]">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <CardHeader className="pb-4 relative z-10">
-            <div className="flex items-center space-x-2">
-              <Clock className="h-5 w-5 text-blue-500" />
-              <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                Sessions
-              </CardTitle>
-            </div>
-            <CardDescription className="text-muted-foreground/80">
+        <Card className="h-[450px] flex flex-col">
+          <CardHeader className="pb-3">
+            <CardTitle>Sessions</CardTitle>
+            <CardDescription>
               {selectedDate ? (
                 <>
                   Sessions for {selectedDate.toLocaleDateString('en-US', {
@@ -239,45 +222,41 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               )}
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-0 flex-1 overflow-auto relative z-10">
+          <CardContent className="pt-0 flex-1 overflow-auto">
             {selectedDateSessions.length > 0 ? (
-              <div className='overflow-hidden rounded-lg border border-border/30 bg-card/50 backdrop-blur-sm'>
+              <div className='border rounded-md border-border'>
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-muted/30">
-                      <TableHead className="font-semibold">Source</TableHead>
-                      <TableHead className="font-semibold">Begin</TableHead>
-                      <TableHead className="font-semibold">End</TableHead>
-                      <TableHead className="font-semibold">Duration</TableHead>
+                    <TableRow>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Begin</TableHead>
+                      <TableHead>End</TableHead>
+                      <TableHead>Duration</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {selectedDateSessions.map((session, index) => (
-                      <TableRow key={index} className="hover:bg-muted/20 transition-colors duration-200">
+                      <TableRow key={index}>
                         <TableCell>
-                          <Badge
-                            variant="outline"
-                            className="bg-blue-500/10 text-blue-600 border-blue-500/20"
-                          >
-                            <MapPin className="w-3 h-3 mr-1" />
+                          <Badge variant="outline">
                             {session.source}
                           </Badge>
                         </TableCell>
-                        <TableCell className="font-mono">
+                        <TableCell>
                           {new Date(session.beginAt).toLocaleTimeString('en-US', {
                             hour: '2-digit',
                             minute: '2-digit',
                             hour12: false
                           })}
                         </TableCell>
-                        <TableCell className="font-mono">
+                        <TableCell>
                           {new Date(session.endAt).toLocaleTimeString('en-US', {
                             hour: '2-digit',
                             minute: '2-digit',
                             hour12: false
                           })}
                         </TableCell>
-                        <TableCell className="font-mono font-medium text-primary">
+                        <TableCell className="font-medium">
                           {formatDuration(session.duration)}
                         </TableCell>
                       </TableRow>
@@ -286,13 +265,8 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                 </Table>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
-                <div className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/50 flex items-center justify-center">
-                    <span className="text-2xl">📅</span>
-                  </div>
-                  <p>{selectedDate ? 'No sessions on this day for selected source' : 'Select a day to view sessions'}</p>
-                </div>
+              <div className="py-8 text-muted-foreground text-center">
+                {selectedDate ? 'No sessions on this day for selected source' : 'Select a day to view sessions'}
               </div>
             )}
           </CardContent>
