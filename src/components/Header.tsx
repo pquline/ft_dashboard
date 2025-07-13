@@ -70,36 +70,7 @@ export function Header({
         </div>
 
         <div className="flex items-center space-x-6">
-          {/* Filters - only show if props are provided */}
-          {months && selectedMonth && onMonthChange && sources && selectedSource && onSourceChange && (
-            <div className="flex flex-row gap-4 items-center">
-              <Select value={selectedMonth} onValueChange={onMonthChange}>
-                <SelectTrigger className="w-[120px] h-8 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {months.map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
-                      {month.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={selectedSource} onValueChange={onSourceChange}>
-                <SelectTrigger className="w-[120px] h-8 text-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
-                  {sources.map((source) => (
-                    <SelectItem key={source} value={source}>
-                      {source}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          {/* Remove the filters from header - they will be in dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -116,6 +87,52 @@ export function Header({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+              {/* Month Selector */}
+              {months && selectedMonth && onMonthChange && (
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <span>Month</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {months.map((month) => (
+                      <DropdownMenuItem
+                        key={month.value}
+                        onClick={() => onMonthChange(month.value)}
+                        className={selectedMonth === month.value ? "bg-accent" : ""}
+                      >
+                        {month.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              )}
+
+              {/* Source Selector */}
+              {sources && selectedSource && onSourceChange && (
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <span>Source</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem
+                      onClick={() => onSourceChange("all")}
+                      className={selectedSource === "all" ? "bg-accent" : ""}
+                    >
+                      All Sources
+                    </DropdownMenuItem>
+                    {sources.map((source) => (
+                      <DropdownMenuItem
+                        key={source}
+                        onClick={() => onSourceChange(source)}
+                        className={selectedSource === source ? "bg-accent" : ""}
+                      >
+                        {source}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              )}
+
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-4 h-4 w-4" />
