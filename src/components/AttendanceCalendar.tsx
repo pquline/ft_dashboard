@@ -62,7 +62,11 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     const selectedDateSessions = useMemo(() => {
     if (!selectedDate) return [];
 
-    const dateString = selectedDate.toISOString().split('T')[0];
+    // Use local date string to avoid timezone issues
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
 
     // Try exact match first
     let rawDayData = period.daily_attendances.find(day => day.date === dateString);
@@ -71,10 +75,9 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     if (!rawDayData) {
       rawDayData = period.daily_attendances.find(day => {
         const dayDate = new Date(day.date);
-        const selectedDateObj = new Date(selectedDate);
-        return dayDate.getFullYear() === selectedDateObj.getFullYear() &&
-               dayDate.getMonth() === selectedDateObj.getMonth() &&
-               dayDate.getDate() === selectedDateObj.getDate();
+        return dayDate.getFullYear() === year &&
+               dayDate.getMonth() === selectedDate.getMonth() &&
+               dayDate.getDate() === selectedDate.getDate();
       });
     }
 
