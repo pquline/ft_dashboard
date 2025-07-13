@@ -24,7 +24,7 @@ export default function LoginPage() {
       document.cookie = `session=${sessionCookie}; path=/; max-age=86400`; // 24 hours
       const response = await fetch('/api/attendance');
       if (response.ok) {
-        router.push('/');
+        window.location.href = '/';
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to authenticate');

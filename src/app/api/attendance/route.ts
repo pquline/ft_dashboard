@@ -2,17 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    // Get session cookie from the request
     const sessionCookie = request.cookies.get('session')?.value;
 
-    if (!sessionCookie) {
-      return NextResponse.json(
-        { error: 'Session cookie not found. Please log in first.' },
-        { status: 401 }
-      );
-    }
-
-    // Fetch data from 42 API
     const response = await fetch('https://dashboard.42paris.fr/api/attendance', {
       headers: {
         'accept': '*/*',
@@ -31,6 +22,12 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        return NextResponse.json(
+          { error: 'Invalid session. Please log in again.' },
+          { status: 401 }
+        );
+      }
       throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
