@@ -211,3 +211,31 @@ export function filterDailyAttendancesToMainMonth(period: AttendancePeriod, dail
     return d.getFullYear() === year && d.getMonth() === month;
   });
 }
+
+function getTimestamp() {
+  const now = new Date();
+  return now.toLocaleTimeString('fr-FR', { hour12: false });
+}
+
+export const devLog = {
+  log: (...args: unknown[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${getTimestamp()}] [LOG]:`, ...args);
+    }
+  },
+  error: (...args: unknown[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`[${getTimestamp()}] [ERROR]:`, ...args);
+    }
+  },
+  warn: (...args: unknown[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[${getTimestamp()}] [WARN]:`, ...args);
+    }
+  },
+  info: (...args: unknown[]) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.info(`[${getTimestamp()}] [INFO]:`, ...args);
+    }
+  }
+};

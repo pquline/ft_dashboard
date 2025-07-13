@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { devLog } from '@/lib/utils';
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching attendance data:', error);
+    devLog.error('Error fetching attendance data:', error);
     return NextResponse.json(
       { error: 'Failed to fetch attendance data' },
       { status: 500 }

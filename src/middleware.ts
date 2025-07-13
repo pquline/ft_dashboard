@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { devLog } from '@/lib/utils';
 
 async function validateSession(sessionCookie: string): Promise<boolean> {
   try {
@@ -14,7 +15,7 @@ async function validateSession(sessionCookie: string): Promise<boolean> {
     });
     return response.ok;
   } catch (error) {
-    console.error('Session validation error:', error);
+    devLog.error('Session validation error:', error);
     return false;
   }
 }
@@ -23,38 +24,38 @@ export async function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('session');
   const isLoginPage = request.nextUrl.pathname === '/login';
 
-  console.log('Middleware - pathname:', request.nextUrl.pathname);
-  console.log('Middleware - sessionCookie:', sessionCookie ? 'exists' : 'missing');
-  console.log('Middleware - isLoginPage:', isLoginPage);
+  devLog.log('Middleware - pathname:', request.nextUrl.pathname);
+  devLog.log('Middleware - sessionCookie:', sessionCookie ? 'exists' : 'missing');
+  devLog.log('Middleware - isLoginPage:', isLoginPage);
 
   if (!sessionCookie && !isLoginPage) {
-    console.log('Middleware - Redirecting to /login (no session)');
+    devLog.log('Middleware - Redirecting to /login (no session)');
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
   if (sessionCookie && !isLoginPage) {
-    console.log('Middleware - Validating session...');
+    devLog.log('Middleware - Validating session...');
     const isValid = await validateSession(sessionCookie.value);
-    console.log('Middleware - Session valid:', isValid);
+    devLog.log('Middleware - Session valid:', isValid);
 
     if (!isValid) {
-      console.log('Middleware - Invalid session, redirecting to /login');
+      devLog.log('Middleware - Invalid session, redirecting to /login');
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
   if (sessionCookie && isLoginPage) {
-    console.log('Middleware - Validating session for login page...');
+    devLog.log('Middleware - Validating session for login page...');
     const isValid = await validateSession(sessionCookie.value);
-    console.log('Middleware - Session valid for login page:', isValid);
+    devLog.log('Middleware - Session valid for login page:', isValid);
 
     if (isValid) {
-      console.log('Middleware - Redirecting to / (has valid session on login page)');
+      devLog.log('Middleware - Redirecting to / (has valid session on login page)');
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
-  console.log('Middleware - Continuing to page');
+  devLog.log('Middleware - Continuing to page');
   return NextResponse.next();
 }
 

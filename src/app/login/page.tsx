@@ -49,7 +49,7 @@ export default function LoginPage() {
               <Input
                 id="session"
                 type="text"
-                placeholder="C00k13fcgq4iwtAC5cpVYsunZYKwDjtnD6nwNsmgjzw"
+                placeholder="535510n_c00k13"
                 value={sessionCookie}
                 onChange={(e) => setSessionCookie(e.target.value)}
                 required
