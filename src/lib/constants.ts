@@ -1,19 +1,21 @@
 export const CHART_COLORS = {
   PIE_COLORS: [
-    "#ea580c", // Orange-600
-    "#fb923c", // Orange-400
-    "#f97316", // Orange-500
-    "#c2410c", // Orange-600
-    "#f59e0b", // Amber-500
-    "#d97706", // Amber-600
+    // Glassmorphic-inspired semi-transparent gradients (for SVG <defs>)
+    'url(#pie-glass-orange)', // Orange glass gradient
+    'url(#pie-glass-amber)',  // Amber glass gradient
+    'url(#pie-glass-blue)',   // Blue glass gradient
+    'url(#pie-glass-green)',  // Green glass gradient
+    'url(#pie-glass-purple)', // Purple glass gradient
+    'url(#pie-glass-pink)',   // Pink glass gradient
   ],
   BAR_COLORS: {
-    LOW: "#fdba74",      // Orange-300 for low attendance (< 4h)
-    MEDIUM_LOW: "#fb923c", // Orange-400 for medium-low (4-8h)
-    MEDIUM: "#f97316",     // Orange-500 for medium (8-12h)
-    HIGH: "#ea580c",       // Orange-600 for high attendance (>= 12h)
-    DEFAULT: "#8884d8",    // Default purple for all sources
+    LOW: 'url(#bar-glass-low)',         // Soft orange glass gradient
+    MEDIUM_LOW: 'url(#bar-glass-medlow)', // Amber glass gradient
+    MEDIUM: 'url(#bar-glass-medium)',     // Blue glass gradient
+    HIGH: 'url(#bar-glass-high)',         // Green glass gradient
+    DEFAULT: 'url(#bar-glass-default)',   // Neutral glass gradient
   },
+  // For dark mode, define additional gradients in the chart SVG <defs> and reference as needed
 } as const;
 
 export const ATTENDANCE_THRESHOLDS = {

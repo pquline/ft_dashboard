@@ -74,6 +74,33 @@ export function SourcesDistributionChart({
             className="mx-auto aspect-square max-h-[320px]"
           >
             <PieChart>
+              {/* Glassmorphic SVG gradients */}
+              <defs>
+                <linearGradient id="pie-glass-orange" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fff8f1" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#fb923c" stop-opacity="0.5" />
+                </linearGradient>
+                <linearGradient id="pie-glass-amber" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fefce8" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.5" />
+                </linearGradient>
+                <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.5" />
+                </linearGradient>
+                <linearGradient id="pie-glass-green" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#dcfce7" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.5" />
+                </linearGradient>
+                <linearGradient id="pie-glass-purple" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#ede9fe" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#a5b4fc" stop-opacity="0.5" />
+                </linearGradient>
+                <linearGradient id="pie-glass-pink" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fdf2f8" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#f472b6" stop-opacity="0.5" />
+                </linearGradient>
+              </defs>
               <Pie
                 data={sourceData}
                 dataKey="value"
