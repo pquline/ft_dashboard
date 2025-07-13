@@ -308,13 +308,13 @@ function ChartLegendContent({
         if (typeof color === 'string' && color.startsWith('url(')) {
           // Map url(#pie-glass-*) to a matching CSS linear-gradient for legend swatch
           if (color.includes('pie-glass-blue')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #00c6fb 0%, #005bea 100%)' };
+            swatchStyle = { background: '#00c6fb' };
           } else if (color.includes('pie-glass-orange')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #ff9900 0%, #ffea00 100%)' };
+            swatchStyle = { background: '#ff9900' };
           } else if (color.includes('pie-glass-green')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #00ff99 0%, #00e676 100%)' };
+            swatchStyle = { background: '#00ff99' };
           } else if (color.includes('pie-glass-indigo')) {
-            swatchStyle = { background: 'linear-gradient(180deg, #a18cd1 0%, #fbc2eb 100%)' };
+            swatchStyle = { background: '#a18cd1' };
           }
         } else if (color) {
           swatchStyle = { background: color };
