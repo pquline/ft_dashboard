@@ -11,7 +11,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Calendar, LogOut, Moon, Server, Sun, Sparkles } from 'lucide-react';
+import { Calendar, LogOut, Moon, Server, Sun, BarChart } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 
@@ -57,8 +57,9 @@ export function Header({
       <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
           <Link href="/" className="group">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 btn-modern">
-              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-[rgba(24,28,40,0.55)] dark:bg-[rgba(255,255,255,0.10)] border border-white/10 shadow-2xl rounded-xl flex items-center justify-center group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 btn-modern relative overflow-hidden backdrop-blur-xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-70 pointer-events-none" />
+              <BarChart className="w-5 h-5 md:w-6 md:h-6 text-primary drop-shadow-glow" strokeWidth={3.5} />
             </div>
           </Link>
           <Link href="/" className="group">
