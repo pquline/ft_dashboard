@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, MapPin, Wifi, TrendingUp, TrendingDown } from 'lucide-react';
+import { Clock, MapPin, Wifi } from 'lucide-react';
 import { getPeriodMonthName } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
 

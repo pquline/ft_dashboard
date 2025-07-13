@@ -16,10 +16,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getPeriodMonthName, parseISODuration, formatDuration } from "@/lib/utils";
-import { SourceType } from "@/types/attendance";
+import { AttendancePeriod, SourceType } from "@/types/attendance";
 
 interface SourcesDetailsTableProps {
-  currentPeriod: any;
+  currentPeriod: AttendancePeriod;
   selectedSource: SourceType;
 }
 

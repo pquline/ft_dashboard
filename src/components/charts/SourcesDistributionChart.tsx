@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { getPeriodMonthName } from "@/lib/utils";
 import { CHART_COLORS } from "@/lib/constants";
-import { SourceType } from "@/types/attendance";
+import { SourceType, AttendancePeriod } from "@/types/attendance";
 
 interface SourcesDistributionChartProps {
   sourceData: Array<{
@@ -27,7 +27,7 @@ interface SourcesDistributionChartProps {
     value: number;
     type: "none";
   }>;
-  currentPeriod: any;
+  currentPeriod: AttendancePeriod;
   selectedSource: SourceType;
 }
 

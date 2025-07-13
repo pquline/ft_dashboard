@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, Github } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export function Footer() {
   return (

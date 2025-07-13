@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -94,7 +94,7 @@ export default function LoginPage() {
                     </li>
                     <li>Open Developer Tools (F12)</li>
                     <li>Go to Application/Storage → Cookies</li>
-                    <li>Copy the value of the "session" cookie</li>
+                    <li>Copy the value of the &quot;session&quot; cookie</li>
                   </ol>
                 </AlertDescription>
               </Alert>

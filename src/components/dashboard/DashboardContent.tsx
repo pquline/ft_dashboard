@@ -5,11 +5,11 @@ import { DailyAttendanceChart } from "@/components/charts/DailyAttendanceChart";
 import { SourcesDistributionChart } from "@/components/charts/SourcesDistributionChart";
 import { SourcesDetailsTable } from "@/components/tables/SourcesDetailsTable";
 import { getMainMonth } from "@/lib/utils";
-import { AttendanceData, SourceType } from "@/types/attendance";
+import { AttendanceData, SourceType, AttendancePeriod } from "@/types/attendance";
 
 interface DashboardContentProps {
   data: AttendanceData;
-  currentPeriod: any;
+  currentPeriod: AttendancePeriod;
   selectedSource: SourceType;
   availableSources: string[];
   total: string;
@@ -40,7 +40,7 @@ export function DashboardContent({
   chartData,
   sourceData,
   onMonthChange,
-}: DashboardContentProps) {
+}: Omit<DashboardContentProps, 'currentPeriod'> & { currentPeriod: AttendancePeriod }) {
   return (
     <div className="container mx-auto px-6 max-w-7xl">
       <div className="space-y-8 mt-8 animate-fade-in-up">

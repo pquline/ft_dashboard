@@ -5,7 +5,6 @@ import {
   formatDuration,
   getPeriodMonthName,
   filterDailyAttendancesToMainMonth,
-  getMainMonth,
 } from "@/lib/utils";
 import {
   calculateTotalAttendanceForSource,

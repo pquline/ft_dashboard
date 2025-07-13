@@ -23,6 +23,7 @@ import {
 import { getPeriodMonthName } from "@/lib/utils";
 import { CHART_COLORS, ATTENDANCE_THRESHOLDS } from "@/lib/constants";
 import { SourceType } from "@/types/attendance";
+import { AttendancePeriod } from '@/types/attendance';
 
 interface DailyAttendanceChartProps {
   chartData: Array<{
@@ -31,7 +32,7 @@ interface DailyAttendanceChartProps {
     onSite: number;
     offSite: number;
   }>;
-  currentPeriod: any;
+  currentPeriod: AttendancePeriod;
   selectedSource: SourceType;
   availableSources: string[];
 }
@@ -53,13 +54,6 @@ export function DailyAttendanceChart({
             ],
     },
   } satisfies ChartConfig;
-
-  const getBarColor = (value: number) => {
-    if (value < ATTENDANCE_THRESHOLDS.LOW) return CHART_COLORS.BAR_COLORS.LOW;
-    if (value < ATTENDANCE_THRESHOLDS.MEDIUM_LOW) return CHART_COLORS.BAR_COLORS.MEDIUM_LOW;
-    if (value < ATTENDANCE_THRESHOLDS.MEDIUM) return CHART_COLORS.BAR_COLORS.MEDIUM;
-    return CHART_COLORS.BAR_COLORS.HIGH;
-  };
 
   return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
