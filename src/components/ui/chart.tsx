@@ -196,7 +196,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
+        "border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl glass-tooltip",
         className
       )}
     >
@@ -275,14 +275,12 @@ const ChartLegend = RechartsPrimitive.Legend
 
 function ChartLegendContent({
   className,
-  hideIcon = false,
   payload,
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> & {
   payload?: TooltipPayloadEntry[];
   verticalAlign?: "top" | "bottom";
-  hideIcon?: boolean;
   nameKey?: string;
 }) {
   const { config } = useChart();
@@ -294,7 +292,7 @@ function ChartLegendContent({
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-4",
+        "flex items-center justify-center gap-4 bg-white/30 dark:bg-neutral-900/30 backdrop-blur-md rounded-xl px-3 py-2 border border-border/40 glass-legend",
         verticalAlign === "top" ? "pb-3" : "pt-3",
         className
       )}
@@ -303,24 +301,33 @@ function ChartLegendContent({
         const key = `${nameKey || item.dataKey || "value"}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
         const color = getPayloadColor(item);
-
+        // If color is a gradient url, render a span with the matching gradient as background
+        let swatchStyle = {};
+        if (typeof color === 'string' && color.startsWith('url(')) {
+          // Map url(#pie-glass-*) to a matching CSS linear-gradient for legend swatch
+          if (color.includes('pie-glass-blue')) {
+            swatchStyle = { background: '#005bea' };
+          } else if (color.includes('pie-glass-orange')) {
+            swatchStyle = { background: '#ff8000' };
+          } else if (color.includes('pie-glass-green')) {
+            swatchStyle = { background: '#00e676' };
+          } else if (color.includes('pie-glass-indigo')) {
+            swatchStyle = { background: '#6366f1' };
+          }
+        } else if (color) {
+          swatchStyle = { background: color };
+        }
         return (
           <div
             key={String(item.value) + String(idx)}
             className={cn(
-              "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3"
+              "flex items-center gap-1.5"
             )}
           >
-            {itemConfig?.icon && !hideIcon ? (
-              <itemConfig.icon />
-            ) : (
-              <div
-                className="h-2 w-2 shrink-0 rounded-[2px]"
-                style={{
-                  backgroundColor: color,
-                }}
-              />
-            )}
+            <span
+              className="h-3 w-3 shrink-0 rounded-[2px] inline-block border border-border"
+              style={swatchStyle}
+            />
             {itemConfig?.label}
           </div>
         );

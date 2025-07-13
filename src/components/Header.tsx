@@ -11,7 +11,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Calendar, LogOut, Moon, Server, Sun } from 'lucide-react';
+import { Calendar, LogOut, Moon, Server, Sun, BarChart } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 
@@ -53,20 +53,33 @@ export function Header({
   }
 
   return (
-    <header className="bg-white dark:bg-secondary/50 backdrop-blur-sm border-b w-full" suppressHydrationWarning>
+    <header className="glass border-b border-border/50 backdrop-blur-xl sticky top-0 z-50 w-full animate-fade-in-up shadow-lg">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
-          <Link href="/">
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm md:text-base">FT</span>
+        <div className="flex items-center gap-4">
+          <Link href="/" className="group">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 shadow-2xl rounded-xl flex items-center justify-center group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 btn-modern relative overflow-hidden backdrop-blur-xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-70 pointer-events-none" />
+              <BarChart className="w-5 h-5 md:w-6 md:h-6 text-primary drop-shadow-glow" strokeWidth={3.5} />
             </div>
           </Link>
-          <Link href="/" className="text-lg font-semibold">
-            <h1 className="text-xl md:text-2xl font-bold text-primary-900 dark:text-primary-100">ft_dashboard</h1>
+          <Link href="/" className="group">
+            <h1 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-all duration-300">
+              ft_dashboard
+            </h1>
           </Link>
         </div>
 
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
+          {/* Quick Stats Display */}
+          <div className="hidden md:flex items-center space-x-3 px-4 py-2 rounded-lg glass-hover">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-slow"></div>
+              <span className="text-sm font-medium text-foreground/80">Live</span>
+            </div>
+            <div className="w-px h-4 bg-border/50"></div>
+            <span className="text-sm text-muted-foreground">{login}</span>
+          </div>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button

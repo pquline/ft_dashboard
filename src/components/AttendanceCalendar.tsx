@@ -174,7 +174,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {/* Calendar Card */}
       <div className="lg:col-span-2">
-        <Card className="h-[450px] flex flex-col">
+        <Card className="card-modern glass-hover h-[450px] flex flex-col animate-slide-in-right">
           <CardHeader className="pb-3">
             <CardTitle>Attendance Calendar in {getPeriodMonthName(period.from_date, period.to_date)}</CardTitle>
             <CardDescription>
@@ -193,7 +193,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               onMonthChange={onMonthChange}
               className="rounded-md border"
               classNames={{
-                day_selected: "bg-primary text-primary-foreground rounded-full",
+                day_selected: "bg-primary text-primary-foreground rounded-md",
                 day_today: "",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
@@ -204,7 +204,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
       {/* Sessions Card */}
       <div className="lg:col-span-3">
-        <Card className="h-[450px] flex flex-col">
+        <Card className="card-modern glass-hover h-[450px] flex flex-col animate-slide-in-right">
           <CardHeader className="pb-3">
             <CardTitle>Sessions</CardTitle>
             <CardDescription>
@@ -224,7 +224,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
           </CardHeader>
           <CardContent className="pt-0 flex-1 overflow-auto">
             {selectedDateSessions.length > 0 ? (
-              <div className='border rounded-md border-border'>
+              <div className='border rounded-md border-border/50 p-2 glass'>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -236,9 +236,9 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                   </TableHeader>
                   <TableBody>
                     {selectedDateSessions.map((session, index) => (
-                      <TableRow key={index}>
+                      <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
                         <TableCell>
-                          <Badge variant="outline">
+                          <Badge variant="outline" className="glass-hover">
                             {session.source}
                           </Badge>
                         </TableCell>
