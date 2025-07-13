@@ -198,19 +198,19 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
               components={{
-                DayContent: ({ date, ...props }: { date: Date } & React.HTMLAttributes<HTMLSpanElement>) => {
+                Day: ({ date, ...props }: { date: Date } & React.HTMLAttributes<HTMLButtonElement>) => {
                   const dayData = calendarData.find(day =>
                     day.date.toDateString() === date.toDateString()
                   );
-                  if (!dayData) return <span {...props}>{date.getDate()}</span>;
-
                   return (
-                    <span {...props} className="relative w-full h-full flex items-center justify-center">
-                      {date.getDate()}
-                      {dayData.hasSessions && (
-                        <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
-                      )}
-                    </span>
+                    <button {...props}>
+                      <span className="relative w-full h-full flex items-center justify-center">
+                        {date.getDate()}
+                        {dayData?.hasSessions && (
+                          <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
+                        )}
+                      </span>
+                    </button>
                   );
                 }
               }}
