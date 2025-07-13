@@ -263,28 +263,15 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                   const dayData = calendarData.find(day =>
                     day.date.toDateString() === date.toDateString()
                   );
-                  const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString();
-
-                  if (!dayData) return <div {...props} />;
+                  if (!dayData) return <span {...props}>{date.getDate()}</span>;
 
                   return (
-                    <div
-                      {...props}
-                      className={[
-                        'relative h-9 w-9 flex items-center justify-center',
-                        props.className,
-                        isSelected
-                          ? ''
-                          : dayData.hasSessions
-                          ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
-                          : ''
-                      ].filter(Boolean).join(' ')}
-                    >
+                    <span {...props} className="relative w-full h-full flex items-center justify-center">
                       {date.getDate()}
-                      {dayData.hasSessions && !isSelected && (
-                        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
+                      {dayData.hasSessions && (
+                        <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
                       )}
-                    </div>
+                    </span>
                   );
                 }
               }}
