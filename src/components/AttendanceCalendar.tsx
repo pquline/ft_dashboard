@@ -250,13 +250,8 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
         }
       }
     } else {
-      // For other months, select first day with sessions or first day of month
-      const firstDayWithSessions = calendarData.find(day => day.hasSessions);
-      if (firstDayWithSessions) {
-        setSelectedDate(firstDayWithSessions.date);
-      } else {
-        setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
-      }
+      // For other months, always start with the 1st day of the month
+      setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
     }
   }, [month, calendarData]);
 
