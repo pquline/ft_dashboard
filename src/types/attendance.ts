@@ -5,6 +5,17 @@ export interface DetailedAttendance {
   duration: string;
 }
 
+export interface TimePeriod {
+  begin_at: string;
+  end_at: string;
+}
+
+export interface IndividualSession {
+  campus_id: number;
+  source: string;
+  time_period: TimePeriod;
+}
+
 export interface DailyAttendance {
   day: string;
   date: string;
@@ -28,6 +39,7 @@ export interface AttendancePeriod {
   total_off_site_attendance: string;
   detailed_attendance: DetailedAttendance[];
   daily_attendances: DailyAttendance[];
+  sessions?: IndividualSession[];
 }
 
 export interface AttendanceData {

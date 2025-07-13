@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { formatDuration } from '@/lib/utils';
-import { AttendancePeriod } from '@/types/attendance';
+import { AttendancePeriod, IndividualSession } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
@@ -70,54 +70,47 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
   }, [period]);
 
     const selectedDateSessions = useMemo(() => {
-    if (!selectedDate) return [];
+    if (!selectedDate || !period.sessions) return [];
 
     const year = selectedDate.getFullYear();
     const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
-    let rawDayData = period.daily_attendances.find(day => day.date === dateString);
-
-    if (!rawDayData) {
-      rawDayData = period.daily_attendances.find(day => {
-        const dayDate = new Date(day.date);
-        return dayDate.getFullYear() === year &&
-               dayDate.getMonth() === selectedDate.getMonth() &&
-               dayDate.getDate() === selectedDate.getDate();
-      });
-    }
-
-    if (!rawDayData) return [];
-
-    const dayTotal = parseISODuration(rawDayData.total_attendance);
-    const monthTotal = period.daily_attendances.reduce((sum, day) =>
-      sum + parseISODuration(day.total_attendance), 0
-    );
-
-    if (dayTotal === 0 || monthTotal === 0) return [];
-
-    const dayRatio = dayTotal / monthTotal;
-
-    const filteredDetails = period.detailed_attendance.filter(detail => {
-      if (detail.name === 'locations') return false;
-      if (selectedSource === 'all') return true;
-      return detail.name === selectedSource;
+    // Filter sessions for the selected date
+    const daySessions = period.sessions.filter(session => {
+      const sessionDate = new Date(session.time_period.begin_at);
+      const sessionDateString = sessionDate.getFullYear() + '-' +
+        String(sessionDate.getMonth() + 1).padStart(2, '0') + '-' +
+        String(sessionDate.getDate()).padStart(2, '0');
+      return sessionDateString === dateString;
     });
 
-    const sessions = filteredDetails.map(detail => {
-      const sessionDuration = parseISODuration(detail.duration) * dayRatio;
+    // Apply source filtering
+    const filteredSessions = daySessions.filter(session => {
+      if (session.source === 'locations') return false;
+      if (selectedSource === 'all') return true;
+      return session.source === selectedSource;
+    });
+
+    // Convert to display format
+    const sessions = filteredSessions.map(session => {
+      const beginAt = new Date(session.time_period.begin_at);
+      const endAt = new Date(session.time_period.end_at);
+      const duration = (endAt.getTime() - beginAt.getTime()) / 1000; // duration in seconds
 
       return {
-        type: detail.type,
-        duration: sessionDuration,
-        source: detail.name,
-        campusId: detail.campus_id,
+        type: 'on_site' as const, // Individual sessions are typically on-site
+        duration,
+        source: session.source,
+        campusId: session.campus_id,
+        beginAt: session.time_period.begin_at,
+        endAt: session.time_period.end_at,
       };
     }).filter(session => session.duration > 0);
 
     return sessions;
-  }, [selectedDate, period.daily_attendances, period.detailed_attendance, selectedSource]);
+  }, [selectedDate, period.sessions, selectedSource]);
 
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
     const from = new Date(period.from_date);
@@ -329,8 +322,17 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
                         {formatDuration(session.duration)}
                       </span>
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      Campus ID: {session.campusId}
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <div>Begin: {new Date(session.beginAt).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })}</div>
+                      <div>End: {new Date(session.endAt).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })}</div>
                     </div>
                   </div>
                 ))}
