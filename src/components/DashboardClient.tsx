@@ -94,9 +94,9 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
         color: PIE_COLORS[index % PIE_COLORS.length],
       },
     }), {}),
-  } satisfies ChartConfig;
+} satisfies ChartConfig;
 
-  return (
+return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
       <TooltipProvider>
         {/* Header */}
@@ -109,10 +109,11 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
           sources={availableSources}
           selectedSource={selectedSource}
           onSourceChange={(value) => setSelectedSource(value as SourceType)}
-        />
+          />
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="space-y-6 mt-6">
             <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
+
             {/* Daily Attendance Chart */}
             <div className="space-y-6">
               <Card>
@@ -134,40 +135,45 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
                         tickLine={false}
                         tickMargin={10}
                         axisLine={false}
-                      />
+                        />
                       <YAxis
                         tickLine={false}
                         tickMargin={10}
                         axisLine={false}
                         tickFormatter={(value: number) => `${value}h`}
-                      />
+                        />
                       <ChartTooltip
                         cursor={false}
                         content={<ChartTooltipContent
-                          formatter={(value: unknown) => {
-                            const numValue = typeof value === 'number' ? value : parseFloat(String(value));
-                            const hours = Math.floor(numValue);
+                            formatter={(value: unknown) => {
+                                const numValue = typeof value === 'number' ? value : parseFloat(String(value));
+                                const hours = Math.floor(numValue);
                             const minutes = Math.round((numValue - hours) * 60);
                             return `${hours}h ${minutes}m`;
-                          }}
+                        }}
                         />}
-                      />
+                        />
                       <Bar dataKey="attendance" radius={4}>
                         {chartData.map((entry, index) => {
-                          const value = entry.attendance;
-                          let color;
-                          if (value < 4) color = '#fdba74'; // Orange-300 for low attendance
-                          else if (value < 8) color = '#fb923c'; // Orange-400 for medium-low
-                          else if (value < 12) color = '#f97316'; // Orange-500 for medium
-                          else color = '#ea580c'; // Orange-600 for high attendance
+                            const value = entry.attendance;
+                            let color;
+                            if (value < 4) color = '#fdba74'; // Orange-300 for low attendance
+                            else if (value < 8) color = '#fb923c'; // Orange-400 for medium-low
+                            else if (value < 12) color = '#f97316'; // Orange-500 for medium
+                            else color = '#ea580c'; // Orange-600 for high attendance
 
-                          return <Cell key={`cell-${index}`} fill={color} />;
+                            return <Cell key={`cell-${index}`} fill={color} />;
                         })}
                       </Bar>
                     </BarChart>
                   </ChartContainer>
                 </CardContent>
               </Card>
+
+            {/* Daily Attendance Calendar */}
+            {currentPeriod && (
+                <AttendanceCalendar period={currentPeriod} selectedSource={selectedSource} />
+            )}
 
               {/* Sources Breakdown */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -187,7 +193,7 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
                         <PieChart>
                           <Pie data={sourceData} dataKey="value">
                             {sourceData.map((entry, index) => (
-                              <Cell key={`cell-${entry.name}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                                <Cell key={`cell-${entry.name}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                             ))}
                           </Pie>
                           <ChartLegend
@@ -253,11 +259,6 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
                   </CardContent>
                 </Card>
               </div>
-
-              {/* Daily Attendance Calendar */}
-              {currentPeriod && (
-                <AttendanceCalendar period={currentPeriod} selectedSource={selectedSource} />
-              )}
             </div>
           </div>
         </div>

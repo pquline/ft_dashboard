@@ -22,21 +22,23 @@ interface DayData {
 export function AttendanceCalendar({ period, selectedSource }: AttendanceCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
-  // Generate calendar data for the selected month
   const calendarData = useMemo(() => {
     const { year, month } = getMainMonth(period);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDayOfMonth = new Date(year, month, 1);
-    const lastDayOfMonth = new Date(year, month, daysInMonth);
 
-    // Get daily attendance data for the selected source
-    const dailyData = getDailyAttendanceForSource(period, selectedSource);
-    const filteredDailyData = filterDailyAttendancesToMainMonth(period, dailyData);
-
-    // Create a map of date strings to attendance data
+    // Create a map of date strings to raw attendance data
     const attendanceMap = new Map<string, { total: number; onSite: number; offSite: number }>();
-    filteredDailyData.forEach(day => {
-      attendanceMap.set(day.date, { total: day.total, onSite: day.onSite, offSite: day.offSite });
+    period.daily_attendances.forEach(day => {
+      const d = new Date(day.date);
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        const totalOnSite = parseISODuration(day.total_on_site_attendance);
+        const totalOffSite = parseISODuration(day.total_off_site_attendance);
+        attendanceMap.set(day.date, {
+          total: totalOnSite + totalOffSite,
+          onSite: totalOnSite,
+          offSite: totalOffSite
+        });
+      }
     });
 
     // Generate all days in the month
@@ -56,42 +58,44 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     }
 
     return days;
-  }, [period, selectedSource]);
+  }, [period]);
 
-  // Get sessions for selected date
   const selectedDateSessions = useMemo(() => {
     if (!selectedDate) return [];
 
     const dateString = selectedDate.toISOString().split('T')[0];
-    const dayData = calendarData.find(day =>
-      day.date.toISOString().split('T')[0] === dateString
-    );
 
-    if (!dayData || dayData.total === 0) return [];
+    // Get the raw daily attendance data for this date
+    const rawDayData = period.daily_attendances.find(day => day.date === dateString);
 
-    // Create session entries based on the day's data
+    if (!rawDayData) return [];
+
+    const totalOnSite = parseISODuration(rawDayData.total_on_site_attendance);
+    const totalOffSite = parseISODuration(rawDayData.total_off_site_attendance);
+
+    if (totalOnSite === 0 && totalOffSite === 0) return [];
+
     const sessions = [];
 
-    if (dayData.onSite > 0) {
+    if (totalOnSite > 0) {
       sessions.push({
         type: 'on_site' as const,
-        duration: dayData.onSite,
+        duration: totalOnSite,
         source: selectedSource === 'all' ? 'Multiple sources' : selectedSource,
       });
     }
 
-    if (dayData.offSite > 0) {
+    if (totalOffSite > 0) {
       sessions.push({
         type: 'off_site' as const,
-        duration: dayData.offSite,
+        duration: totalOffSite,
         source: selectedSource === 'all' ? 'Multiple sources' : selectedSource,
       });
     }
 
     return sessions;
-  }, [selectedDate, calendarData, selectedSource]);
+  }, [selectedDate, period.daily_attendances, selectedSource]);
 
-  // Helper function to get main month (copied from utils)
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
     const from = new Date(period.from_date);
     const to = new Date(period.to_date);
@@ -112,7 +116,6 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     }
   }
 
-  // Helper function to get daily attendance for source (copied from utils)
   function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
     if (source === 'all') {
       const totalWithoutLocations = period.detailed_attendance
@@ -176,7 +179,6 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     });
   }
 
-  // Helper function to filter daily attendances to main month (copied from utils)
   function filterDailyAttendancesToMainMonth(period: AttendancePeriod, daily: Array<{ date: string; total: number; onSite: number; offSite: number; day: string; total_attendance: string; total_on_site_attendance: string; total_off_site_attendance: string }>) {
     const { year, month } = getMainMonth(period);
     return daily.filter(day => {
@@ -185,7 +187,6 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     });
   }
 
-  // Helper function to parse ISO duration (copied from utils)
   function parseISODuration(duration: string): number {
     const match = duration.match(/P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?/)
     if (!match) return 0
@@ -198,23 +199,19 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     return days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds
   }
 
-  // Get the main month for the calendar
   const { year, month } = getMainMonth(period);
   const calendarMonth = new Date(year, month, 1);
 
-  // Auto-select first day with sessions if no date is selected
   React.useEffect(() => {
     if (!selectedDate) {
       const firstDayWithSessions = calendarData.find(day => day.hasSessions);
       if (firstDayWithSessions) {
         setSelectedDate(firstDayWithSessions.date);
       } else {
-        // If no days have sessions, select today's date if it's in the current month
         const today = new Date();
         if (today.getFullYear() === year && today.getMonth() === month) {
           setSelectedDate(today);
         } else {
-          // Otherwise select the first day of the month
           setSelectedDate(new Date(year, month, 1));
         }
       }
