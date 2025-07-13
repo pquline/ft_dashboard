@@ -198,7 +198,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
               components={{
-                Day: ({ day, modifiers, ...props }: { day: { date: Date }, modifiers: any } & React.HTMLAttributes<HTMLDivElement>) => {
+                Day: ({ day, ...props }: { day: { date: Date } } & React.HTMLAttributes<HTMLDivElement>) => {
                   const dayData = calendarData.find(d =>
                     d.date.toDateString() === day.date.toDateString()
                   );
