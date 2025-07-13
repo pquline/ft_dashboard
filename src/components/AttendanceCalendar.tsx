@@ -219,13 +219,36 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   }
 
   React.useEffect(() => {
-    const firstDayWithSessions = calendarData.find(day => day.hasSessions);
-    if (firstDayWithSessions) {
-      setSelectedDate(firstDayWithSessions.date);
+    // Check if we're in the current month
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth();
+
+    if (isCurrentMonth) {
+      // For current month, try to select today, or first day with sessions, or first day of month
+      const todayInCalendar = calendarData.find(day =>
+        day.date.getDate() === today.getDate()
+      );
+
+      if (todayInCalendar && todayInCalendar.hasSessions) {
+        setSelectedDate(todayInCalendar.date);
+      } else {
+        const firstDayWithSessions = calendarData.find(day => day.hasSessions);
+        if (firstDayWithSessions) {
+          setSelectedDate(firstDayWithSessions.date);
+        } else {
+          setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
+        }
+      }
     } else {
-      setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
+      // For other months, select first day with sessions or first day of month
+      const firstDayWithSessions = calendarData.find(day => day.hasSessions);
+      if (firstDayWithSessions) {
+        setSelectedDate(firstDayWithSessions.date);
+      } else {
+        setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
+      }
     }
-  }, [month, period, selectedSource]);
+  }, [month, calendarData]);
 
   return (
     <Card>
