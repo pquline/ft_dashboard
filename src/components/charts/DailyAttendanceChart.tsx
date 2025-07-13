@@ -85,29 +85,15 @@ export function DailyAttendanceChart({
           className="h-[320px] !aspect-auto"
         >
           <BarChart accessibilityLayer data={chartData}>
-            {/* Glassmorphic SVG gradients */}
+            {/* Glassmorphic SVG gradients: blend orange, green, blue for all bars */}
             <defs>
-              <linearGradient id="bar-glass-low" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#64748b" stop-opacity="0.3" />
+              <linearGradient id="bar-glass-blend" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.7" />
+                <stop offset="40%" stop-color="#22c55e" stop-opacity="0.7" />
+                <stop offset="80%" stop-color="#2563eb" stop-opacity="0.7" />
+                <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
               </linearGradient>
-              <linearGradient id="bar-glass-medlow" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f0f9ff" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.3" />
-              </linearGradient>
-              <linearGradient id="bar-glass-medium" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f0fdfa" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.3" />
-              </linearGradient>
-              <linearGradient id="bar-glass-high" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#eef2ff" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.3" />
-              </linearGradient>
-              <linearGradient id="bar-glass-default" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.3" />
-              </linearGradient>
-              {/* Pie gradients for legend/other use */}
+              {/* Pie gradients for legend/other use (unchanged for now) */}
               <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#f0f9ff" stop-opacity="0.8" />
                 <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.4" />
@@ -187,7 +173,7 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={getBarColor(entry.attendance)}
+                  fill="url(#bar-glass-blend)"
                   className="transition-all duration-300"
                 />
               ))}
