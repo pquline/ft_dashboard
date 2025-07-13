@@ -132,8 +132,9 @@ export function getDailyAttendanceForSource(period: AttendancePeriod, source: st
       sum + parseISODuration(day.total_attendance), 0
     );
 
+    // Only apply scaling if there's a significant difference and we have data
     const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
-      ? Math.min(totalWithoutLocations / totalWithLocations, 1)
+      ? Math.min(totalWithoutLocations / totalWithLocations, 1) // Don't scale up, only down
       : 1;
 
     return period.daily_attendances.map(day => {
@@ -141,16 +142,21 @@ export function getDailyAttendanceForSource(period: AttendancePeriod, source: st
       const rawOnSite = parseISODuration(day.total_on_site_attendance);
       const rawOffSite = parseISODuration(day.total_off_site_attendance);
 
-      const minVisibleHours = 0.1;
+      // If the day has significant attendance data (> 6 hours), use a more conservative scaling
+      const minVisibleHours = 6; // Minimum 6 hours to be considered significant
       const minVisibleSeconds = minVisibleHours * 3600;
 
       let scaledTotal, scaledOnSite, scaledOffSite;
 
       if (rawTotal > minVisibleSeconds) {
-        scaledTotal = Math.max(rawTotal * scaleFactor, minVisibleSeconds);
-        scaledOnSite = Math.max(rawOnSite * scaleFactor, rawOnSite > 0 ? minVisibleSeconds * 0.5 : 0);
-        scaledOffSite = Math.max(rawOffSite * scaleFactor, rawOffSite > 0 ? minVisibleSeconds * 0.5 : 0);
+        // For days with significant data, use a more conservative scaling approach
+        // Use the scaling factor but ensure we don't reduce too much
+        const conservativeScaleFactor = Math.max(scaleFactor, 0.9); // At least 90% of original
+        scaledTotal = rawTotal * conservativeScaleFactor;
+        scaledOnSite = rawOnSite * conservativeScaleFactor;
+        scaledOffSite = rawOffSite * conservativeScaleFactor;
       } else {
+        // For days with minimal data, apply normal scaling
         scaledTotal = rawTotal * scaleFactor;
         scaledOnSite = rawOnSite * scaleFactor;
         scaledOffSite = rawOffSite * scaleFactor;
