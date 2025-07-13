@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, Sparkles, Shield, ExternalLink } from 'lucide-react';
+import { Info, BarChart } from 'lucide-react';
 
 export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
@@ -41,8 +41,9 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo and Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl shadow-lg mb-4">
-            <Sparkles className="w-8 h-8 text-primary-foreground" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 shadow-2xl rounded-2xl mb-4 relative overflow-hidden backdrop-blur-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-70 pointer-events-none" />
+            <BarChart className="w-8 h-8 text-primary drop-shadow-glow" strokeWidth={3.5} />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent mb-2">
             ft_dashboard
@@ -51,16 +52,8 @@ export default function LoginPage() {
         </div>
 
         <Card className="card-modern group overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <CardHeader className="text-center relative z-10">
-            <div className="flex items-center justify-center space-x-2 mb-2">
-              <Shield className="h-5 w-5 text-primary" />
-              <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                Secure Login
-              </CardTitle>
-            </div>
-            <p className="text-sm text-muted-foreground">Enter your session cookie to access your dashboard</p>
-          </CardHeader>
+          {/* Lighter glassy hover overlay for dark mode */}
+          <div className="absolute inset-0 bg-white/30 dark:bg-[rgba(40,40,60,0.25)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <CardContent className="relative z-10">
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-3">
@@ -85,9 +78,9 @@ export default function LoginPage() {
               )}
 
               <Alert className="border-blue-500/20 bg-blue-500/10">
-                <Info className="h-4 w-4 text-blue-500" />
-                <AlertDescription className="text-blue-600">
-                  <strong className="text-blue-700">How to get your session cookie:</strong>
+                <Info className="h-4 w-4 text-foreground" />
+                <AlertDescription className="text-foreground">
+                  <strong className="text-foreground">How to get your session cookie:</strong>
                   <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
                     <li>
                       Go to{' '}
@@ -95,10 +88,9 @@ export default function LoginPage() {
                         href="https://dashboard.42paris.fr/attendance"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-1 text-blue-600 hover:text-blue-700 underline transition-colors duration-200"
+                        className="inline-flex items-center space-x-1 text-foreground/50 hover:underline transition-colors duration-200"
                       >
                         <span>42 Dashboard</span>
-                        <ExternalLink className="h-3 w-3" />
                       </a>
                     </li>
                     <li>Open Developer Tools (F12)</li>
@@ -110,7 +102,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold py-3 transition-all duration-300 btn-modern focus-ring"
+                className="btn-glass w-full font-semibold py-3 transition-all duration-300 focus-ring relative z-10"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -119,7 +111,7 @@ export default function LoginPage() {
                     <span>Authenticating...</span>
                   </div>
                 ) : (
-                  'Login to Dashboard'
+                  'Login'
                 )}
               </Button>
             </form>
