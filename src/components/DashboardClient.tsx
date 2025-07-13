@@ -123,6 +123,31 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
         periodFromDate: currentPeriod.from_date,
         periodToDate: currentPeriod.to_date
       });
+
+      // Check if this is October 2024 period
+      if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
+        devLog.debug('=== OCTOBER 2024 PERIOD DETECTED ===');
+        devLog.debug('Raw daily attendances for October:', currentPeriod.daily_attendances);
+
+        // Find October 22nd in raw data
+        const oct22Raw = currentPeriod.daily_attendances.find(day => {
+          const date = new Date(day.date);
+          return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
+        });
+        devLog.debug('October 22nd raw data:', oct22Raw);
+
+        if (oct22Raw) {
+          const rawTotal = parseISODuration(oct22Raw.total_attendance);
+          const scaledTotal = rawTotal * scaleFactor;
+          devLog.debug('October 22nd scaling calculation:', {
+            rawTotal,
+            rawHours: rawTotal / 3600,
+            scaleFactor,
+            scaledTotal,
+            scaledHours: scaledTotal / 3600
+          });
+        }
+      }
     }
   }
 
