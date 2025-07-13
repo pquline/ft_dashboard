@@ -151,7 +151,7 @@ return (
           />
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="space-y-6 mt-6">
-            <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} />
+            <DashboardSummaryCards total={total} onSite={onSite} offSite={offSite} currentPeriod={currentPeriod} />
 
             {/* Daily Attendance Chart */}
             <div className="space-y-6">

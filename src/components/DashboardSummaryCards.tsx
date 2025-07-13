@@ -1,14 +1,17 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, MapPin, Wifi } from 'lucide-react';
+import { getPeriodMonthName } from '@/lib/utils';
+import { AttendancePeriod } from '@/types/attendance';
 
 interface DashboardSummaryCardsProps {
   total: string;
   onSite: string;
   offSite: string;
+  currentPeriod?: AttendancePeriod;
 }
 
-export function DashboardSummaryCards({ total, onSite, offSite }: DashboardSummaryCardsProps) {
+export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }: DashboardSummaryCardsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
       <Card>
@@ -19,7 +22,7 @@ export function DashboardSummaryCards({ total, onSite, offSite }: DashboardSumma
         <CardContent>
           <div className="text-2xl font-bold">{total}</div>
           <p className="text-xs text-muted-foreground">
-            Total hours this month
+            Total hours for {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'Loading...'}
           </p>
         </CardContent>
       </Card>
