@@ -124,38 +124,12 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
   if (source === 'all') {
-    const dailyAttendance = new Map<string, { total: number; onSite: number; offSite: number }>();
-
-    period.daily_attendances.forEach(day => {
-      dailyAttendance.set(day.date, { total: 0, onSite: 0, offSite: 0 });
-    });
-
-    if (period.entries) {
-      period.entries
-        .filter(entry => entry.source !== 'locations')
-        .forEach(entry => {
-          const entryDate = new Date(entry.time_period.begin_at).toISOString().split('T')[0];
-          const begin = new Date(entry.time_period.begin_at);
-          const end = new Date(entry.time_period.end_at);
-          const duration = (end.getTime() - begin.getTime()) / 1000; // duration in seconds
-
-          const dayData = dailyAttendance.get(entryDate);
-          if (dayData) {
-            dayData.total += duration;
-            dayData.onSite += duration;
-          }
-        });
-    }
-
-    return period.daily_attendances.map(day => {
-      const dayData = dailyAttendance.get(day.date) || { total: 0, onSite: 0, offSite: 0 };
-      return {
-        ...day,
-        total: dayData.total,
-        onSite: dayData.onSite,
-        offSite: dayData.offSite,
-      };
-    });
+    return period.daily_attendances.map(day => ({
+      ...day,
+      total: parseISODuration(day.total_attendance),
+      onSite: parseISODuration(day.total_on_site_attendance),
+      offSite: parseISODuration(day.total_off_site_attendance),
+    }));
   }
 
   const sourceDetail = period.detailed_attendance.find(detail => detail.name === source);

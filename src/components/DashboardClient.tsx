@@ -104,43 +104,11 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     offSite: day.offSite / 3600,
   }));
 
-
-
   devLog.debug('Chart data length:', chartData.length);
   devLog.debug('Chart data dates:', chartData.map(d => d.date));
   devLog.debug('Chart data with attendance > 0:', chartData.filter(d => d.attendance > 0));
 
-  // Debug October 2024 specifically
-  if (currentPeriod) {
-    const octoberData = filteredDailyData.filter(day => {
-      const date = new Date(day.date);
-      return date.getFullYear() === 2024 && date.getMonth() === 9; // October 2024
-    });
-    console.log('October 2024 data:', octoberData);
 
-    const oct22Data = filteredDailyData.find(day => {
-      const date = new Date(day.date);
-      return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
-    });
-    console.log('October 22nd 2024 data:', oct22Data);
-
-    if (oct22Data) {
-      console.log('October 22nd 2024 hours:', oct22Data.total / 3600);
-    }
-
-    // Debug the raw data from getDailyAttendanceForSource
-    if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
-      const rawDailyData = getDailyAttendanceForSource(currentPeriod, 'all');
-      const oct22RawData = rawDailyData.find(day => {
-        const date = new Date(day.date);
-        return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
-      });
-      console.log('October 22nd raw data from getDailyAttendanceForSource:', oct22RawData);
-      if (oct22RawData) {
-        console.log('October 22nd raw hours from function:', oct22RawData.total / 3600);
-      }
-    }
-  }
 
   const sourceData = currentPeriod?.detailed_attendance
     .filter(detail => {
