@@ -85,6 +85,14 @@ export function DailyAttendanceChart({
           className="h-[320px] !aspect-auto"
         >
           <BarChart accessibilityLayer data={chartData}>
+            <defs>
+              <linearGradient id="bar-glass-primary" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
+                <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
+                <stop offset="6%" stop-color="var(--primary)" stop-opacity="1" />
+                <stop offset="100%" stop-color="var(--primary)" stop-opacity="1" />
+              </linearGradient>
+            </defs>
             <CartesianGrid
               vertical={false}
               strokeDasharray="3 3"
@@ -139,7 +147,7 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={selectedSource === 'all' ? 'var(--primary)' : '#2563eb'}
+                  fill={selectedSource === 'all' ? 'url(#bar-glass-primary)' : '#2563eb'}
                   className="transition-all duration-300"
                 />
               ))}

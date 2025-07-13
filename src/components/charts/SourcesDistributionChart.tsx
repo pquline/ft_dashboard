@@ -76,9 +76,17 @@ export function SourcesDistributionChart({
             <PieChart>
               {/* Glassmorphic SVG gradients */}
               <defs>
-                <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#f0f9ff" stop-opacity="0.8" />
-                  <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.4" />
+                <linearGradient id="pie-glass-primary" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
+                  <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
+                  <stop offset="6%" stop-color="var(--primary)" stop-opacity="1" />
+                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="1" />
+                </linearGradient>
+                <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
+                  <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
+                  <stop offset="6%" stop-color="#2563eb" stop-opacity="1" />
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="1" />
                 </linearGradient>
                 <linearGradient id="pie-glass-teal" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stop-color="#f0fdfa" stop-opacity="0.8" />
@@ -111,7 +119,7 @@ export function SourcesDistributionChart({
                 {sourceData.map((entry, index) => (
                   <Cell
                     key={`cell-${entry.name}`}
-                    fill={CHART_COLORS.PIE_COLORS[index % CHART_COLORS.PIE_COLORS.length]}
+                    fill={selectedSource === 'all' ? 'url(#pie-glass-primary)' : 'url(#pie-glass-blue)'}
                     className="transition-all duration-300"
                   />
                 ))}
