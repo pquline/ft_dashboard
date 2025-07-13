@@ -77,15 +77,13 @@ export function SourcesDistributionChart({
               {/* Glassmorphic SVG gradients */}
               <defs>
                 <linearGradient id="pie-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#fff" stop-opacity="0.5" />
-                  <stop offset="7%" stop-color="#fff" stop-opacity="0.12" />
-                  <stop offset="8%" stop-color="#ffb347" stop-opacity="1" />
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0.18" />
+                  <stop offset="10%" stop-color="#ffb347" stop-opacity="1" />
                   <stop offset="100%" stop-color="#ff8000" stop-opacity="1" />
                 </linearGradient>
                 <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#fff" stop-opacity="0.5" />
-                  <stop offset="7%" stop-color="#fff" stop-opacity="0.12" />
-                  <stop offset="8%" stop-color="#60a5fa" stop-opacity="1" />
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0.18" />
+                  <stop offset="10%" stop-color="#60a5fa" stop-opacity="1" />
                   <stop offset="100%" stop-color="#2563eb" stop-opacity="1" />
                 </linearGradient>
                 <linearGradient id="pie-glass-teal" x1="0" y1="0" x2="1" y2="1">
