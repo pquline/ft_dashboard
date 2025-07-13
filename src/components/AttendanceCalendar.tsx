@@ -266,7 +266,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               </div>
             ) : (
               <div className="py-8 text-muted-foreground text-center">
-                {selectedDate ? 'No sessions on this day' : 'Select a day to view sessions'}
+                {selectedDate ? 'No sessions on this day for selected source' : 'Select a day to view sessions'}
               </div>
             )}
           </CardContent>

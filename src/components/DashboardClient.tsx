@@ -274,6 +274,7 @@ return (
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
+                    {sourceData.length > 0 ? (
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -300,15 +301,13 @@ return (
                               <TableCell>{formatDuration(parseISODuration(detail.duration))}</TableCell>
                             </TableRow>
                           ))}
-                        {sourceData.length === 0 && (
-                          <TableRow>
-                            <TableCell colSpan={3} className="text-center text-muted-foreground">
-                              No data available for the selected source in
-                            </TableCell>
-                          </TableRow>
-                        )}
                       </TableBody>
                     </Table>
+                    ) : (
+                      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                        No data available for the selected source in selected month
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
