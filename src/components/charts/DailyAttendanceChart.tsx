@@ -85,44 +85,15 @@ export function DailyAttendanceChart({
           className="h-[320px] !aspect-auto"
         >
           <BarChart accessibilityLayer data={chartData}>
-            {/* Vibrant glassmorphic: very thin white highlight at top, vibrant color for rest */}
+            {/* Solid vibrant color per step, no gradients or highlights */}
             <defs>
               <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff" stop-opacity="0.85" />
-                <stop offset="3%" stop-color="#fff" stop-opacity="0.25" />
-                <stop offset="4%" stop-color="#fb923c" stop-opacity="0.92" />
-                <stop offset="100%" stop-color="#fb923c" stop-opacity="0.85" />
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="1" />
+                <stop offset="100%" stop-color="#fb923c" stop-opacity="1" />
               </linearGradient>
               <linearGradient id="bar-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff" stop-opacity="0.85" />
-                <stop offset="3%" stop-color="#fff" stop-opacity="0.25" />
-                <stop offset="4%" stop-color="#2563eb" stop-opacity="0.92" />
-                <stop offset="100%" stop-color="#2563eb" stop-opacity="0.85" />
-              </linearGradient>
-              {/* Pie gradients for legend/other use (unchanged for now) */}
-              <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#f0f9ff" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.4" />
-              </linearGradient>
-              <linearGradient id="pie-glass-teal" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#f0fdfa" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.4" />
-              </linearGradient>
-              <linearGradient id="pie-glass-slate" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#64748b" stop-opacity="0.4" />
-              </linearGradient>
-              <linearGradient id="pie-glass-indigo" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#eef2ff" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#6366f1" stop-opacity="0.4" />
-              </linearGradient>
-              <linearGradient id="pie-glass-cyan" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#ecfeff" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.4" />
-              </linearGradient>
-              <linearGradient id="pie-glass-gray" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#f9fafb" stop-opacity="0.8" />
-                <stop offset="100%" stop-color="#6b7280" stop-opacity="0.4" />
+                <stop offset="0%" stop-color="#2563eb" stop-opacity="1" />
+                <stop offset="100%" stop-color="#2563eb" stop-opacity="1" />
               </linearGradient>
             </defs>
             <CartesianGrid
