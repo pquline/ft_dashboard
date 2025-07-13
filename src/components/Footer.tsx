@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4">
           <div className="flex items-center space-x-2 text-sm text-muted-foreground">
             <span className="font-mono">
-              <span className="text-primary">{"$>"}</span> ./made with{' '}<span className="text-red-500 mx-1">{"<3"}</span>on{' '}
+              <span className="text-primary">{"$>"}</span> ./made with{' '}<span className="text-red-500 mx-1">{"<3"}{' '}</span>on{' '}
               <Link
                 href="https://github.com/pquline/ft_dashboard"
                 target="_blank"
