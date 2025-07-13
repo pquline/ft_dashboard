@@ -21,7 +21,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { getPeriodMonthName } from "@/lib/utils";
-import { CHART_COLORS, ATTENDANCE_THRESHOLDS } from "@/lib/constants";
+import { CHART_COLORS } from "@/lib/constants";
 import { SourceType } from "@/types/attendance";
 import { AttendancePeriod } from '@/types/attendance';
 

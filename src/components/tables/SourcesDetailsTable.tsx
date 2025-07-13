@@ -28,11 +28,18 @@ export function SourcesDetailsTable({
   selectedSource,
 }: SourcesDetailsTableProps) {
   const filteredDetails = currentPeriod?.detailed_attendance
-    .filter((detail: any) => {
+    .filter((detail: AttendancePeriod['detailed_attendance'][number]) => {
       if (detail.name === "locations") return false;
       if (selectedSource === "all") return true;
       return detail.name === selectedSource;
     }) || [];
+
+  const getRows = () => {
+    if (!currentPeriod || !currentPeriod.detailed_attendance) return [];
+    return currentPeriod.detailed_attendance.map((detail: AttendancePeriod['detailed_attendance'][number]) => ({
+      ...detail,
+    }));
+  };
 
   return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
@@ -64,7 +71,7 @@ export function SourcesDetailsTable({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredDetails.map((detail: any, index: number) => (
+                {filteredDetails.map((detail: AttendancePeriod['detailed_attendance'][number], index: number) => (
                   <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
                     <TableCell>
                       <Badge variant="outline" className="glass-hover">
