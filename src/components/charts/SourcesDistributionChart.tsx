@@ -76,29 +76,29 @@ export function SourcesDistributionChart({
             <PieChart>
               {/* Glassmorphic SVG gradients */}
               <defs>
-                <linearGradient id="pie-glass-orange" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fff8f1" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#fb923c" stop-opacity="0.5" />
-                </linearGradient>
-                <linearGradient id="pie-glass-amber" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fefce8" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.5" />
-                </linearGradient>
                 <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.5" />
+                  <stop offset="0%" stop-color="#f0f9ff" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.4" />
                 </linearGradient>
-                <linearGradient id="pie-glass-green" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#dcfce7" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.5" />
+                <linearGradient id="pie-glass-teal" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f0fdfa" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#14b8a6" stop-opacity="0.4" />
                 </linearGradient>
-                <linearGradient id="pie-glass-purple" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#ede9fe" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#a5b4fc" stop-opacity="0.5" />
+                <linearGradient id="pie-glass-slate" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#64748b" stop-opacity="0.4" />
                 </linearGradient>
-                <linearGradient id="pie-glass-pink" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#fdf2f8" stop-opacity="0.7" />
-                  <stop offset="100%" stop-color="#f472b6" stop-opacity="0.5" />
+                <linearGradient id="pie-glass-indigo" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#eef2ff" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.4" />
+                </linearGradient>
+                <linearGradient id="pie-glass-cyan" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#ecfeff" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.4" />
+                </linearGradient>
+                <linearGradient id="pie-glass-gray" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f9fafb" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#6b7280" stop-opacity="0.4" />
                 </linearGradient>
               </defs>
               <Pie
