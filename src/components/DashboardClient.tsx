@@ -25,7 +25,6 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   const [selectedMonth, setSelectedMonth] = useState<string>(defaultMonth);
   const [selectedSource, setSelectedSource] = useState<SourceType>('all');
 
-  // Debug month selection
   devLog.debug('=== MONTH SELECTION DEBUG ===');
   devLog.debug('defaultMonth:', defaultMonth);
   devLog.debug('selectedMonth state:', selectedMonth);
@@ -36,7 +35,8 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   })));
 
   const handleMonthChange = (newMonth: string) => {
-    devLog.debug('Month change triggered:', {
+    console.log('=== MONTH CHANGE TRIGGERED ===');
+    console.log('Month change:', {
       from: selectedMonth,
       to: newMonth
     });
@@ -54,16 +54,15 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
 
   const currentPeriod = data.attendance.find(period => period.from_date === selectedMonth);
 
-  // Debug currentPeriod changes
-  devLog.debug('=== CURRENT PERIOD DEBUG ===');
-  devLog.debug('Looking for period with from_date:', selectedMonth);
-  devLog.debug('Found period:', currentPeriod ? {
+  // Debug currentPeriod changes on client side
+  console.log('=== CURRENT PERIOD DEBUG ===');
+  console.log('Selected month:', selectedMonth);
+  console.log('Current period:', currentPeriod ? {
     from_date: currentPeriod.from_date,
     to_date: currentPeriod.to_date,
     label: getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date)
   } : 'NOT FOUND');
 
-  // Debug available months and current selection
   devLog.debug('Available months:', data.attendance.map(p => ({
     from_date: p.from_date,
     to_date: p.to_date,
@@ -117,63 +116,33 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
       const date = new Date(day.date);
       return date.getFullYear() === 2024 && date.getMonth() === 9; // October 2024
     });
-    devLog.debug('October 2024 data:', octoberData);
+    console.log('October 2024 data:', octoberData);
 
     const oct22Data = filteredDailyData.find(day => {
       const date = new Date(day.date);
       return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
     });
-    devLog.debug('October 22nd 2024 data:', oct22Data);
+    console.log('October 22nd 2024 data:', oct22Data);
 
     if (oct22Data) {
-      devLog.debug('October 22nd 2024 hours:', oct22Data.total / 3600);
+      console.log('October 22nd 2024 hours:', oct22Data.total / 3600);
     }
 
-    // Debug scaling for current period
-    if (selectedSource === 'all') {
-      const totalWithoutLocations = currentPeriod.detailed_attendance
-        .filter(detail => detail.name !== 'locations')
-        .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
+    // Check if this is October 2024 period
+    if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
+      console.log('=== OCTOBER 2024 PERIOD DETECTED ===');
+      console.log('Raw daily attendances for October:', currentPeriod.daily_attendances);
 
-      const totalWithLocations = currentPeriod.daily_attendances.reduce((sum, day) =>
-        sum + parseISODuration(day.total_attendance), 0
-      );
-
-      const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
-        ? Math.min(totalWithoutLocations / totalWithLocations, 1)
-        : 1;
-
-      devLog.debug('Scaling debug for current period:', {
-        totalWithoutLocations,
-        totalWithLocations,
-        scaleFactor,
-        periodFromDate: currentPeriod.from_date,
-        periodToDate: currentPeriod.to_date
+      // Find October 22nd in raw data
+      const oct22Raw = currentPeriod.daily_attendances.find(day => {
+        const date = new Date(day.date);
+        return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
       });
+      console.log('October 22nd raw data:', oct22Raw);
 
-      // Check if this is October 2024 period
-      if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
-        devLog.debug('=== OCTOBER 2024 PERIOD DETECTED ===');
-        devLog.debug('Raw daily attendances for October:', currentPeriod.daily_attendances);
-
-        // Find October 22nd in raw data
-        const oct22Raw = currentPeriod.daily_attendances.find(day => {
-          const date = new Date(day.date);
-          return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
-        });
-        devLog.debug('October 22nd raw data:', oct22Raw);
-
-        if (oct22Raw) {
-          const rawTotal = parseISODuration(oct22Raw.total_attendance);
-          const scaledTotal = rawTotal * scaleFactor;
-          devLog.debug('October 22nd scaling calculation:', {
-            rawTotal,
-            rawHours: rawTotal / 3600,
-            scaleFactor,
-            scaledTotal,
-            scaledHours: scaledTotal / 3600
-          });
-        }
+      if (oct22Raw) {
+        const rawTotal = parseISODuration(oct22Raw.total_attendance);
+        console.log('October 22nd raw total hours:', rawTotal / 3600);
       }
     }
   }
