@@ -124,49 +124,17 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
   if (source === 'all') {
-    const totalWithoutLocations = period.detailed_attendance
-      .filter(detail => detail.name !== 'locations')
-      .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
-
-    const totalWithLocations = period.daily_attendances.reduce((sum, day) =>
-      sum + parseISODuration(day.total_attendance), 0
-    );
-
-    // Only apply scaling if there's a significant difference and we have data
-    const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
-      ? Math.min(totalWithoutLocations / totalWithLocations, 1) // Don't scale up, only down
-      : 1;
-
+    // No scaling needed - use raw daily attendance data directly
     return period.daily_attendances.map(day => {
       const rawTotal = parseISODuration(day.total_attendance);
       const rawOnSite = parseISODuration(day.total_on_site_attendance);
       const rawOffSite = parseISODuration(day.total_off_site_attendance);
 
-      // If the day has significant attendance data (> 6 hours), use a more conservative scaling
-      const minVisibleHours = 6; // Minimum 6 hours to be considered significant
-      const minVisibleSeconds = minVisibleHours * 3600;
-
-      let scaledTotal, scaledOnSite, scaledOffSite;
-
-      if (rawTotal > minVisibleSeconds) {
-        // For days with significant data, use a more conservative scaling approach
-        // Use the scaling factor but ensure we don't reduce too much
-        const conservativeScaleFactor = Math.max(scaleFactor, 0.9); // At least 90% of original
-        scaledTotal = rawTotal * conservativeScaleFactor;
-        scaledOnSite = rawOnSite * conservativeScaleFactor;
-        scaledOffSite = rawOffSite * conservativeScaleFactor;
-      } else {
-        // For days with minimal data, apply normal scaling
-        scaledTotal = rawTotal * scaleFactor;
-        scaledOnSite = rawOnSite * scaleFactor;
-        scaledOffSite = rawOffSite * scaleFactor;
-      }
-
       return {
         ...day,
-        total: scaledTotal,
-        onSite: scaledOnSite,
-        offSite: scaledOffSite,
+        total: rawTotal,
+        onSite: rawOnSite,
+        offSite: rawOffSite,
       };
     });
   }
