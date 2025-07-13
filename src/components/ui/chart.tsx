@@ -310,7 +310,7 @@ function ChartLegendContent({
           if (color.includes('pie-glass-blue')) {
             swatchStyle = { background: '#005bea' };
           } else if (color.includes('pie-glass-orange')) {
-            swatchStyle = { background: '#ffea00' };
+            swatchStyle = { background: '#ff8000' };
           } else if (color.includes('pie-glass-green')) {
             swatchStyle = { background: '#00e676' };
           } else if (color.includes('pie-glass-indigo')) {
