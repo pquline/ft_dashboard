@@ -34,7 +34,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
       {/* Total Hours Card */}
       <Card className="card-modern group overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">Total Hours</CardTitle>
           <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
@@ -64,7 +63,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
 
       {/* On Campus Card */}
       <Card className="card-modern group overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">On Campus</CardTitle>
           <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
@@ -94,7 +92,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
 
       {/* Remote Card */}
       <Card className="card-modern group overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">Remote</CardTitle>
           <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">

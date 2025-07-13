@@ -193,7 +193,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               onMonthChange={onMonthChange}
               className="rounded-md border"
               classNames={{
-                day_selected: "bg-primary text-primary-foreground rounded-full",
+                day_selected: "bg-primary text-primary-foreground rounded-md",
                 day_today: "",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
@@ -224,7 +224,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
           </CardHeader>
           <CardContent className="pt-0 flex-1 overflow-auto">
             {selectedDateSessions.length > 0 ? (
-              <div className='border rounded-md border-border'>
+              <div className='border rounded-md border-border p-2'>
                 <Table>
                   <TableHeader>
                     <TableRow>

@@ -62,7 +62,7 @@ export function Header({
             </div>
           </Link>
           <Link href="/" className="group">
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary/80 transition-all duration-300">
+            <h1 className="text-xl md:text-2xl font-bold text-foreground group-hover:text-primary transition-all duration-300">
               ft_dashboard
             </h1>
           </Link>
