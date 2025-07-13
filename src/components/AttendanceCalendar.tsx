@@ -235,7 +235,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {/* Calendar Card */}
       <div className="lg:col-span-2">
-        <Card>
+        <Card className="h-[500px] flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle>Attendance Calendar</CardTitle>
             <CardDescription>
@@ -245,7 +245,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               }
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-0">
+          <CardContent className="pt-0 flex-1">
             <Calendar
               mode="single"
               selected={selectedDate}
@@ -282,7 +282,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
       {/* Sessions Card */}
       <div className="lg:col-span-3">
-        <Card>
+        <Card className="h-[500px] flex flex-col">
           <CardHeader className="pb-3">
             <CardTitle>Sessions</CardTitle>
             <CardDescription>
@@ -300,7 +300,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               )}
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-0">
+          <CardContent className="pt-0 flex-1 overflow-auto">
             {selectedDateSessions.length > 0 ? (
               <div className='border rounded-md border-border'>
                 <Table>
