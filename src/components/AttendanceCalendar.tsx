@@ -24,6 +24,7 @@ interface DayData {
 
 export function AttendanceCalendar({ period, selectedSource, month, onMonthChange }: AttendanceCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const lastMonthRef = React.useRef<string>('');
 
   const calendarData = useMemo(() => {
     const { year, month } = getMainMonth(period);
@@ -219,6 +220,15 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   }
 
   React.useEffect(() => {
+    const currentMonthKey = `${month.getFullYear()}-${month.getMonth()}`;
+
+    // Only run this effect if the month has actually changed
+    if (currentMonthKey === lastMonthRef.current) {
+      return;
+    }
+
+    lastMonthRef.current = currentMonthKey;
+
     // Check if we're in the current month
     const today = new Date();
     const isCurrentMonth = today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth();
@@ -248,7 +258,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
         setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
       }
     }
-  }, [month]); // Only depend on month changes, not calendarData
+  }, [month, calendarData]);
 
   return (
     <Card>
