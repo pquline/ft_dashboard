@@ -14,21 +14,21 @@ interface DashboardSummaryCardsProps {
 export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }: DashboardSummaryCardsProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total</CardTitle>
-          <Clock className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total hours in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{total}</div>
           <p className="text-xs text-muted-foreground">
-            Total hours for {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'Loading...'}
+            Total hours
           </p>
         </CardContent>
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">On Campus</CardTitle>
+          <CardTitle className="text-sm font-medium">On Campus in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
           <MapPin className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -40,7 +40,7 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Remote</CardTitle>
+          <CardTitle className="text-sm font-medium">Remote in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
           <Wifi className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>

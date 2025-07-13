@@ -157,7 +157,7 @@ return (
             <div className="space-y-6">
               <Card>
                 <CardHeader className="pb-3">
-                  <CardTitle>Daily Attendance</CardTitle>
+                  <CardTitle>Daily Attendance in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
                   <CardDescription>
                     {selectedSource === 'all'
                       ? 'Hours spent on campus per day (All sources)'
@@ -232,7 +232,7 @@ return (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle>Sources Distribution</CardTitle>
+                    <CardTitle>Sources Distribution in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
                     <CardDescription>
                       {selectedSource === 'all'
                         ? 'Time spent by source type (All sources)'
@@ -257,7 +257,7 @@ return (
                       </ChartContainer>
                     ) : (
                       <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                        No data available for the selected source in this month
+                        No data available for the selected source in selected month
                       </div>
                     )}
                   </CardContent>
@@ -265,7 +265,7 @@ return (
 
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle>Sources Details</CardTitle>
+                    <CardTitle>Sources Details in {currentPeriod ? getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date) : 'selected month'}</CardTitle>
                     <CardDescription>
                       {selectedSource === 'all'
                         ? 'All sources'
@@ -303,7 +303,7 @@ return (
                         {sourceData.length === 0 && (
                           <TableRow>
                             <TableCell colSpan={3} className="text-center text-muted-foreground">
-                              No data available for the selected source in this month
+                              No data available for the selected source in
                             </TableCell>
                           </TableRow>
                         )}

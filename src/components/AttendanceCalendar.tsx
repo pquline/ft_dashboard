@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { formatDuration } from '@/lib/utils';
+import { formatDuration, getPeriodMonthName } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
@@ -176,7 +176,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
       <div className="lg:col-span-2">
         <Card className="h-[450px] flex flex-col">
           <CardHeader className="pb-3">
-            <CardTitle>Attendance Calendar</CardTitle>
+            <CardTitle>Attendance Calendar in {getPeriodMonthName(period.from_date, period.to_date)}</CardTitle>
             <CardDescription>
               {selectedSource === 'all'
                 ? 'Click on any day to view session details (All sources)'
