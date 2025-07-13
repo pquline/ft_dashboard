@@ -171,6 +171,29 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
             rawHours: rawTotal / 3600,
             scaledHours: (rawTotal * scaleFactor) / 3600
           });
+
+          // Debug detailed attendance for October 22nd
+          console.log('Detailed attendance for October 2024:', currentPeriod.detailed_attendance);
+
+          // Check if there are entries for October 22nd
+          if (currentPeriod.entries) {
+            const oct22Entries = currentPeriod.entries.filter(entry => {
+              const entryDate = new Date(entry.time_period.begin_at);
+              return entryDate.getFullYear() === 2024 &&
+                     entryDate.getMonth() === 9 &&
+                     entryDate.getDate() === 22;
+            });
+            console.log('October 22nd entries:', oct22Entries);
+
+            if (oct22Entries.length > 0) {
+              const totalDuration = oct22Entries.reduce((sum, entry) => {
+                const begin = new Date(entry.time_period.begin_at);
+                const end = new Date(entry.time_period.end_at);
+                return sum + (end.getTime() - begin.getTime()) / 1000;
+              }, 0);
+              console.log('October 22nd calculated total duration:', totalDuration / 3600, 'hours');
+            }
+          }
         }
       }
     }

@@ -124,7 +124,7 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
   if (source === 'all') {
-    // No scaling needed - use raw daily attendance data directly
+    // Use raw daily attendance data directly
     return period.daily_attendances.map(day => {
       const rawTotal = parseISODuration(day.total_attendance);
       const rawOnSite = parseISODuration(day.total_on_site_attendance);
