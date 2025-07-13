@@ -85,22 +85,19 @@ export function DailyAttendanceChart({
           className="h-[320px] !aspect-auto"
         >
           <BarChart accessibilityLayer data={chartData}>
-            {/* Glassmorphic SVG gradients: one for each accent color */}
+            {/* Glassmorphic SVG gradients: vibrant accent with strong glassy highlight, minimal gradient */}
             <defs>
               <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff7ed" stop-opacity="0.7" />
-                <stop offset="80%" stop-color="#fb923c" stop-opacity="0.7" />
-                <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
-              </linearGradient>
-              <linearGradient id="bar-glass-green" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f0fdf4" stop-opacity="0.7" />
-                <stop offset="80%" stop-color="#22c55e" stop-opacity="0.7" />
-                <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
+                <stop offset="0%" stop-color="#fff" stop-opacity="0.85" />
+                <stop offset="20%" stop-color="#fff" stop-opacity="0.35" />
+                <stop offset="21%" stop-color="#fb923c" stop-opacity="0.95" />
+                <stop offset="100%" stop-color="#fb923c" stop-opacity="0.85" />
               </linearGradient>
               <linearGradient id="bar-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#eff6ff" stop-opacity="0.7" />
-                <stop offset="80%" stop-color="#2563eb" stop-opacity="0.7" />
-                <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
+                <stop offset="0%" stop-color="#fff" stop-opacity="0.85" />
+                <stop offset="20%" stop-color="#fff" stop-opacity="0.35" />
+                <stop offset="21%" stop-color="#2563eb" stop-opacity="0.95" />
+                <stop offset="100%" stop-color="#2563eb" stop-opacity="0.85" />
               </linearGradient>
               {/* Pie gradients for legend/other use (unchanged for now) */}
               <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="1" y2="1">
