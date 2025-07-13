@@ -472,6 +472,3 @@
 .drop-shadow-glow {
   filter: drop-shadow(0 0 2px #818cf888) drop-shadow(0 0 1px #fff5);
 }
-
-/* TEMP: Force pure black background for color vibrancy test */
-body { background: #000 !important; }
