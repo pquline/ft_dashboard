@@ -219,20 +219,13 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   }
 
   React.useEffect(() => {
-    if (!selectedDate) {
-      const firstDayWithSessions = calendarData.find(day => day.hasSessions);
-      if (firstDayWithSessions) {
-        setSelectedDate(firstDayWithSessions.date);
-      } else {
-        const today = new Date();
-        if (today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth()) {
-          setSelectedDate(today);
-        } else {
-          setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
-        }
-      }
+    const firstDayWithSessions = calendarData.find(day => day.hasSessions);
+    if (firstDayWithSessions) {
+      setSelectedDate(firstDayWithSessions.date);
+    } else {
+      setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
     }
-  }, [calendarData, selectedDate, month]);
+  }, [month, period, selectedSource]);
 
   return (
     <Card>
@@ -241,7 +234,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
         <CardDescription>
           {selectedSource === 'all'
             ? 'Click on any day to view session details (All sources)'
-            : `Click on any day to view session details (${selectedSource.charAt(0).toUpperCase() + selectedSource.slice(1)} source)`
+            : `Click on any day to view session details (${selectedSource} source)`
           }
         </CardDescription>
       </CardHeader>
