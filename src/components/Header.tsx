@@ -11,10 +11,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, Moon, Sun } from 'lucide-react';
+import { Calendar, LogOut, Moon, Server, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface HeaderProps {
   login: string;
@@ -45,9 +44,7 @@ export function Header({
   }, []);
 
   const handleLogout = () => {
-    // Remove session cookie
     document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    // Redirect to login page
     window.location.href = '/login';
   };
 
@@ -57,20 +54,19 @@ export function Header({
 
   return (
     <header className="bg-white dark:bg-secondary/50 backdrop-blur-sm border-b w-full" suppressHydrationWarning>
-      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
-                <div className="flex items-center gap-3 w-full md:w-auto">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
+        <div className="flex items-center gap-3">
           <Link href="/">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm md:text-base">FT</span>
             </div>
           </Link>
           <Link href="/" className="text-lg font-semibold">
-            <h1 className="text-2xl font-bold text-primary-900 dark:text-primary-100">ft_dashboard</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-primary-900 dark:text-primary-100">ft_dashboard</h1>
           </Link>
         </div>
 
         <div className="flex items-center space-x-6">
-          {/* Remove the filters from header - they will be in dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -91,6 +87,7 @@ export function Header({
               {months && selectedMonth && onMonthChange && (
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
+                    <Calendar className="mr-4 h-4 w-4" />
                     <span>Month</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
@@ -111,6 +108,7 @@ export function Header({
               {sources && selectedSource && onSourceChange && (
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
+                    <Server className="mr-4 h-4 w-4" />
                     <span>Source</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
