@@ -39,7 +39,7 @@ export interface AttendancePeriod {
   total_off_site_attendance: string;
   detailed_attendance: DetailedAttendance[];
   daily_attendances: DailyAttendance[];
-  sessions?: IndividualSession[];
+  entries?: IndividualSession[];
 }
 
 export interface AttendanceData {

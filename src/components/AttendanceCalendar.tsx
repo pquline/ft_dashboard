@@ -69,38 +69,49 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     return days;
   }, [period]);
 
-    const selectedDateSessions = useMemo(() => {
-    if (!selectedDate || !period.sessions) return [];
+      const selectedDateSessions = useMemo(() => {
+    if (!selectedDate) return [];
 
     const year = selectedDate.getFullYear();
     const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
-    // Filter sessions for the selected date
-    const daySessions = period.sessions.filter(session => {
+    console.log('Debug - Selected date:', dateString);
+    console.log('Debug - Period entries:', period.entries);
+    console.log('Debug - Period keys:', Object.keys(period));
+
+    if (!period.entries) {
+      console.log('Debug - No entries data available');
+      return [];
+    }
+
+    const daySessions = period.entries.filter(session => {
       const sessionDate = new Date(session.time_period.begin_at);
       const sessionDateString = sessionDate.getFullYear() + '-' +
         String(sessionDate.getMonth() + 1).padStart(2, '0') + '-' +
         String(sessionDate.getDate()).padStart(2, '0');
+      console.log('Debug - Session date:', sessionDateString, 'vs target:', dateString);
       return sessionDateString === dateString;
     });
 
-    // Apply source filtering
+    console.log('Debug - Day sessions found:', daySessions.length);
+
     const filteredSessions = daySessions.filter(session => {
       if (session.source === 'locations') return false;
       if (selectedSource === 'all') return true;
       return session.source === selectedSource;
     });
 
-    // Convert to display format
+    console.log('Debug - Filtered sessions:', filteredSessions.length);
+
     const sessions = filteredSessions.map(session => {
       const beginAt = new Date(session.time_period.begin_at);
       const endAt = new Date(session.time_period.end_at);
       const duration = (endAt.getTime() - beginAt.getTime()) / 1000; // duration in seconds
 
       return {
-        type: 'on_site' as const, // Individual sessions are typically on-site
+        type: 'on_site' as const,
         duration,
         source: session.source,
         campusId: session.campus_id,
@@ -109,8 +120,9 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
       };
     }).filter(session => session.duration > 0);
 
+    console.log('Debug - Final sessions:', sessions.length);
     return sessions;
-  }, [selectedDate, period.sessions, selectedSource]);
+  }, [selectedDate, period.entries, selectedSource]);
 
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
     const from = new Date(period.from_date);
