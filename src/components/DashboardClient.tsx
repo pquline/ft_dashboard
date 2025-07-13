@@ -127,6 +127,19 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
     if (oct22Data) {
       console.log('October 22nd 2024 hours:', oct22Data.total / 3600);
     }
+
+    // Debug the raw data from getDailyAttendanceForSource
+    if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
+      const rawDailyData = getDailyAttendanceForSource(currentPeriod, 'all');
+      const oct22RawData = rawDailyData.find(day => {
+        const date = new Date(day.date);
+        return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
+      });
+      console.log('October 22nd raw data from getDailyAttendanceForSource:', oct22RawData);
+      if (oct22RawData) {
+        console.log('October 22nd raw hours from function:', oct22RawData.total / 3600);
+      }
+    }
   }
 
   const sourceData = currentPeriod?.detailed_attendance
