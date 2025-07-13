@@ -85,18 +85,14 @@ export function DailyAttendanceChart({
           className="h-[320px] !aspect-auto"
         >
           <BarChart accessibilityLayer data={chartData}>
-            {/* Glassmorphic SVG gradients: vibrant accent with strong glassy highlight, minimal gradient */}
+            {/* Glassmorphic solid vibrant colors, no gradient */}
             <defs>
               <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff" stop-opacity="0.85" />
-                <stop offset="20%" stop-color="#fff" stop-opacity="0.35" />
-                <stop offset="21%" stop-color="#fb923c" stop-opacity="0.95" />
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.85" />
                 <stop offset="100%" stop-color="#fb923c" stop-opacity="0.85" />
               </linearGradient>
               <linearGradient id="bar-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff" stop-opacity="0.85" />
-                <stop offset="20%" stop-color="#fff" stop-opacity="0.35" />
-                <stop offset="21%" stop-color="#2563eb" stop-opacity="0.95" />
+                <stop offset="0%" stop-color="#2563eb" stop-opacity="0.85" />
                 <stop offset="100%" stop-color="#2563eb" stop-opacity="0.85" />
               </linearGradient>
               {/* Pie gradients for legend/other use (unchanged for now) */}
