@@ -25,6 +25,24 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   const [selectedMonth, setSelectedMonth] = useState<string>(defaultMonth);
   const [selectedSource, setSelectedSource] = useState<SourceType>('all');
 
+  // Debug month selection
+  devLog.debug('=== MONTH SELECTION DEBUG ===');
+  devLog.debug('defaultMonth:', defaultMonth);
+  devLog.debug('selectedMonth state:', selectedMonth);
+  devLog.debug('Available months:', data.attendance.map(p => ({
+    from_date: p.from_date,
+    to_date: p.to_date,
+    label: getPeriodMonthName(p.from_date, p.to_date)
+  })));
+
+  const handleMonthChange = (newMonth: string) => {
+    devLog.debug('Month change triggered:', {
+      from: selectedMonth,
+      to: newMonth
+    });
+    setSelectedMonth(newMonth);
+  };
+
   useEffect(() => {
     if (data && selectedMonth && selectedSource !== 'all') {
       const available = availableSources.filter(source => source !== 'locations');
@@ -35,6 +53,15 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   }, [data, selectedMonth, selectedSource, availableSources]);
 
   const currentPeriod = data.attendance.find(period => period.from_date === selectedMonth);
+
+  // Debug currentPeriod changes
+  devLog.debug('=== CURRENT PERIOD DEBUG ===');
+  devLog.debug('Looking for period with from_date:', selectedMonth);
+  devLog.debug('Found period:', currentPeriod ? {
+    from_date: currentPeriod.from_date,
+    to_date: currentPeriod.to_date,
+    label: getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date)
+  } : 'NOT FOUND');
 
   // Debug available months and current selection
   devLog.debug('Available months:', data.attendance.map(p => ({
@@ -198,7 +225,7 @@ return (
           imageUrl={data.image_url}
           months={months}
           selectedMonth={selectedMonth}
-          onMonthChange={setSelectedMonth}
+          onMonthChange={handleMonthChange}
           sources={availableSources}
           selectedSource={selectedSource}
           onSourceChange={(value) => setSelectedSource(value as SourceType)}
