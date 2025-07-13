@@ -26,13 +26,23 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     const { year, month } = getMainMonth(period);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+    const totalWithoutLocations = period.detailed_attendance
+      .filter(detail => detail.name !== 'locations')
+      .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
+
+    const totalWithLocations = period.daily_attendances.reduce((sum, day) =>
+      sum + parseISODuration(day.total_attendance), 0
+    );
+
+    const scaleFactor = totalWithLocations > 0 ? totalWithoutLocations / totalWithLocations : 0;
+
     const attendanceMap = new Map<string, { total: number; onSite: number; offSite: number }>();
 
     period.daily_attendances.forEach(day => {
       const d = new Date(day.date);
       if (d.getFullYear() === year && d.getMonth() === month) {
-        const totalOnSite = parseISODuration(day.total_on_site_attendance);
-        const totalOffSite = parseISODuration(day.total_off_site_attendance);
+        const totalOnSite = parseISODuration(day.total_on_site_attendance) * scaleFactor;
+        const totalOffSite = parseISODuration(day.total_off_site_attendance) * scaleFactor;
         attendanceMap.set(day.date, {
           total: totalOnSite + totalOffSite,
           onSite: totalOnSite,
@@ -62,16 +72,13 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     const selectedDateSessions = useMemo(() => {
     if (!selectedDate) return [];
 
-    // Use local date string to avoid timezone issues
     const year = selectedDate.getFullYear();
     const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
-    // Try exact match first
     let rawDayData = period.daily_attendances.find(day => day.date === dateString);
 
-    // If no exact match, try more flexible matching
     if (!rawDayData) {
       rawDayData = period.daily_attendances.find(day => {
         const dayDate = new Date(day.date);
@@ -83,8 +90,19 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
 
     if (!rawDayData) return [];
 
-    const totalOnSite = parseISODuration(rawDayData.total_on_site_attendance);
-    const totalOffSite = parseISODuration(rawDayData.total_off_site_attendance);
+    // Calculate scaling factor to exclude locations source (same logic as utils)
+    const totalWithoutLocations = period.detailed_attendance
+      .filter(detail => detail.name !== 'locations')
+      .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
+
+    const totalWithLocations = period.daily_attendances.reduce((sum, day) =>
+      sum + parseISODuration(day.total_attendance), 0
+    );
+
+    const scaleFactor = totalWithLocations > 0 ? totalWithoutLocations / totalWithLocations : 0;
+
+    const totalOnSite = parseISODuration(rawDayData.total_on_site_attendance) * scaleFactor;
+    const totalOffSite = parseISODuration(rawDayData.total_off_site_attendance) * scaleFactor;
 
     if (totalOnSite === 0 && totalOffSite === 0) return [];
 
