@@ -62,74 +62,96 @@ export function DailyAttendanceChart({
   };
 
   return (
-    // TEMP: Render chart directly on page background for vibrancy test
-    // Remove <Card> and <CardContent> wrappers
-    <ChartContainer
-      config={barChartConfig}
-      className="h-[320px] !aspect-auto"
-      style={{ filter: 'saturate(1.5) contrast(1.2)' }}
-    >
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid
-          vertical={false}
-          strokeDasharray="3 3"
-          stroke="currentColor"
-          opacity={0.1}
-        />
-        <XAxis
-          dataKey="date"
-          tickLine={false}
-          tickMargin={12}
-          axisLine={false}
-          tick={{
-            fontSize: 12,
-            fill: "currentColor",
-            opacity: 0.7,
-          }}
-        />
-        <YAxis
-          tickLine={false}
-          tickMargin={12}
-          axisLine={false}
-          tickFormatter={(value: number) => `${value}h`}
-          tick={{
-            fontSize: 12,
-            fill: "currentColor",
-            opacity: 0.7,
-          }}
-        />
-        <ChartTooltip
-          cursor={false}
-          content={
-            <ChartTooltipContent
-              formatter={(value: unknown) => {
-                const numValue =
-                  typeof value === "number"
-                    ? value
-                    : parseFloat(String(value));
-                const hours = Math.floor(numValue);
-                const minutes = Math.round(
-                  (numValue - hours) * 60
-                );
-                return `${hours}h ${minutes}m`;
-              }}
-            />
-          }
-        />
-        <Bar
-          dataKey="attendance"
-          radius={[4, 4, 0, 0]}
-          className="transition-all duration-300"
-        >
-          {chartData.map((entry, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={selectedSource === 'all' ? '#ff8000' : '#2563eb'}
-              className="transition-all duration-300"
-            />
-          ))}
-        </Bar>
-      </BarChart>
-    </ChartContainer>
+    <>
+      {/* TEMP: Pure orange div for vibrancy test */}
+      <div style={{ width: '100px', height: '100px', background: '#ff8000', margin: '2rem auto' }}></div>
+      <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
+        <CardHeader className="pb-4 relative z-10">
+          <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+            Daily Attendance in{" "}
+            {currentPeriod
+              ? getPeriodMonthName(
+                  currentPeriod.from_date,
+                  currentPeriod.to_date
+                )
+              : "selected month"}
+          </CardTitle>
+          <CardDescription className="text-muted-foreground/80">
+            {selectedSource === "all"
+              ? "Hours spent on campus per day (All sources)"
+              : `Hours spent on campus per day (${selectedSource} source)`}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-0 relative z-10">
+          <ChartContainer
+            config={barChartConfig}
+            className="h-[320px] !aspect-auto"
+            style={{ filter: 'saturate(1.5) contrast(1.2)' }}
+          >
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid
+                vertical={false}
+                strokeDasharray="3 3"
+                stroke="currentColor"
+                opacity={0.1}
+              />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                tickMargin={12}
+                axisLine={false}
+                tick={{
+                  fontSize: 12,
+                  fill: "currentColor",
+                  opacity: 0.7,
+                }}
+              />
+              <YAxis
+                tickLine={false}
+                tickMargin={12}
+                axisLine={false}
+                tickFormatter={(value: number) => `${value}h`}
+                tick={{
+                  fontSize: 12,
+                  fill: "currentColor",
+                  opacity: 0.7,
+                }}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    formatter={(value: unknown) => {
+                      const numValue =
+                        typeof value === "number"
+                          ? value
+                          : parseFloat(String(value));
+                      const hours = Math.floor(numValue);
+                      const minutes = Math.round(
+                        (numValue - hours) * 60
+                      );
+                      return `${hours}h ${minutes}m`;
+                    }}
+                  />
+                }
+              />
+              <Bar
+                dataKey="attendance"
+                radius={[4, 4, 0, 0]}
+                className="transition-all duration-300"
+              >
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={selectedSource === 'all' ? '#ff8000' : '#2563eb'}
+                    className="transition-all duration-300"
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+    </>
   );
 }
