@@ -2,6 +2,8 @@ import { cookies } from 'next/headers';
 import { AttendanceData } from '@/types/attendance';
 import { getUniqueSources } from '@/lib/utils';
 import { DashboardClient } from '@/components/DashboardClient';
+import { DashboardSkeleton } from '@/components/DashboardSkeleton';
+import { Suspense } from 'react';
 
 async function fetchAttendanceData(sessionCookie: string): Promise<AttendanceData> {
   const response = await fetch('https://dashboard.42paris.fr/api/attendance', {
@@ -22,7 +24,7 @@ async function fetchAttendanceData(sessionCookie: string): Promise<AttendanceDat
   return response.json();
 }
 
-export default async function DashboardPage() {
+async function DashboardContent() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session')?.value;
 
@@ -36,4 +38,12 @@ export default async function DashboardPage() {
   const availableSources = uniqueSources.filter(source => source !== 'locations');
 
   return <DashboardClient data={data} defaultMonth={defaultMonth} availableSources={availableSources} />;
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent />
+    </Suspense>
+  );
 }

@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      document.cookie = `session=${sessionCookie}; path=/; max-age=86400`; // 24 hours
+      document.cookie = `session=${sessionCookie}; path=/; max-age=86400`;
       const response = await fetch('/api/attendance');
       if (response.ok) {
         window.location.href = '/';
