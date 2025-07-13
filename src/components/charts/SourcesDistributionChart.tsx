@@ -76,17 +76,17 @@ export function SourcesDistributionChart({
             <PieChart>
               {/* Glassmorphic SVG gradients */}
               <defs>
-                <linearGradient id="pie-glass-primary" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
-                  <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
-                  <stop offset="6%" stop-color="var(--primary)" stop-opacity="1" />
-                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.8" />
+                <linearGradient id="pie-glass-orange" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0.5" />
+                  <stop offset="7%" stop-color="#fff" stop-opacity="0.12" />
+                  <stop offset="8%" stop-color="#ffb347" stop-opacity="1" />
+                  <stop offset="100%" stop-color="#ff8000" stop-opacity="1" />
                 </linearGradient>
                 <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
-                  <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
-                  <stop offset="6%" stop-color="#2563eb" stop-opacity="1" />
-                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0.8" />
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0.5" />
+                  <stop offset="7%" stop-color="#fff" stop-opacity="0.12" />
+                  <stop offset="8%" stop-color="#60a5fa" stop-opacity="1" />
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="1" />
                 </linearGradient>
                 <linearGradient id="pie-glass-teal" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stop-color="#f0fdfa" stop-opacity="0.8" />
@@ -119,7 +119,7 @@ export function SourcesDistributionChart({
                 {sourceData.map((entry, index) => (
                   <Cell
                     key={`cell-${entry.name}`}
-                    fill={selectedSource === 'all' ? 'url(#pie-glass-primary)' : 'url(#pie-glass-blue)'}
+                    fill={selectedSource === 'all' ? 'url(#pie-glass-orange)' : 'url(#pie-glass-blue)'}
                     className="transition-all duration-300"
                   />
                 ))}

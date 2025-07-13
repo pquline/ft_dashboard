@@ -86,11 +86,11 @@ export function DailyAttendanceChart({
         >
           <BarChart accessibilityLayer data={chartData}>
             <defs>
-              <linearGradient id="bar-glass-primary" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
-                <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
-                <stop offset="6%" stop-color="var(--primary)" stop-opacity="1" />
-                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.8" />
+              <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fff" stop-opacity="0.5" />
+                <stop offset="7%" stop-color="#fff" stop-opacity="0.12" />
+                <stop offset="8%" stop-color="#ffb347" stop-opacity="1" />
+                <stop offset="100%" stop-color="#ff8000" stop-opacity="1" />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -147,7 +147,7 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={selectedSource === 'all' ? 'url(#bar-glass-primary)' : '#2563eb'}
+                  fill={selectedSource === 'all' ? 'url(#bar-glass-orange)' : '#2563eb'}
                   className="transition-all duration-300"
                 />
               ))}
