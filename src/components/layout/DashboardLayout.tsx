@@ -2,6 +2,7 @@ import React from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AttendanceData, SourceType } from "@/types/attendance";
+import { useInteractiveBackground } from "@/hooks/useInteractiveBackground";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -24,8 +25,9 @@ export function DashboardLayout({
   onMonthChange,
   onSourceChange,
 }: DashboardLayoutProps) {
+  useInteractiveBackground();
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen gradient-bg interactive-bg">
       <Header
         login={data.login}
         imageUrl={data.image_url}
@@ -36,8 +38,10 @@ export function DashboardLayout({
         selectedSource={selectedSource}
         onSourceChange={onSourceChange}
       />
-      {children}
-      <div className="mt-12">
+      <div className="relative z-10">
+        {children}
+      </div>
+      <div className="mt-12 relative z-10">
         <Footer />
       </div>
     </div>

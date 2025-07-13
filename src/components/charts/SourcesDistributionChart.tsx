@@ -50,7 +50,7 @@ export function SourcesDistributionChart({
   } satisfies ChartConfig;
 
   return (
-    <Card className="card-modern group overflow-hidden">
+    <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
         <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
           Sources Distribution in{" "}
@@ -85,7 +85,7 @@ export function SourcesDistributionChart({
                   <Cell
                     key={`cell-${entry.name}`}
                     fill={CHART_COLORS.PIE_COLORS[index % CHART_COLORS.PIE_COLORS.length]}
-                    className="transition-all duration-300 hover:opacity-80"
+                    className="transition-all duration-300 hover:opacity-80 hover:scale-110"
                   />
                 ))}
               </Pie>

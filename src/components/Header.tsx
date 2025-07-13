@@ -53,7 +53,7 @@ export function Header({
   }
 
   return (
-    <header className="glass border-b border-border/50 backdrop-blur-xl sticky top-0 z-50 w-full animate-fade-in-up">
+    <header className="glass border-b border-border/50 backdrop-blur-xl sticky top-0 z-50 w-full animate-fade-in-up shadow-lg">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
           <Link href="/" className="group">
@@ -70,7 +70,7 @@ export function Header({
 
         <div className="flex items-center space-x-4">
           {/* Quick Stats Display */}
-          <div className="hidden md:flex items-center space-x-3 px-4 py-2 rounded-lg bg-card/50 border border-border/30">
+          <div className="hidden md:flex items-center space-x-3 px-4 py-2 rounded-lg glass-hover">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-slow"></div>
               <span className="text-sm font-medium text-foreground/80">Live</span>

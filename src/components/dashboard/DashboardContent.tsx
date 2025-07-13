@@ -43,7 +43,7 @@ export function DashboardContent({
 }: DashboardContentProps) {
   return (
     <div className="container mx-auto px-6 max-w-7xl">
-      <div className="space-y-8 mt-8">
+      <div className="space-y-8 mt-8 animate-fade-in-up">
         <DashboardSummaryCards
           total={total}
           onSite={onSite}

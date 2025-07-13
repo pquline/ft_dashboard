@@ -35,7 +35,7 @@ export function SourcesDetailsTable({
     }) || [];
 
   return (
-    <Card className="card-modern group overflow-hidden">
+    <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
         <CardTitle className="text-lg font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
           Sources Details in{" "}
@@ -54,7 +54,7 @@ export function SourcesDetailsTable({
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
         {filteredDetails.length > 0 ? (
-          <div className='border rounded-md border-border p-2'>
+          <div className='border rounded-md border-border/50 p-2 glass'>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -65,9 +65,9 @@ export function SourcesDetailsTable({
               </TableHeader>
               <TableBody>
                 {filteredDetails.map((detail: any, index: number) => (
-                  <TableRow key={index}>
+                  <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
                     <TableCell>
-                      <Badge variant="outline">
+                      <Badge variant="outline" className="glass-hover">
                         {detail.name}
                       </Badge>
                     </TableCell>
@@ -78,7 +78,7 @@ export function SourcesDetailsTable({
                             ? "secondary"
                             : "outline"
                         }
-                        className={`${
+                        className={`glass-hover ${
                           detail.type === "on_site"
                             ? "bg-green-500/10 text-green-500 border-green-500/20"
                             : "bg-blue-500/10 text-blue-600 border-blue-500/20"

@@ -62,7 +62,7 @@ export function DailyAttendanceChart({
   };
 
   return (
-    <Card className="card-modern group overflow-hidden">
+    <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
         <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
           Daily Attendance in{" "}
@@ -140,7 +140,7 @@ export function DailyAttendanceChart({
                 <Cell
                   key={`cell-${index}`}
                   fill={getBarColor(entry.attendance)}
-                  className="transition-all duration-300 hover:opacity-80"
+                  className="transition-all duration-300 hover:opacity-80 hover:scale-105"
                 />
               ))}
             </Bar>
