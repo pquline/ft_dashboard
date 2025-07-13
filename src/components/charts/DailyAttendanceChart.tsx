@@ -85,11 +85,20 @@ export function DailyAttendanceChart({
           className="h-[320px] !aspect-auto"
         >
           <BarChart accessibilityLayer data={chartData}>
-            {/* Glassmorphic SVG gradients: blend orange, green, blue for all bars */}
+            {/* Glassmorphic SVG gradients: one for each accent color */}
             <defs>
-              <linearGradient id="bar-glass-blend" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.7" />
-                <stop offset="40%" stop-color="#22c55e" stop-opacity="0.7" />
+              <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fff7ed" stop-opacity="0.7" />
+                <stop offset="80%" stop-color="#fb923c" stop-opacity="0.7" />
+                <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
+              </linearGradient>
+              <linearGradient id="bar-glass-green" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f0fdf4" stop-opacity="0.7" />
+                <stop offset="80%" stop-color="#22c55e" stop-opacity="0.7" />
+                <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
+              </linearGradient>
+              <linearGradient id="bar-glass-blue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#eff6ff" stop-opacity="0.7" />
                 <stop offset="80%" stop-color="#2563eb" stop-opacity="0.7" />
                 <stop offset="100%" stop-color="#fff" stop-opacity="0.15" />
               </linearGradient>
@@ -173,7 +182,11 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill="url(#bar-glass-blend)"
+                  fill={
+                    selectedSource === 'all'
+                      ? 'url(#bar-glass-orange)'
+                      : 'url(#bar-glass-blue)'
+                  }
                   className="transition-all duration-300"
                 />
               ))}
