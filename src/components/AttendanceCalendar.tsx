@@ -248,7 +248,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
         setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
       }
     }
-  }, [month, calendarData]);
+  }, [month]); // Only depend on month changes, not calendarData
 
   return (
     <Card>
