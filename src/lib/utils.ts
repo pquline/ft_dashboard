@@ -7,7 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function parseISODuration(duration: string): number {
-  const match = duration.match(/P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?/)
+  // Handle formats like P1D (1 day), P1DT2H (1 day 2 hours), PT2H30M (2 hours 30 minutes), etc.
+  const match = duration.match(/P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/)
   if (!match) return 0
 
   const days = parseInt(match[1] || '0')

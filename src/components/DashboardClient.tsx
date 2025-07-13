@@ -110,7 +110,6 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   devLog.debug('Chart data dates:', chartData.map(d => d.date));
   devLog.debug('Chart data with attendance > 0:', chartData.filter(d => d.attendance > 0));
 
-  // Debug October 2024 specifically
   if (currentPeriod) {
     const octoberData = filteredDailyData.filter(day => {
       const date = new Date(day.date);
@@ -128,12 +127,10 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
       console.log('October 22nd 2024 hours:', oct22Data.total / 3600);
     }
 
-    // Check if this is October 2024 period
     if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
       console.log('=== OCTOBER 2024 PERIOD DETECTED ===');
       console.log('Raw daily attendances for October:', currentPeriod.daily_attendances);
 
-      // Find October 22nd in raw data
       const oct22Raw = currentPeriod.daily_attendances.find(day => {
         const date = new Date(day.date);
         return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
@@ -143,6 +140,11 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
       if (oct22Raw) {
         const rawTotal = parseISODuration(oct22Raw.total_attendance);
         console.log('October 22nd raw total hours:', rawTotal / 3600);
+        console.log('October 22nd parseISODuration test:', {
+          input: oct22Raw.total_attendance,
+          output: rawTotal,
+          hours: rawTotal / 3600
+        });
       }
     }
   }
