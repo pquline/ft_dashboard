@@ -80,13 +80,13 @@ export function SourcesDistributionChart({
                   <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
                   <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
                   <stop offset="6%" stop-color="var(--primary)" stop-opacity="1" />
-                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="1" />
+                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.8" />
                 </linearGradient>
                 <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
                   <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
                   <stop offset="6%" stop-color="#2563eb" stop-opacity="1" />
-                  <stop offset="100%" stop-color="#2563eb" stop-opacity="1" />
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0.8" />
                 </linearGradient>
                 <linearGradient id="pie-glass-teal" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stop-color="#f0fdfa" stop-opacity="0.8" />

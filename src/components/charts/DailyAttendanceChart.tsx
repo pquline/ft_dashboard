@@ -90,7 +90,7 @@ export function DailyAttendanceChart({
                 <stop offset="0%" stop-color="#fff" stop-opacity="0.7" />
                 <stop offset="5%" stop-color="#fff" stop-opacity="0.15" />
                 <stop offset="6%" stop-color="var(--primary)" stop-opacity="1" />
-                <stop offset="100%" stop-color="var(--primary)" stop-opacity="1" />
+                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.8" />
               </linearGradient>
             </defs>
             <CartesianGrid
