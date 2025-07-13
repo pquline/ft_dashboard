@@ -124,17 +124,40 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
   if (source === 'all') {
-    // Use raw daily attendance data directly
-    return period.daily_attendances.map(day => {
-      const rawTotal = parseISODuration(day.total_attendance);
-      const rawOnSite = parseISODuration(day.total_on_site_attendance);
-      const rawOffSite = parseISODuration(day.total_off_site_attendance);
+    // Calculate actual daily attendance from session entries
+    const dailyAttendance = new Map<string, { total: number; onSite: number; offSite: number }>();
 
+    // Initialize all days with 0
+    period.daily_attendances.forEach(day => {
+      dailyAttendance.set(day.date, { total: 0, onSite: 0, offSite: 0 });
+    });
+
+    // Calculate actual attendance from session entries, excluding 'locations'
+    if (period.entries) {
+      period.entries
+        .filter(entry => entry.source !== 'locations')
+        .forEach(entry => {
+          const entryDate = new Date(entry.time_period.begin_at).toISOString().split('T')[0];
+          const begin = new Date(entry.time_period.begin_at);
+          const end = new Date(entry.time_period.end_at);
+          const duration = (end.getTime() - begin.getTime()) / 1000; // duration in seconds
+
+          const dayData = dailyAttendance.get(entryDate);
+          if (dayData) {
+            dayData.total += duration;
+            // Assume all entries are on-site for now (can be refined later)
+            dayData.onSite += duration;
+          }
+        });
+    }
+
+    return period.daily_attendances.map(day => {
+      const dayData = dailyAttendance.get(day.date) || { total: 0, onSite: 0, offSite: 0 };
       return {
         ...day,
-        total: rawTotal,
-        onSite: rawOnSite,
-        offSite: rawOffSite,
+        total: dayData.total,
+        onSite: dayData.onSite,
+        offSite: dayData.offSite,
       };
     });
   }
