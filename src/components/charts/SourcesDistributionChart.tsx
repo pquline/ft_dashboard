@@ -85,7 +85,7 @@ export function SourcesDistributionChart({
                   <Cell
                     key={`cell-${entry.name}`}
                     fill={CHART_COLORS.PIE_COLORS[index % CHART_COLORS.PIE_COLORS.length]}
-                    className="transition-all duration-300 hover:opacity-80 hover:scale-110"
+                    className="transition-all duration-300"
                   />
                 ))}
               </Pie>

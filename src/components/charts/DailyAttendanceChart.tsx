@@ -140,7 +140,7 @@ export function DailyAttendanceChart({
                 <Cell
                   key={`cell-${index}`}
                   fill={getBarColor(entry.attendance)}
-                  className="transition-all duration-300 hover:opacity-80 hover:scale-105"
+                  className="transition-all duration-300"
                 />
               ))}
             </Bar>
