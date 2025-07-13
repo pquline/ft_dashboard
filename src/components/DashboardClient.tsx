@@ -38,18 +38,21 @@ export function DashboardClient({
       onMonthChange={handleMonthChange}
       onSourceChange={handleSourceChange}
     >
-      <DashboardContent
-        data={data}
-        currentPeriod={currentPeriod}
-        selectedSource={selectedSource}
-        availableSources={availableSources}
-        total={total}
-        onSite={onSite}
-        offSite={offSite}
-        chartData={chartData}
-        sourceData={sourceData}
-        onMonthChange={handleMonthChange}
-      />
+      {/* Only render DashboardContent if currentPeriod is defined */}
+      {currentPeriod && (
+        <DashboardContent
+          data={data}
+          currentPeriod={currentPeriod}
+          selectedSource={selectedSource}
+          availableSources={availableSources}
+          total={total}
+          onSite={onSite}
+          offSite={offSite}
+          chartData={chartData}
+          sourceData={sourceData}
+          onMonthChange={handleMonthChange}
+        />
+      )}
     </DashboardLayout>
   );
 }
