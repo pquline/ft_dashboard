@@ -252,12 +252,11 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               onSelect={setSelectedDate}
               month={month}
               onMonthChange={onMonthChange}
-              className="rounded-md border w-full max-w-xs mx-auto p-4"
-              style={{ '--cell-size': '2.75rem' }}
+              className="rounded-md border w-full p-4"
               classNames={{
                 day_selected: "bg-primary text-primary-foreground rounded-full",
                 day_today: "",
-                day: "h-11 w-11 p-0 font-normal aria-selected:opacity-100",
+                day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
               components={{
                 DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
