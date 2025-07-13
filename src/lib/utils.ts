@@ -141,10 +141,23 @@ export function getDailyAttendanceForSource(period: AttendancePeriod, source: st
       const rawOnSite = parseISODuration(day.total_on_site_attendance);
       const rawOffSite = parseISODuration(day.total_off_site_attendance);
 
-      // If the day has actual attendance data, ensure it's not scaled to zero
-      const scaledTotal = rawTotal > 0 ? Math.max(rawTotal * scaleFactor, rawTotal * 0.1) : 0;
-      const scaledOnSite = rawOnSite > 0 ? Math.max(rawOnSite * scaleFactor, rawOnSite * 0.1) : 0;
-      const scaledOffSite = rawOffSite > 0 ? Math.max(rawOffSite * scaleFactor, rawOffSite * 0.1) : 0;
+      // If the day has significant attendance data (> 1 hour), ensure it's visible
+      const minVisibleHours = 0.5; // Minimum 30 minutes to be visible
+      const minVisibleSeconds = minVisibleHours * 3600;
+
+      let scaledTotal, scaledOnSite, scaledOffSite;
+
+      if (rawTotal > minVisibleSeconds) {
+        // For days with significant data, use the scaling factor but ensure minimum visibility
+        scaledTotal = Math.max(rawTotal * scaleFactor, minVisibleSeconds);
+        scaledOnSite = Math.max(rawOnSite * scaleFactor, rawOnSite > 0 ? minVisibleSeconds * 0.5 : 0);
+        scaledOffSite = Math.max(rawOffSite * scaleFactor, rawOffSite > 0 ? minVisibleSeconds * 0.5 : 0);
+      } else {
+        // For days with minimal data, apply normal scaling
+        scaledTotal = rawTotal * scaleFactor;
+        scaledOnSite = rawOnSite * scaleFactor;
+        scaledOffSite = rawOffSite * scaleFactor;
+      }
 
       return {
         ...day,

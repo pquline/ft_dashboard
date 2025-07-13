@@ -36,6 +36,15 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
 
   const currentPeriod = data.attendance.find(period => period.from_date === selectedMonth);
 
+  // Debug available months and current selection
+  devLog.debug('Available months:', data.attendance.map(p => ({
+    from_date: p.from_date,
+    to_date: p.to_date,
+    label: getPeriodMonthName(p.from_date, p.to_date)
+  })));
+  devLog.debug('Selected month:', selectedMonth);
+  devLog.debug('Current period found:', !!currentPeriod);
+
   if (currentPeriod) {
     const d = new Date(currentPeriod.from_date);
     const calendarMonth = new Date(d.getFullYear(), d.getMonth(), 1);
@@ -74,6 +83,48 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   devLog.debug('Chart data length:', chartData.length);
   devLog.debug('Chart data dates:', chartData.map(d => d.date));
   devLog.debug('Chart data with attendance > 0:', chartData.filter(d => d.attendance > 0));
+
+  // Debug October 2024 specifically
+  if (currentPeriod) {
+    const octoberData = filteredDailyData.filter(day => {
+      const date = new Date(day.date);
+      return date.getFullYear() === 2024 && date.getMonth() === 9; // October 2024
+    });
+    devLog.debug('October 2024 data:', octoberData);
+
+    const oct22Data = filteredDailyData.find(day => {
+      const date = new Date(day.date);
+      return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
+    });
+    devLog.debug('October 22nd 2024 data:', oct22Data);
+
+    if (oct22Data) {
+      devLog.debug('October 22nd 2024 hours:', oct22Data.total / 3600);
+    }
+
+    // Debug scaling for current period
+    if (selectedSource === 'all') {
+      const totalWithoutLocations = currentPeriod.detailed_attendance
+        .filter(detail => detail.name !== 'locations')
+        .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
+
+      const totalWithLocations = currentPeriod.daily_attendances.reduce((sum, day) =>
+        sum + parseISODuration(day.total_attendance), 0
+      );
+
+      const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
+        ? Math.min(totalWithoutLocations / totalWithLocations, 1)
+        : 1;
+
+      devLog.debug('Scaling debug for current period:', {
+        totalWithoutLocations,
+        totalWithLocations,
+        scaleFactor,
+        periodFromDate: currentPeriod.from_date,
+        periodToDate: currentPeriod.to_date
+      });
+    }
+  }
 
   const sourceData = currentPeriod?.detailed_attendance
     .filter(detail => {
