@@ -232,137 +232,124 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
   }, [month, calendarData]);
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle>Daily Attendance Details</CardTitle>
-        <CardDescription>
-          {selectedSource === 'all'
-            ? 'Click on any day to view session details (All sources)'
-            : `Click on any day to view session details (${selectedSource} source)`
-          }
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-          {/* Calendar Card */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Attendance Calendar</CardTitle>
-                <CardDescription>
-                  {selectedSource === 'all'
-                    ? 'Click on any day to view session details (All sources)'
-                    : `Click on any day to view session details (${selectedSource} source)`
-                  }
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  month={month}
-                  onMonthChange={onMonthChange}
-                  className="rounded-md border"
-                  classNames={{
-                    day_selected: "bg-primary text-primary-foreground rounded-full",
-                    day_today: "",
-                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
-                  }}
-                  components={{
-                    DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
-                      const dayData = calendarData.find(day =>
-                        day.date.toDateString() === date.toDateString()
-                      );
-                      if (!dayData) return <span {...props}>{date.getDate()}</span>;
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+      {/* Calendar Card */}
+      <div className="lg:col-span-2">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Attendance Calendar</CardTitle>
+            <CardDescription>
+              {selectedSource === 'all'
+                ? 'Click on any day to view session details (All sources)'
+                : `Click on any day to view session details (${selectedSource} source)`
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={setSelectedDate}
+              month={month}
+              onMonthChange={onMonthChange}
+              className="rounded-md border"
+              classNames={{
+                day_selected: "bg-primary text-primary-foreground rounded-full",
+                day_today: "",
+                day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+              }}
+              components={{
+                DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
+                  const dayData = calendarData.find(day =>
+                    day.date.toDateString() === date.toDateString()
+                  );
+                  if (!dayData) return <span {...props}>{date.getDate()}</span>;
 
-                      return (
-                        <span {...props} className="relative w-full h-full flex items-center justify-center">
-                          {date.getDate()}
-                          {dayData.hasSessions && (
-                            <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
-                          )}
-                        </span>
-                      );
-                    }
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </div>
+                  return (
+                    <span {...props} className="relative w-full h-full flex items-center justify-center">
+                      {date.getDate()}
+                      {dayData.hasSessions && (
+                        <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
+                      )}
+                    </span>
+                  );
+                }
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
-          {/* Sessions Card */}
-          <div className="lg:col-span-3">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle>Sessions</CardTitle>
-                <CardDescription>
-                  {selectedDate ? (
-                    <>
-                      Sessions for {selectedDate.toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </>
-                  ) : (
-                    'Select a day to view sessions'
-                  )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {selectedDateSessions.length > 0 ? (
-                  <div className='border rounded-md border-border'>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Source</TableHead>
-                          <TableHead>Begin</TableHead>
-                          <TableHead>End</TableHead>
-                          <TableHead>Duration</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {selectedDateSessions.map((session, index) => (
-                          <TableRow key={index}>
-                            <TableCell>
-                              <Badge variant="outline">
-                                {session.source}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {new Date(session.beginAt).toLocaleTimeString('en-US', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                              })}
-                            </TableCell>
-                            <TableCell>
-                              {new Date(session.endAt).toLocaleTimeString('en-US', {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false
-                              })}
-                            </TableCell>
-                            <TableCell className="font-medium">
-                              {formatDuration(session.duration)}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <div className="py-8 text-muted-foreground">
-                    {selectedDate ? 'No sessions on this day' : 'Select a day to view sessions'}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      {/* Sessions Card */}
+      <div className="lg:col-span-3">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Sessions</CardTitle>
+            <CardDescription>
+              {selectedDate ? (
+                <>
+                  Sessions for {selectedDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </>
+              ) : (
+                'Select a day to view sessions'
+              )}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {selectedDateSessions.length > 0 ? (
+              <div className='border rounded-md border-border'>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Begin</TableHead>
+                      <TableHead>End</TableHead>
+                      <TableHead>Duration</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {selectedDateSessions.map((session, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Badge variant="outline">
+                            {session.source}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {new Date(session.beginAt).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          {new Date(session.endAt).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                          })}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {formatDuration(session.duration)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="py-8 text-muted-foreground">
+                {selectedDate ? 'No sessions on this day' : 'Select a day to view sessions'}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }
