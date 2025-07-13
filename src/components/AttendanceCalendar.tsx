@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDuration } from '@/lib/utils';
-import { AttendancePeriod, IndividualSession } from '@/types/attendance';
+import { AttendancePeriod } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
@@ -126,67 +126,6 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     }
   }
 
-  function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
-    if (source === 'all') {
-      return period.daily_attendances.map(day => ({
-        ...day,
-        total: parseISODuration(day.total_attendance),
-        onSite: parseISODuration(day.total_on_site_attendance),
-        offSite: parseISODuration(day.total_off_site_attendance),
-      }));
-    }
-
-    const sourceDetail = period.detailed_attendance.find(detail => detail.name === source);
-    if (!sourceDetail) {
-      return period.daily_attendances.map(day => ({
-        ...day,
-        total: 0,
-        onSite: 0,
-        offSite: 0,
-      }));
-    }
-
-    const sourceTotalDuration = parseISODuration(sourceDetail.duration);
-    const totalMonthDuration = period.daily_attendances.reduce((sum, day) =>
-      sum + parseISODuration(day.total_attendance), 0
-    );
-
-    if (totalMonthDuration === 0) {
-      return period.daily_attendances.map(day => ({
-        ...day,
-        total: 0,
-        onSite: 0,
-        offSite: 0,
-      }));
-    }
-
-    return period.daily_attendances.map(day => {
-      const dayTotal = parseISODuration(day.total_attendance);
-      const dayRatio = dayTotal / totalMonthDuration;
-      const sourceDayTotal = sourceTotalDuration * dayRatio;
-
-      const dayOnSite = parseISODuration(day.total_on_site_attendance);
-      const dayOffSite = parseISODuration(day.total_off_site_attendance);
-      const dayOnSiteRatio = dayTotal > 0 ? dayOnSite / dayTotal : 0;
-      const dayOffSiteRatio = dayTotal > 0 ? dayOffSite / dayTotal : 0;
-
-      return {
-        ...day,
-        total: sourceDayTotal,
-        onSite: sourceDayTotal * dayOnSiteRatio,
-        offSite: sourceDayTotal * dayOffSiteRatio,
-      };
-    });
-  }
-
-  function filterDailyAttendancesToMainMonth(period: AttendancePeriod, daily: Array<{ date: string; total: number; onSite: number; offSite: number; day: string; total_attendance: string; total_on_site_attendance: string; total_off_site_attendance: string }>) {
-    const { year, month } = getMainMonth(period);
-    return daily.filter(day => {
-      const d = new Date(day.date);
-      return d.getFullYear() === year && d.getMonth() === month;
-    });
-  }
-
   function parseISODuration(duration: string): number {
     const match = duration.match(/P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/)
     if (!match) return 0
@@ -259,7 +198,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
               components={{
-                DayContent: ({ date, ...props }: { date: Date; [key: string]: any }) => {
+                DayContent: ({ date, ...props }: { date: Date } & React.HTMLAttributes<HTMLSpanElement>) => {
                   const dayData = calendarData.find(day =>
                     day.date.toDateString() === date.toDateString()
                   );
