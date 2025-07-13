@@ -254,7 +254,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               onMonthChange={onMonthChange}
               className="rounded-md border"
               classNames={{
-                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md !bg-primary !text-primary-foreground",
+                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-md",
                 day_today: "bg-accent text-accent-foreground rounded-md",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
@@ -263,6 +263,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                   const dayData = calendarData.find(day =>
                     day.date.toDateString() === date.toDateString()
                   );
+                  const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString();
 
                   if (!dayData) return <div {...props} />;
 
@@ -270,13 +271,15 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                     <div
                       {...props}
                       className={`relative h-9 w-9 flex items-center justify-center ${
-                        dayData.hasSessions
+                        isSelected
+                          ? '' // Don't apply custom styling when selected
+                          : dayData.hasSessions
                           ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
                           : ''
                       }`}
                     >
                       {date.getDate()}
-                      {dayData.hasSessions && (
+                      {dayData.hasSessions && !isSelected && (
                         <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-orange-500 rounded-full" />
                       )}
                     </div>
