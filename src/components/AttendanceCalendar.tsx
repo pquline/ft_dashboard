@@ -26,8 +26,8 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     const { year, month } = getMainMonth(period);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Create a map of date strings to raw attendance data
     const attendanceMap = new Map<string, { total: number; onSite: number; offSite: number }>();
+
     period.daily_attendances.forEach(day => {
       const d = new Date(day.date);
       if (d.getFullYear() === year && d.getMonth() === month) {
@@ -41,7 +41,6 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
       }
     });
 
-    // Generate all days in the month
     const days: DayData[] = [];
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
@@ -60,13 +59,24 @@ export function AttendanceCalendar({ period, selectedSource }: AttendanceCalenda
     return days;
   }, [period]);
 
-  const selectedDateSessions = useMemo(() => {
+    const selectedDateSessions = useMemo(() => {
     if (!selectedDate) return [];
 
     const dateString = selectedDate.toISOString().split('T')[0];
 
-    // Get the raw daily attendance data for this date
-    const rawDayData = period.daily_attendances.find(day => day.date === dateString);
+    // Try exact match first
+    let rawDayData = period.daily_attendances.find(day => day.date === dateString);
+
+    // If no exact match, try more flexible matching
+    if (!rawDayData) {
+      rawDayData = period.daily_attendances.find(day => {
+        const dayDate = new Date(day.date);
+        const selectedDateObj = new Date(selectedDate);
+        return dayDate.getFullYear() === selectedDateObj.getFullYear() &&
+               dayDate.getMonth() === selectedDateObj.getMonth() &&
+               dayDate.getDate() === selectedDateObj.getDate();
+      });
+    }
 
     if (!rawDayData) return [];
 
