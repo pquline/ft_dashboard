@@ -124,15 +124,12 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
   if (source === 'all') {
-    // Calculate actual daily attendance from session entries
     const dailyAttendance = new Map<string, { total: number; onSite: number; offSite: number }>();
 
-    // Initialize all days with 0
     period.daily_attendances.forEach(day => {
       dailyAttendance.set(day.date, { total: 0, onSite: 0, offSite: 0 });
     });
 
-    // Calculate actual attendance from session entries, excluding 'locations'
     if (period.entries) {
       period.entries
         .filter(entry => entry.source !== 'locations')
@@ -145,7 +142,6 @@ export function getDailyAttendanceForSource(period: AttendancePeriod, source: st
           const dayData = dailyAttendance.get(entryDate);
           if (dayData) {
             dayData.total += duration;
-            // Assume all entries are on-site for now (can be refined later)
             dayData.onSite += duration;
           }
         });

@@ -192,6 +192,19 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
                 return sum + (end.getTime() - begin.getTime()) / 1000;
               }, 0);
               console.log('October 22nd calculated total duration:', totalDuration / 3600, 'hours');
+
+              // Debug desk-made entries specifically
+              const deskMadeEntries = oct22Entries.filter(entry => entry.source === 'desk-made');
+              console.log('October 22nd desk-made entries:', deskMadeEntries);
+
+              if (deskMadeEntries.length > 0) {
+                const deskMadeDuration = deskMadeEntries.reduce((sum, entry) => {
+                  const begin = new Date(entry.time_period.begin_at);
+                  const end = new Date(entry.time_period.end_at);
+                  return sum + (end.getTime() - begin.getTime()) / 1000;
+                }, 0);
+                console.log('October 22nd desk-made duration:', deskMadeDuration / 3600, 'hours');
+              }
             }
           }
         }
