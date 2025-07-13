@@ -110,6 +110,7 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   devLog.debug('Chart data dates:', chartData.map(d => d.date));
   devLog.debug('Chart data with attendance > 0:', chartData.filter(d => d.attendance > 0));
 
+  // Debug October 2024 specifically
   if (currentPeriod) {
     const octoberData = filteredDailyData.filter(day => {
       const date = new Date(day.date);
@@ -125,90 +126,6 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
 
     if (oct22Data) {
       console.log('October 22nd 2024 hours:', oct22Data.total / 3600);
-    }
-
-    // Check if this is October 2024 period
-    if (currentPeriod.from_date === '2024-09-30' && currentPeriod.to_date === '2024-10-31') {
-      console.log('=== OCTOBER 2024 PERIOD DETECTED ===');
-      console.log('Raw daily attendances for October:', currentPeriod.daily_attendances);
-
-      // Find October 22nd in raw data
-      const oct22Raw = currentPeriod.daily_attendances.find(day => {
-        const date = new Date(day.date);
-        return date.getFullYear() === 2024 && date.getMonth() === 9 && date.getDate() === 22;
-      });
-      console.log('October 22nd raw data:', oct22Raw);
-
-      if (oct22Raw) {
-        const rawTotal = parseISODuration(oct22Raw.total_attendance);
-        console.log('October 22nd raw total hours:', rawTotal / 3600);
-        console.log('October 22nd parseISODuration test:', {
-          input: oct22Raw.total_attendance,
-          output: rawTotal,
-          hours: rawTotal / 3600
-        });
-
-        // Debug scaling for October 2024
-        if (selectedSource === 'all') {
-          const totalWithoutLocations = currentPeriod.detailed_attendance
-            .filter(detail => detail.name !== 'locations')
-            .reduce((sum, detail) => sum + parseISODuration(detail.duration), 0);
-
-          const totalWithLocations = currentPeriod.daily_attendances.reduce((sum, day) =>
-            sum + parseISODuration(day.total_attendance), 0
-          );
-
-          const scaleFactor = totalWithLocations > 0 && totalWithoutLocations > 0
-            ? Math.min(totalWithoutLocations / totalWithLocations, 1)
-            : 1;
-
-          console.log('October 2024 scaling debug:', {
-            totalWithoutLocations,
-            totalWithLocations,
-            scaleFactor,
-            rawTotal,
-            scaledTotal: rawTotal * scaleFactor,
-            rawHours: rawTotal / 3600,
-            scaledHours: (rawTotal * scaleFactor) / 3600
-          });
-
-          // Debug detailed attendance for October 22nd
-          console.log('Detailed attendance for October 2024:', currentPeriod.detailed_attendance);
-
-          // Check if there are entries for October 22nd
-          if (currentPeriod.entries) {
-            const oct22Entries = currentPeriod.entries.filter(entry => {
-              const entryDate = new Date(entry.time_period.begin_at);
-              return entryDate.getFullYear() === 2024 &&
-                     entryDate.getMonth() === 9 &&
-                     entryDate.getDate() === 22;
-            });
-            console.log('October 22nd entries:', oct22Entries);
-
-            if (oct22Entries.length > 0) {
-              const totalDuration = oct22Entries.reduce((sum, entry) => {
-                const begin = new Date(entry.time_period.begin_at);
-                const end = new Date(entry.time_period.end_at);
-                return sum + (end.getTime() - begin.getTime()) / 1000;
-              }, 0);
-              console.log('October 22nd calculated total duration:', totalDuration / 3600, 'hours');
-
-              // Debug desk-made entries specifically
-              const deskMadeEntries = oct22Entries.filter(entry => entry.source === 'desk-made');
-              console.log('October 22nd desk-made entries:', deskMadeEntries);
-
-              if (deskMadeEntries.length > 0) {
-                const deskMadeDuration = deskMadeEntries.reduce((sum, entry) => {
-                  const begin = new Date(entry.time_period.begin_at);
-                  const end = new Date(entry.time_period.end_at);
-                  return sum + (end.getTime() - begin.getTime()) / 1000;
-                }, 0);
-                console.log('October 22nd desk-made duration:', deskMadeDuration / 3600, 'hours');
-              }
-            }
-          }
-        }
-      }
     }
   }
 
