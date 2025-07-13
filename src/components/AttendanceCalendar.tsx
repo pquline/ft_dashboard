@@ -245,14 +245,14 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               }
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-0 flex-1">
+          <CardContent className="flex-1 flex items-center justify-center h-full">
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={setSelectedDate}
               month={month}
               onMonthChange={onMonthChange}
-              className="rounded-md border w-full p-4"
+              className="rounded-md border"
               classNames={{
                 day_selected: "bg-primary text-primary-foreground rounded-full",
                 day_today: "",
