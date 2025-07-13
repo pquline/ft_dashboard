@@ -270,13 +270,15 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                   return (
                     <div
                       {...props}
-                      className={`relative h-9 w-9 flex items-center justify-center ${
+                      className={[
+                        'relative h-9 w-9 flex items-center justify-center',
+                        props.className,
                         isSelected
                           ? ''
                           : dayData.hasSessions
                           ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
                           : ''
-                      }`}
+                      ].filter(Boolean).join(' ')}
                     >
                       {date.getDate()}
                       {dayData.hasSessions && !isSelected && (
