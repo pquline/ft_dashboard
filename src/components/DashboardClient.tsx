@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { AttendanceData, SourceType } from '@/types/attendance';
-import { parseISODuration, formatDuration, getPeriodMonthName, filterDailyAttendancesToMainMonth } from '@/lib/utils';
+import { parseISODuration, formatDuration, getPeriodMonthName, filterDailyAttendancesToMainMonth, devLog, getMainMonth } from '@/lib/utils';
 import { calculateTotalAttendanceForSource, calculateOnSiteAttendanceForSource, calculateOffSiteAttendanceForSource, getDailyAttendanceForSource } from '@/lib/utils';
 import { Header } from '@/components/Header';
 import { DashboardSummaryCards } from '@/components/DashboardSummaryCards';
@@ -35,6 +35,16 @@ export function DashboardClient({ data, defaultMonth, availableSources }: { data
   }, [data, selectedMonth, selectedSource, availableSources]);
 
   const currentPeriod = data.attendance.find(period => period.from_date === selectedMonth);
+
+  if (currentPeriod) {
+    const d = new Date(currentPeriod.from_date);
+    const calendarMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+    const headerLabel = getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date);
+    devLog.debug('currentPeriod.from_date:', currentPeriod.from_date);
+    devLog.debug('currentPeriod.to_date:', currentPeriod.to_date);
+    devLog.debug('calendarMonth (passed to calendar):', calendarMonth.toString());
+    devLog.debug('headerLabel:', headerLabel);
+  }
 
   const months = data.attendance.map(period => ({
     value: period.from_date,
@@ -176,14 +186,14 @@ return (
                   period={currentPeriod}
                   selectedSource={selectedSource}
                   month={(() => {
-                    const d = new Date(currentPeriod.from_date);
-                    return new Date(d.getFullYear(), d.getMonth(), 1);
+                    const { year, month } = getMainMonth(currentPeriod);
+                    return new Date(year, month, 1);
                   })()}
                   onMonthChange={(date) => {
-                    // Find the period whose from_date is in the same local year and month as the selected date
+                    // Find the period whose main month matches the selected date
                     const newMonthStr = data.attendance.find(period => {
-                      const d = new Date(period.from_date);
-                      return d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth();
+                      const { year, month } = getMainMonth(period);
+                      return year === date.getFullYear() && month === date.getMonth();
                     })?.from_date;
                     if (newMonthStr) setSelectedMonth(newMonthStr);
                   }}
