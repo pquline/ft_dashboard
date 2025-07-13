@@ -255,7 +255,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               className="rounded-md border"
               classNames={{
                 day_selected: "bg-primary text-primary-foreground rounded-full",
-                day_today: "bg-accent text-accent-foreground rounded-full",
+                day_today: "",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
               components={{
