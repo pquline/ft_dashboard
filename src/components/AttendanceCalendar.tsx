@@ -197,7 +197,6 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
                 day_today: "",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
-              // No custom components, use default Calendar from shadcn
             />
           </CardContent>
         </Card>
