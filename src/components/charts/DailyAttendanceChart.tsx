@@ -83,19 +83,9 @@ export function DailyAttendanceChart({
         <ChartContainer
           config={barChartConfig}
           className="h-[320px] !aspect-auto"
+          style={{ filter: 'saturate(1.5) contrast(1.2)' }}
         >
           <BarChart accessibilityLayer data={chartData}>
-            {/* Solid vibrant color per step, no gradients or highlights */}
-            <defs>
-              <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#ff8000" stop-opacity="1" />
-                <stop offset="100%" stop-color="#ff8000" stop-opacity="1" />
-              </linearGradient>
-              <linearGradient id="bar-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2563eb" stop-opacity="1" />
-                <stop offset="100%" stop-color="#2563eb" stop-opacity="1" />
-              </linearGradient>
-            </defs>
             <CartesianGrid
               vertical={false}
               strokeDasharray="3 3"
@@ -150,11 +140,7 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={
-                    selectedSource === 'all'
-                      ? 'url(#bar-glass-orange)'
-                      : 'url(#bar-glass-blue)'
-                  }
+                  fill={selectedSource === 'all' ? '#ff8000' : '#2563eb'}
                   className="transition-all duration-300"
                 />
               ))}
