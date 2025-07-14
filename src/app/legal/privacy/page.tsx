@@ -6,43 +6,43 @@ import Link from 'next/link';
 export default function PrivacyPolicyPage() {
   const sections = [
     {
-      title: 'Information We Collect',
+      title: 'No Data Collection',
       icon: User,
       content: [
-        'Session cookie from 42 Paris dashboard for authentication',
-        'Attendance data fetched from 42 Paris API',
-        'User profile information (login, image) from 42 Paris',
-        'No personal data is stored on our servers'
+        'We do not collect, store, or process any personal data',
+        'Session cookies are stored locally in your browser only',
+        'All data is fetched directly from 42 Paris API',
+        'No information is transmitted to or stored on our servers'
       ]
     },
     {
-      title: 'How We Use Your Information',
+      title: 'How the Service Works',
       icon: Eye,
       content: [
-        'Authenticate users with 42 Paris dashboard',
-        'Fetch and display attendance analytics',
-        'Provide attendance tracking and visualization',
-        'No usage analytics or tracking is performed'
+        'Your browser stores a session cookie locally for 24 hours',
+        'This cookie is used to authenticate with 42 Paris API',
+        'Data is fetched and displayed temporarily in your browser',
+        'No data is collected, analyzed, or stored by our service'
       ]
     },
     {
-      title: 'Data Protection',
+      title: 'Data Security',
       icon: Lock,
       content: [
-        'Session cookies are encrypted and secure',
-        'All API requests use HTTPS encryption',
-        'No data is stored permanently on our servers',
-        'Session data expires after 24 hours'
+        'All communication with 42 Paris uses HTTPS encryption',
+        'Session cookies are secure and expire automatically',
+        'No data is stored on our servers or infrastructure',
+        'Your data remains under 42 Paris control at all times'
       ]
     },
     {
       title: 'Data Retention',
       icon: Calendar,
       content: [
-        'Session cookies expire after 24 hours',
-        'No data is retained after session expiration',
-        'No analytics or usage data is collected',
-        'No backup or permanent storage of user data'
+        'Session cookies expire after 24 hours automatically',
+        'No data is retained after your browser session ends',
+        'No logs, analytics, or tracking data is collected',
+        'No personal information is ever stored on our systems'
       ]
     }
   ];
@@ -83,12 +83,13 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              At ft_dashboard, we are committed to protecting your privacy. This Privacy Policy explains how we handle your information
-              when you use our attendance dashboard service, which connects to the 42 Paris API.
+              At ft_dashboard, we are committed to protecting your privacy. This Privacy Policy explains how our service works
+              and why we do not collect, store, or process any of your personal data.
             </p>
             <p>
-              We do not collect, store, or process any personal data on our servers. All data is fetched directly from 42 Paris
-              and displayed temporarily in your browser. Your session information is only stored in a secure cookie that expires after 24 hours.
+              Our service acts as a bridge between your browser and the 42 Paris API. We do not collect, store, or process any data.
+              All information is fetched directly from 42 Paris and displayed temporarily in your browser. Your session cookie is stored
+              locally and expires after 24 hours.
             </p>
           </CardContent>
         </Card>
@@ -124,12 +125,12 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              Since we do not store any personal data on our servers, there is no personal information to access, correct, or delete.
+              Since we do not collect, store, or process any personal data, there is no information to access, correct, or delete.
               All your data remains under the control of 42 Paris and is subject to their privacy policy.
             </p>
             <p>
-              You can revoke access to your data at any time by clearing your browser cookies or logging out of the application.
-              Your session will automatically expire after 24 hours of inactivity.
+              You can revoke access at any time by clearing your browser cookies or logging out. Your session will automatically
+              expire after 24 hours, and no data will be retained by our service.
             </p>
           </CardContent>
         </Card>
@@ -140,7 +141,7 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              If you have any questions about this Privacy Policy or our data practices, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
+              If you have any questions about this Privacy Policy or how our service works, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>
           </CardContent>
         </Card>
