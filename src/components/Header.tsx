@@ -2,14 +2,21 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { BarChart, Calendar, LogOut, Moon, Server, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
@@ -80,6 +87,25 @@ export function Header({
             <span className="text-sm text-muted-foreground">{login}</span>
           </div>
 
+          {/* Month Selector */}
+          {months && selectedMonth && onMonthChange && (
+            <div className="flex items-center space-x-2">
+              <Calendar className="w-4 h-4 text-foreground/70" />
+              <Select value={selectedMonth} onValueChange={onMonthChange}>
+                <SelectTrigger className="w-[140px] h-9 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {months.map((month) => (
+                    <SelectItem key={month.value} value={month.value}>
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -96,27 +122,6 @@ export function Header({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {/* Month Selector */}
-              {months && selectedMonth && onMonthChange && (
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Calendar className="mr-4 h-4 w-4" />
-                    <span>Month</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    {months.map((month) => (
-                      <DropdownMenuItem
-                        key={month.value}
-                        onClick={() => onMonthChange(month.value)}
-                        className={selectedMonth === month.value ? "bg-accent" : ""}
-                      >
-                        {month.label}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-              )}
-
               {/* Source Selector */}
               {sources && selectedSource && onSourceChange && (
                 <DropdownMenuSub>
@@ -150,11 +155,11 @@ export function Header({
                   <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-4 h-4 w-4" />
                   <span>Theme</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
+                <DropdownMenuContent>
                   <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
-                </DropdownMenuSubContent>
+                </DropdownMenuContent>
               </DropdownMenuSub>
 
               <DropdownMenuItem onClick={handleLogout}>
