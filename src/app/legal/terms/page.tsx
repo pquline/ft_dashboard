@@ -65,7 +65,7 @@ export default function TermsOfServicePage() {
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">
                 Terms of Service
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-foreground/90">
                 Last updated: {new Date().toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -81,7 +81,7 @@ export default function TermsOfServicePage() {
           <CardHeader className="relative z-10">
             <CardTitle className="text-sm font-semibold text-foreground/80">Introduction</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground relative z-10">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               These Terms of Service ("Terms") govern your use of ft_dashboard ("Service"), a dashboard application
               that provides attendance tracking and visualization by connecting to the 42 Paris API.
@@ -109,7 +109,7 @@ export default function TermsOfServicePage() {
                   {section.content.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">{item}</span>
+                      <span className="text-foreground/90">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -123,7 +123,7 @@ export default function TermsOfServicePage() {
           <CardHeader className="relative z-10">
             <CardTitle className="text-sm font-semibold text-foreground/80">Intellectual Property</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground relative z-10">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               The Service and its original content, features, and functionality are and will remain the exclusive property
               of ft_dashboard. The Service is protected by copyright and other laws.
@@ -139,7 +139,7 @@ export default function TermsOfServicePage() {
           <CardHeader className="relative z-10">
             <CardTitle className="text-sm font-semibold text-foreground/80">Limitation of Liability</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground relative z-10">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               In no event shall ft_dashboard, nor its directors, employees, partners, agents, suppliers, or affiliates,
               be liable for any indirect, incidental, special, consequential, or punitive damages.
@@ -155,7 +155,7 @@ export default function TermsOfServicePage() {
           <CardHeader className="relative z-10">
             <CardTitle className="text-sm font-semibold text-foreground/80">Termination</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground relative z-10">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               We may terminate or suspend your account and bar access to the Service immediately, without prior notice
               or liability, under our sole discretion, for any reason whatsoever and without limitation.
@@ -171,7 +171,7 @@ export default function TermsOfServicePage() {
           <CardHeader className="relative z-10">
             <CardTitle className="text-sm font-semibold text-foreground/80">Contact Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground relative z-10">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               If you have any questions about these Terms of Service, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>
