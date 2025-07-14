@@ -21,7 +21,6 @@ import { BarChart, LogOut, Moon, Server, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
-import { Badge } from "./ui/badge";
 
 interface HeaderProps {
   login: string;
@@ -46,6 +45,7 @@ export function Header({
 }: HeaderProps) {
   const { setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
@@ -54,6 +54,11 @@ export function Header({
   const handleLogout = () => {
     document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     window.location.href = "/login";
+  };
+
+  const handleThemeChange = (theme: string) => {
+    setTheme(theme);
+    setDropdownOpen(false);
   };
 
   if (!mounted) {
@@ -100,13 +105,13 @@ export function Header({
             </div>
           )}
 
-          <DropdownMenu>
+          <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
                 aria-label="User menu"
                 aria-haspopup="menu"
-                aria-expanded="false"
+                aria-expanded={dropdownOpen}
                 className="cursor-pointer"
               >
                 <Avatar>
@@ -152,17 +157,17 @@ export function Header({
                   <Moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 mr-4 h-4 w-4" />
                   <span>Theme</span>
                 </DropdownMenuSubTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setTheme("light")}>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem onClick={() => handleThemeChange("light")}>
                     Light
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
                     Dark
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>
+                  <DropdownMenuItem onClick={() => handleThemeChange("system")}>
                     System
                   </DropdownMenuItem>
-                </DropdownMenuContent>
+                </DropdownMenuSubContent>
               </DropdownMenuSub>
 
               <DropdownMenuItem onClick={handleLogout}>
