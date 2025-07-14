@@ -63,9 +63,9 @@ export default function PrivacyPolicyPage() {
           </Button>
 
           <div className="flex items-center gap-4 mb-6">
-            <Shield className="w-12 h-12 text-foreground" />
+            <Shield className="w-10 h-10 text-foreground" />
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+              <h1 className="text-xl md:text-2xl font-bold text-foreground">
                 Privacy Policy
               </h1>
               <p className="text-foreground/90">
