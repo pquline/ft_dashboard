@@ -6,23 +6,23 @@ import Link from 'next/link';
 export default function TermsOfServicePage() {
   const sections = [
     {
-      title: 'Acceptance of Terms',
+      title: 'Service Overview',
       icon: CheckCircle,
       content: [
-        'By accessing and using ft_dashboard, you accept and agree to be bound by these terms',
-        'If you do not agree to these terms, you must not use our service',
-        'We reserve the right to modify these terms at any time',
-        'Continued use after changes constitutes acceptance of new terms'
+        'ft_dashboard is a bridge service connecting your browser to 42 Paris API',
+        'We do not collect, store, or process any user data',
+        'Service is provided free of charge and "as is"',
+        'You must have a valid 42 Paris account to use this service'
       ]
     },
     {
-      title: 'Use of Service',
+      title: 'How It Works',
       icon: Users,
       content: [
-        'You must use the service only for lawful purposes',
-        'You must have a valid 42 Paris account to access the service',
-        'You must not attempt to gain unauthorized access to the system',
-        'You must not interfere with or disrupt the service'
+        'Your browser stores a session cookie locally for 24 hours',
+        'This cookie authenticates with 42 Paris API on your behalf',
+        'Data is fetched and displayed temporarily in your browser',
+        'No data is stored on our servers or infrastructure'
       ]
     },
     {
@@ -30,19 +30,19 @@ export default function TermsOfServicePage() {
       icon: AlertTriangle,
       content: [
         'Provide a valid session cookie from 42 Paris dashboard',
-        'Maintain the confidentiality of your session information',
-        'Report any security concerns immediately',
-        'Comply with 42 Paris terms of service and applicable laws'
+        'Use the service only for lawful purposes',
+        'Comply with 42 Paris terms of service',
+        'Report any security concerns immediately'
       ]
     },
     {
-      title: 'Service Availability',
+      title: 'Service Limitations',
       icon: Scale,
       content: [
-        'Service availability depends on 42 Paris API accessibility',
-        'We may perform maintenance that temporarily affects service availability',
-        'We are not liable for any damages caused by service interruptions',
-        'Service is provided "as is" without warranties'
+        'Service availability depends on 42 Paris API',
+        'No data is collected or stored by our service',
+        'Session expires after 24 hours automatically',
+        'Service provided without warranties or guarantees'
       ]
     }
   ];
@@ -83,13 +83,12 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              These Terms of Service ("Terms") govern your use of ft_dashboard ("Service"), a dashboard application
-              that provides attendance tracking and visualization by connecting to the 42 Paris API.
+              These Terms of Service ("Terms") govern your use of ft_dashboard ("Service"), a bridge application
+              that connects your browser to the 42 Paris API for attendance data visualization.
             </p>
             <p>
-              By using our Service, you agree to these Terms and acknowledge that this service is a third-party
-              application that accesses data from 42 Paris. If you disagree with any part of these terms,
-              then you may not access the Service.
+              By using our Service, you agree to these Terms. We do not collect, store, or process any data.
+              This service simply facilitates communication between your browser and 42 Paris.
             </p>
           </CardContent>
         </Card>
@@ -125,12 +124,11 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              The Service and its original content, features, and functionality are and will remain the exclusive property
-              of ft_dashboard. The Service is protected by copyright and other laws.
+              The Service and its original content, features, and functionality are the property of ft_dashboard.
+              The Service is protected by copyright and other applicable laws.
             </p>
             <p>
-              You may not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform,
-              republish, download, store, or transmit any of the material on our Service without permission.
+              You may not reproduce, distribute, modify, or create derivative works of our Service without permission.
             </p>
           </CardContent>
         </Card>
@@ -141,12 +139,10 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              In no event shall ft_dashboard, nor its directors, employees, partners, agents, suppliers, or affiliates,
-              be liable for any indirect, incidental, special, consequential, or punitive damages.
+              The service is provided free of charge and "as is" without any warranties.
             </p>
             <p>
-              Our liability is limited to the amount you paid for the Service, if any, or $100, whichever is greater.
-              The service is provided free of charge and "as is" without any warranties.
+              We are not liable for any damages arising from the use of this service.
             </p>
           </CardContent>
         </Card>
@@ -157,12 +153,10 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              We may terminate or suspend your account and bar access to the Service immediately, without prior notice
-              or liability, under our sole discretion, for any reason whatsoever and without limitation.
+              You may stop using the service at any time by clearing your browser cookies.
             </p>
             <p>
-              If you wish to terminate your account, you may simply discontinue using the Service. All provisions of
-              the Terms which by their nature should survive termination shall survive termination.
+              Since we do not store any data, there is no account to terminate or suspend.
             </p>
           </CardContent>
         </Card>
@@ -173,7 +167,7 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              If you have any questions about these Terms of Service, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
+              If you have any questions about these Terms of Service or how our service works, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>
           </CardContent>
         </Card>
