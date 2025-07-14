@@ -65,7 +65,7 @@ export default function PrivacyPolicyPage() {
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">
                 Privacy Policy
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-foreground/90">
                 Last updated: {new Date().toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
