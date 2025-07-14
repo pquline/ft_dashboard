@@ -11,7 +11,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Calendar, LogOut, Moon, Server, Sun, BarChart } from 'lucide-react';
+import { Calendar, LogOut, Moon, Server, Sun, BarChart, Shield } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 
@@ -156,6 +156,12 @@ export function Header({
                   <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
+              <DropdownMenuItem asChild>
+                <Link href="/legal">
+                  <Shield className="mr-2 h-4 w-4 text-foreground" />
+                  <span>Legal</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4 text-foreground" />
                 <span>Log Out</span>
