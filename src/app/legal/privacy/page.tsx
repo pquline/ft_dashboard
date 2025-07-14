@@ -81,7 +81,7 @@ export default function PrivacyPolicyPage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Introduction</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
               At ft_dashboard, we are committed to protecting your privacy. This Privacy Policy explains how we handle your information
               when you use our attendance dashboard service, which connects to the 42 Paris API.
@@ -108,7 +108,7 @@ export default function PrivacyPolicyPage() {
                   {section.content.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">{item}</span>
+                      <span className="text-foreground/90">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -122,7 +122,7 @@ export default function PrivacyPolicyPage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Your Rights</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
               Since we do not store any personal data on our servers, there is no personal information to access, correct, or delete.
               All your data remains under the control of 42 Paris and is subject to their privacy policy.
@@ -138,14 +138,10 @@ export default function PrivacyPolicyPage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Contact Us</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
-              If you have any questions about this Privacy Policy or our data practices, please contact us:
+              If you have any questions about this Privacy Policy or our data practices, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>
-            <div className="space-y-2">
-              <p>• Email: Through our GitHub repository issues</p>
-              <p>• GitHub: <Link href="https://github.com/pquline/ft_dashboard" className="text-primary hover:underline">github.com/pquline/ft_dashboard</Link></p>
-            </div>
           </CardContent>
         </Card>
 

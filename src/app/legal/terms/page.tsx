@@ -81,7 +81,7 @@ export default function TermsOfServicePage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Introduction</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
               These Terms of Service ("Terms") govern your use of ft_dashboard ("Service"), a dashboard application
               that provides attendance tracking and visualization by connecting to the 42 Paris API.
@@ -109,7 +109,7 @@ export default function TermsOfServicePage() {
                   {section.content.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-muted-foreground">{item}</span>
+                      <span className="text-foreground/90">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -123,7 +123,7 @@ export default function TermsOfServicePage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Intellectual Property</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
               The Service and its original content, features, and functionality are and will remain the exclusive property
               of ft_dashboard. The Service is protected by copyright and other laws.
@@ -139,7 +139,7 @@ export default function TermsOfServicePage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Limitation of Liability</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
               In no event shall ft_dashboard, nor its directors, employees, partners, agents, suppliers, or affiliates,
               be liable for any indirect, incidental, special, consequential, or punitive damages.
@@ -155,7 +155,7 @@ export default function TermsOfServicePage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Termination</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
               We may terminate or suspend your account and bar access to the Service immediately, without prior notice
               or liability, under our sole discretion, for any reason whatsoever and without limitation.
@@ -171,14 +171,10 @@ export default function TermsOfServicePage() {
           <CardHeader>
             <CardTitle className="text-xl font-semibold">Contact Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-muted-foreground">
+          <CardContent className="space-y-4 text-foreground/90">
             <p>
-              If you have any questions about these Terms of Service, please contact us:
+              If you have any questions about these Terms of Service, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>
-            <div className="space-y-2">
-              <p>• GitHub: <Link href="https://github.com/pquline/ft_dashboard" className="text-primary hover:underline">github.com/pquline/ft_dashboard</Link></p>
-              <p>• Issues: <Link href="https://github.com/pquline/ft_dashboard/issues" className="text-primary hover:underline">Create an issue</Link></p>
-            </div>
           </CardContent>
         </Card>
 
