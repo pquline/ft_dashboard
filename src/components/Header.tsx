@@ -84,7 +84,7 @@ export function Header({
           {months && selectedMonth && onMonthChange && (
             <div className="flex items-center space-x-2">
               <Select value={selectedMonth} onValueChange={onMonthChange}>
-                <SelectTrigger className="w-[140px] h-9 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl hover:bg-white/70 dark:hover:bg-[rgba(24,28,40,0.65)] transition-all duration-300 shadow-lg text-foreground/90 relative overflow-hidden">
+                <SelectTrigger className="w-[140px] h-9 bg-white/30 dark:bg-background/10 border border-white/10 backdrop-blur-xl hover:bg-white/50 dark:hover:bg-white/5 transition-all duration-300 shadow-lg text-foreground/90 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-70 pointer-events-none" />
                   <SelectValue className="relative z-10" />
                 </SelectTrigger>

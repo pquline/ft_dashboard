@@ -60,7 +60,6 @@ export function useDashboardState(
     offSite: day.offSite / 3600,
   }));
 
-  // Get source data for pie chart and table
   const sourceData =
     currentPeriod?.detailed_attendance
       .filter((detail) => detail.name !== "locations")
