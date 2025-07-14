@@ -173,7 +173,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {/* Calendar Card */}
       <div className="lg:col-span-2">
-        <Card className="card-modern glass-hover h-[450px] flex flex-col animate-slide-in-right">
+        <Card className="card-modern glass-hover h-[500px] flex flex-col animate-slide-in-right">
           <CardHeader className="pb-3">
             <CardTitle>Attendance Calendar in {getPeriodMonthName(period.from_date, period.to_date)}</CardTitle>
             <CardDescription>
@@ -205,7 +205,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
 
       {/* Sessions Card */}
       <div className="lg:col-span-3">
-        <Card className="card-modern glass-hover h-[450px] flex flex-col animate-slide-in-right">
+        <Card className="card-modern glass-hover h-[500px] flex flex-col animate-slide-in-right">
           <CardHeader className="pb-3">
             <CardTitle>Sessions</CardTitle>
             <CardDescription>
@@ -228,7 +228,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
               <>
                 {/* Daily Totals by Source */}
                 <div className='border rounded-md border-border/50 p-3 glass'>
-                  <h4 className="text-sm font-semibold text-foreground/80 mb-3">Daily Totals by Source</h4>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Daily Totals by Source</h4>
                   <div className="flex flex-wrap gap-4 items-center">
                     {(() => {
                       const sourceTotals = selectedDateSessions.reduce((acc, session) => {
@@ -239,10 +239,9 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                         return acc;
                       }, {} as Record<string, number>);
                       return Object.entries(sourceTotals).map(([source, totalDuration]) => (
-                        <div key={source} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/30 border border-border/30 shadow-sm backdrop-blur-md">
-                          <span className="text-primary/80"><Clock3 className="w-4 h-4" /></span>
-                          <Badge variant="outline" className="glass-hover text-xs px-2 py-1">{source}</Badge>
-                          <span className="font-bold text-base text-foreground ml-1">{formatDuration(totalDuration)}</span>
+                        <div key={source} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30 shadow-sm backdrop-blur-md">
+                          <Badge variant="outline" className="text-xs px-2 py-1 border-orange-500/40 text-orange-500 bg-orange-500/10">{source}</Badge>
+                          <span className="text-sm text-foreground ml-1">{formatDuration(totalDuration)}</span>
                         </div>
                       ));
                     })()}
@@ -251,7 +250,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
 
                 {/* Individual Sessions */}
                 <div className='border rounded-md border-border/50 p-2 glass'>
-                  <h4 className="text-sm font-semibold text-foreground/80 mb-3">Individual Sessions</h4>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Individual Sessions</h4>
                   <Table>
                     <TableHeader>
                       <TableRow>
