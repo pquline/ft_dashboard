@@ -163,7 +163,7 @@ export default function TermsOfServicePage() {
 
         <Card className="card-modern glass-hover group overflow-hidden mt-8">
           <CardHeader className="relative z-10">
-            <CardTitle className="text-sm font-semibold text-foreground/80">Contact Information</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground/80">Contact Us</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
