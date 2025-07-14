@@ -52,9 +52,9 @@ export default function TermsOfServicePage() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Header */}
         <div className="mb-8">
-          <Button asChild variant="ghost" className="mb-6 group">
+          <Button asChild className="btn-glass font-semibold py-3 transition-all duration-300 focus-ring relative z-10 mb-6">
             <Link href="/">
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
+              <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
           </Button>
