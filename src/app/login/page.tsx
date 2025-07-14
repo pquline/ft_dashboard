@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info, BarChart } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
@@ -83,14 +84,14 @@ export default function LoginPage() {
                   <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
                     <li>
                       Go to{' '}
-                      <a
+                      <Link
                         href="https://dashboard.42paris.fr/attendance"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-1 text-foreground/50 hover:underline transition-colors duration-200"
+                        className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
                       >
-                        <span>42 Dashboard</span>
-                      </a>
+                        42 Dashboard
+                      </Link>
                     </li>
                     <li>Open Developer Tools (F12)</li>
                     <li>Go to Application/Storage → Cookies</li>
