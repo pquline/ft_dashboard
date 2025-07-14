@@ -14,7 +14,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="text-foreground hover:underline transition-colors duration-200 group inline-flex items-center gap-1"
               >
-                <span>pfischof</span>
+                <span>pquline</span>
               </Link>
               <span className="text-yellow-500 animate-pulse">{" █"}</span>
             </span>
