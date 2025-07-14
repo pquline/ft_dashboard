@@ -74,18 +74,19 @@ export function getUniqueSources(attendance: AttendancePeriod[]): string[] {
 
 export function calculateTotalAttendance(period: AttendancePeriod): number {
   return period.detailed_attendance
+    .filter(detail => detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0)
 }
 
 export function calculateOnSiteAttendance(period: AttendancePeriod): number {
   return period.detailed_attendance
-    .filter(detail => detail.type === 'on_site')
+    .filter(detail => detail.type === 'on_site' && detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0)
 }
 
 export function calculateOffSiteAttendance(period: AttendancePeriod): number {
   return period.detailed_attendance
-    .filter(detail => detail.type === 'off_site')
+    .filter(detail => detail.type === 'off_site' && detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0)
 }
 
