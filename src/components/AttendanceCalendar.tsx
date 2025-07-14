@@ -222,51 +222,82 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
               )}
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-0 flex-1 overflow-auto">
+          <CardContent className="pt-0 flex-1 overflow-auto space-y-4">
             {selectedDateSessions.length > 0 ? (
-              <div className='border rounded-md border-border/50 p-2 glass'>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Begin</TableHead>
-                      <TableHead>End</TableHead>
-                      <TableHead>Duration</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedDateSessions.map((session, index) => (
-                      <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
-                        <TableCell>
-                          <Badge variant="outline" className="glass-hover">
-                            {session.source}
+              <>
+                {/* Daily Totals by Source */}
+                <div className='border rounded-md border-border/50 p-3 glass'>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3">Daily Totals by Source</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {(() => {
+                      const sourceTotals = selectedDateSessions.reduce((acc, session) => {
+                        if (!acc[session.source]) {
+                          acc[session.source] = 0;
+                        }
+                        acc[session.source] += session.duration;
+                        return acc;
+                      }, {} as Record<string, number>);
+
+                      return Object.entries(sourceTotals).map(([source, totalDuration]) => (
+                        <div key={source} className="flex items-center justify-between p-2 rounded-md bg-muted/20 border border-border/30">
+                          <Badge variant="outline" className="glass-hover text-xs">
+                            {source}
                           </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {new Date(session.beginAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                          })}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(session.endAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                          })}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {formatDuration(session.duration)}
-                        </TableCell>
+                          <span className="text-sm font-medium text-foreground">
+                            {formatDuration(totalDuration)}
+                          </span>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+
+                {/* Individual Sessions */}
+                <div className='border rounded-md border-border/50 p-2 glass'>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3">Individual Sessions</h4>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Source</TableHead>
+                        <TableHead>Begin</TableHead>
+                        <TableHead>End</TableHead>
+                        <TableHead>Duration</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedDateSessions.map((session, index) => (
+                        <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
+                          <TableCell>
+                            <Badge variant="outline" className="glass-hover">
+                              {session.source}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(session.beginAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: false
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(session.endAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: false
+                            })}
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {formatDuration(session.duration)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             ) : (
               <div className="py-8 text-muted-foreground text-center">
-                {selectedDate ? 'No sessions on this day for selected source' : 'Select a day to view sessions'}
+                {selectedDate ? 'No sessions on this day' : 'Select a day to view sessions'}
               </div>
             )}
           </CardContent>
