@@ -6,7 +6,6 @@ import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDuration, getPeriodMonthName } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
-import { Clock3 } from 'lucide-react';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/chart";
 import { CHART_COLORS } from "@/lib/constants";
 import { getPeriodMonthName } from "@/lib/utils";
-import { AttendancePeriod, SourceType } from "@/types/attendance";
+import { AttendancePeriod } from "@/types/attendance";
 import {
     Bar,
     BarChart,
