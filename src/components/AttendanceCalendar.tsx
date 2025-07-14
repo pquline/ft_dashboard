@@ -6,6 +6,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDuration, getPeriodMonthName } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
+import { Clock3 } from 'lucide-react';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
@@ -228,7 +229,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                 {/* Daily Totals by Source */}
                 <div className='border rounded-md border-border/50 p-3 glass'>
                   <h4 className="text-sm font-semibold text-foreground/80 mb-3">Daily Totals by Source</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <div className="flex flex-wrap gap-4 items-center">
                     {(() => {
                       const sourceTotals = selectedDateSessions.reduce((acc, session) => {
                         if (!acc[session.source]) {
@@ -237,15 +238,11 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                         acc[session.source] += session.duration;
                         return acc;
                       }, {} as Record<string, number>);
-
                       return Object.entries(sourceTotals).map(([source, totalDuration]) => (
-                        <div key={source} className="flex items-center justify-between p-2 rounded-md bg-muted/20 border border-border/30">
-                          <Badge variant="outline" className="glass-hover text-xs">
-                            {source}
-                          </Badge>
-                          <span className="text-sm font-medium text-foreground">
-                            {formatDuration(totalDuration)}
-                          </span>
+                        <div key={source} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/30 border border-border/30 shadow-sm backdrop-blur-md">
+                          <span className="text-primary/80"><Clock3 className="w-4 h-4" /></span>
+                          <Badge variant="outline" className="glass-hover text-xs px-2 py-1">{source}</Badge>
+                          <span className="font-bold text-base text-foreground ml-1">{formatDuration(totalDuration)}</span>
                         </div>
                       ));
                     })()}
