@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Eye, Lock, Shield, User } from 'lucide-react';
 import Link from 'next/link';
 
@@ -155,20 +156,18 @@ export default function PrivacyPolicyPage() {
 
                 {/* Navigation */}
         <div className="flex justify-between items-center mt-12 pt-8 border-t border-border/50">
-          <Link
-            href="/"
-            className="btn-glass inline-flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 focus-ring"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Link>
-          <Link
-            href="/legal/terms"
-            className="btn-glass inline-flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 focus-ring"
-          >
-            Terms of Service
-            <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-          </Link>
+          <Button asChild className="btn-glass font-semibold py-3 transition-all duration-300 focus-ring relative z-10">
+            <Link href="/">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Link>
+          </Button>
+          <Button asChild className="btn-glass font-semibold py-3 transition-all duration-300 focus-ring relative z-10">
+            <Link href="/legal/terms">
+              Terms of Service
+              <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
