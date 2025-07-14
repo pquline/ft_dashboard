@@ -74,18 +74,19 @@ export function getUniqueSources(attendance: AttendancePeriod[]): string[] {
 
 export function calculateTotalAttendance(period: AttendancePeriod): number {
   return period.detailed_attendance
+    .filter(detail => detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0)
 }
 
 export function calculateOnSiteAttendance(period: AttendancePeriod): number {
   return period.detailed_attendance
-    .filter(detail => detail.type === 'on_site')
+    .filter(detail => detail.type === 'on_site' && detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0)
 }
 
 export function calculateOffSiteAttendance(period: AttendancePeriod): number {
   return period.detailed_attendance
-    .filter(detail => detail.type === 'off_site')
+    .filter(detail => detail.type === 'off_site' && detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0)
 }
 
@@ -120,6 +121,15 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
   return period.detailed_attendance
     .filter(detail => detail.name === source && detail.type === 'off_site' && detail.name !== 'locations')
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0);
+}
+
+export function getDailyAttendance(period: AttendancePeriod) {
+  return period.daily_attendances.map(day => ({
+    ...day,
+    total: parseISODuration(day.total_attendance),
+    onSite: parseISODuration(day.total_on_site_attendance),
+    offSite: parseISODuration(day.total_off_site_attendance),
+  }));
 }
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AttendanceData, SourceType } from "@/types/attendance";
+import { AttendanceData } from "@/types/attendance";
 import { useInteractiveBackground } from "@/hooks/useInteractiveBackground";
 
 interface DashboardLayoutProps {
@@ -9,10 +9,7 @@ interface DashboardLayoutProps {
   data: AttendanceData;
   months: Array<{ value: string; label: string }>;
   selectedMonth: string;
-  availableSources: string[];
-  selectedSource: SourceType;
   onMonthChange: (newMonth: string) => void;
-  onSourceChange: (value: string) => void;
 }
 
 export function DashboardLayout({
@@ -20,10 +17,7 @@ export function DashboardLayout({
   data,
   months,
   selectedMonth,
-  availableSources,
-  selectedSource,
   onMonthChange,
-  onSourceChange,
 }: DashboardLayoutProps) {
   useInteractiveBackground();
   return (
@@ -34,9 +28,6 @@ export function DashboardLayout({
         months={months}
         selectedMonth={selectedMonth}
         onMonthChange={onMonthChange}
-        sources={availableSources}
-        selectedSource={selectedSource}
-        onSourceChange={onSourceChange}
       />
       <div className="relative z-10">
         {children}

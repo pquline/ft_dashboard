@@ -9,7 +9,6 @@ import { AttendancePeriod } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
-  selectedSource: string;
   month: Date;
   onMonthChange: (date: Date) => void;
 }
@@ -22,7 +21,7 @@ interface DayData {
   hasSessions: boolean;
 }
 
-export function AttendanceCalendar({ period, selectedSource, month, onMonthChange }: AttendanceCalendarProps) {
+export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const lastMonthRef = React.useRef<string>('');
 
@@ -85,8 +84,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
     const filteredSessions = daySessions.filter(session => {
       if (session.source === 'locations') return false;
-      if (selectedSource === 'all') return true;
-      return session.source === selectedSource;
+      return true;
     });
 
     const sessions = filteredSessions.map(session => {
@@ -104,7 +102,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
       };
     }).filter(session => session.duration > 0);
     return sessions;
-  }, [selectedDate, period.entries, selectedSource]);
+  }, [selectedDate, period.entries]);
 
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
     const from = new Date(period.from_date);
@@ -174,14 +172,11 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
       {/* Calendar Card */}
       <div className="lg:col-span-2">
-        <Card className="card-modern glass-hover h-[450px] flex flex-col animate-slide-in-right">
+        <Card className="card-modern glass-hover h-[500px] flex flex-col animate-slide-in-right">
           <CardHeader className="pb-3">
             <CardTitle>Attendance Calendar in {getPeriodMonthName(period.from_date, period.to_date)}</CardTitle>
             <CardDescription>
-              {selectedSource === 'all'
-                ? 'Click on any day to view session details (All sources)'
-                : `Click on any day to view session details (${selectedSource} source)`
-              }
+              Click on any day to view session details
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 flex items-center justify-center h-full">
@@ -209,7 +204,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
       {/* Sessions Card */}
       <div className="lg:col-span-3">
-        <Card className="card-modern glass-hover h-[450px] flex flex-col animate-slide-in-right">
+        <Card className="card-modern glass-hover h-[500px] flex flex-col animate-slide-in-right">
           <CardHeader className="pb-3">
             <CardTitle>Sessions</CardTitle>
             <CardDescription>
@@ -227,51 +222,77 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               )}
             </CardDescription>
           </CardHeader>
-          <CardContent className="pt-0 flex-1 overflow-auto">
+          <CardContent className="pt-0 flex-1 overflow-auto space-y-4">
             {selectedDateSessions.length > 0 ? (
-              <div className='border rounded-md border-border/50 p-2 glass'>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Begin</TableHead>
-                      <TableHead>End</TableHead>
-                      <TableHead>Duration</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedDateSessions.map((session, index) => (
-                      <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
-                        <TableCell>
-                          <Badge variant="outline" className="glass-hover">
-                            {session.source}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {new Date(session.beginAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                          })}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(session.endAt).toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false
-                          })}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {formatDuration(session.duration)}
-                        </TableCell>
+              <>
+                {/* Daily Totals by Source */}
+                <div className='border rounded-md border-border/50 p-3 glass'>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Daily Totals by Source</h4>
+                  <div className="flex flex-wrap gap-4 items-center">
+                    {(() => {
+                      const sourceTotals = selectedDateSessions.reduce((acc, session) => {
+                        if (!acc[session.source]) {
+                          acc[session.source] = 0;
+                        }
+                        acc[session.source] += session.duration;
+                        return acc;
+                      }, {} as Record<string, number>);
+                      return Object.entries(sourceTotals).map(([source, totalDuration]) => (
+                        <div key={source} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30 shadow-sm backdrop-blur-md">
+                          <Badge variant="outline" className="text-xs px-2 py-1 border-orange-500/40 text-orange-500 bg-orange-500/10">{source}</Badge>
+                          <span className="text-sm text-foreground ml-1">{formatDuration(totalDuration)}</span>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+
+                {/* Individual Sessions */}
+                <div className='border rounded-md border-border/50 p-2 glass'>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Individual Sessions</h4>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Source</TableHead>
+                        <TableHead>Begin</TableHead>
+                        <TableHead>End</TableHead>
+                        <TableHead>Duration</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedDateSessions.map((session, index) => (
+                        <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
+                          <TableCell>
+                            <Badge variant="outline" className="glass-hover">
+                              {session.source}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(session.beginAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: false
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(session.endAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: false
+                            })}
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {formatDuration(session.duration)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             ) : (
               <div className="py-8 text-muted-foreground text-center">
-                {selectedDate ? 'No sessions on this day for selected source' : 'Select a day to view sessions'}
+                {selectedDate ? 'No sessions on this day' : 'Select a day to view sessions'}
               </div>
             )}
           </CardContent>

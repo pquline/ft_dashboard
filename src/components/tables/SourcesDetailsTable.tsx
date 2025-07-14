@@ -16,22 +16,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getPeriodMonthName, parseISODuration, formatDuration } from "@/lib/utils";
-import { AttendancePeriod, SourceType } from "@/types/attendance";
+import { AttendancePeriod } from "@/types/attendance";
 
 interface SourcesDetailsTableProps {
   currentPeriod: AttendancePeriod;
-  selectedSource: SourceType;
 }
 
 export function SourcesDetailsTable({
   currentPeriod,
-  selectedSource,
 }: SourcesDetailsTableProps) {
   const filteredDetails = currentPeriod?.detailed_attendance
     .filter((detail: AttendancePeriod['detailed_attendance'][number]) => {
       if (detail.name === "locations") return false;
-      if (selectedSource === "all") return true;
-      return detail.name === selectedSource;
+      return true;
     }) || [];
 
   return (
@@ -47,9 +44,7 @@ export function SourcesDetailsTable({
             : "selected month"}
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          {selectedSource === "all"
-            ? "All sources"
-            : `${selectedSource} source only`}
+          All sources
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">

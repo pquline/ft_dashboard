@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { AttendanceData, SourceType } from "@/types/attendance";
+import { useState } from "react";
+import { AttendanceData } from "@/types/attendance";
 import {
   parseISODuration,
   formatDuration,
@@ -7,31 +7,17 @@ import {
   filterDailyAttendancesToMainMonth,
 } from "@/lib/utils";
 import {
-  calculateTotalAttendanceForSource,
-  calculateOnSiteAttendanceForSource,
-  calculateOffSiteAttendanceForSource,
-  getDailyAttendanceForSource,
+  calculateTotalAttendance,
+  calculateOnSiteAttendance,
+  calculateOffSiteAttendance,
+  getDailyAttendance,
 } from "@/lib/utils";
 
 export function useDashboardState(
   data: AttendanceData,
-  defaultMonth: string,
-  availableSources: string[]
+  defaultMonth: string
 ) {
   const [selectedMonth, setSelectedMonth] = useState<string>(defaultMonth);
-  const [selectedSource, setSelectedSource] = useState<SourceType>("all");
-
-  // Reset selected source if it's no longer available
-  useEffect(() => {
-    if (data && selectedMonth && selectedSource !== "all") {
-      const available = availableSources.filter(
-        (source) => source !== "locations"
-      );
-      if (!available.includes(selectedSource)) {
-        setSelectedSource("all");
-      }
-    }
-  }, [data, selectedMonth, selectedSource, availableSources]);
 
   const currentPeriod = data.attendance.find(
     (period) => period.from_date === selectedMonth
@@ -44,26 +30,20 @@ export function useDashboardState(
 
   // Calculate summary data
   const total = currentPeriod
-    ? formatDuration(
-        calculateTotalAttendanceForSource(currentPeriod, selectedSource)
-      )
+    ? formatDuration(calculateTotalAttendance(currentPeriod))
     : "0h 0m";
 
   const onSite = currentPeriod
-    ? formatDuration(
-        calculateOnSiteAttendanceForSource(currentPeriod, selectedSource)
-      )
+    ? formatDuration(calculateOnSiteAttendance(currentPeriod))
     : "0h 0m";
 
   const offSite = currentPeriod
-    ? formatDuration(
-        calculateOffSiteAttendanceForSource(currentPeriod, selectedSource)
-      )
+    ? formatDuration(calculateOffSiteAttendance(currentPeriod))
     : "0h 0m";
 
   // Get daily attendance data for charts
   let filteredDailyData = currentPeriod
-    ? getDailyAttendanceForSource(currentPeriod, selectedSource)
+    ? getDailyAttendance(currentPeriod)
     : [];
 
   if (currentPeriod) {
@@ -80,14 +60,9 @@ export function useDashboardState(
     offSite: day.offSite / 3600,
   }));
 
-  // Get source data for pie chart and table
   const sourceData =
     currentPeriod?.detailed_attendance
-      .filter((detail) => {
-        if (detail.name === "locations") return false;
-        if (selectedSource === "all") return true;
-        return detail.name === selectedSource;
-      })
+      .filter((detail) => detail.name !== "locations")
       .map((detail) => ({
         name: detail.name,
         value: parseISODuration(detail.duration) / 3600,
@@ -98,13 +73,8 @@ export function useDashboardState(
     setSelectedMonth(newMonth);
   };
 
-  const handleSourceChange = (value: string) => {
-    setSelectedSource(value as SourceType);
-  };
-
   return {
     selectedMonth,
-    selectedSource,
     currentPeriod,
     months,
     total,
@@ -113,6 +83,5 @@ export function useDashboardState(
     chartData,
     sourceData,
     handleMonthChange,
-    handleSourceChange,
   };
 }

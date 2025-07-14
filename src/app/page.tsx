@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
 import { AttendanceData } from '@/types/attendance';
-import { getUniqueSources } from '@/lib/utils';
 import { DashboardClient } from '@/components/DashboardClient';
 import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Suspense } from 'react';
@@ -34,10 +33,8 @@ async function DashboardContent() {
 
   const data = await fetchAttendanceData(sessionCookie);
   const defaultMonth = data.attendance[0]?.from_date || '';
-  const uniqueSources = getUniqueSources(data.attendance);
-  const availableSources = uniqueSources.filter(source => source !== 'locations');
 
-  return <DashboardClient data={data} defaultMonth={defaultMonth} availableSources={availableSources} />;
+  return <DashboardClient data={data} defaultMonth={defaultMonth} />;
 }
 
 export default function DashboardPage() {

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/chart";
 import { CHART_COLORS } from "@/lib/constants";
 import { getPeriodMonthName } from "@/lib/utils";
-import { AttendancePeriod, SourceType } from "@/types/attendance";
+import { AttendancePeriod } from "@/types/attendance";
 import {
     Bar,
     BarChart,
@@ -31,25 +31,16 @@ interface DailyAttendanceChartProps {
     offSite: number;
   }>;
   currentPeriod: AttendancePeriod;
-  selectedSource: SourceType;
-  availableSources: string[];
 }
 
 export function DailyAttendanceChart({
   chartData,
   currentPeriod,
-  selectedSource,
-  availableSources,
 }: DailyAttendanceChartProps) {
   const barChartConfig = {
     attendance: {
       label: "Attendance",
-      color:
-        selectedSource === "all"
-          ? CHART_COLORS.BAR_COLORS.DEFAULT
-          : CHART_COLORS.PIE_COLORS[
-              availableSources.indexOf(selectedSource) % CHART_COLORS.PIE_COLORS.length
-            ],
+      color: CHART_COLORS.BAR_COLORS.DEFAULT,
     },
   } satisfies ChartConfig;
 
@@ -66,9 +57,7 @@ export function DailyAttendanceChart({
             : "selected month"}
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          {selectedSource === "all"
-            ? "Hours spent on campus per day (All sources)"
-            : `Hours spent on campus per day (${selectedSource} source)`}
+          Hours spent on campus per day
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
@@ -137,7 +126,7 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={selectedSource === 'all' ? 'url(#gradient)' : '#2563eb'}
+                  fill="url(#gradient)"
                   className="transition-all duration-300"
                 />
               ))}

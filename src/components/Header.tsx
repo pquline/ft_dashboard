@@ -17,7 +17,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { BarChart, LogOut, Moon, Server, Sun } from "lucide-react";
+import { BarChart, LogOut, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
@@ -28,9 +28,6 @@ interface HeaderProps {
   months?: { value: string; label: string }[];
   selectedMonth?: string;
   onMonthChange?: (value: string) => void;
-  sources?: string[];
-  selectedSource?: string;
-  onSourceChange?: (value: string) => void;
 }
 
 export function Header({
@@ -39,9 +36,6 @@ export function Header({
   months,
   selectedMonth,
   onMonthChange,
-  sources,
-  selectedSource,
-  onSourceChange,
 }: HeaderProps) {
   const { setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
@@ -90,7 +84,7 @@ export function Header({
           {months && selectedMonth && onMonthChange && (
             <div className="flex items-center space-x-2">
               <Select value={selectedMonth} onValueChange={onMonthChange}>
-                <SelectTrigger className="w-[140px] h-9 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl hover:bg-white/70 dark:hover:bg-[rgba(24,28,40,0.65)] transition-all duration-300 shadow-lg text-foreground/90 relative overflow-hidden">
+                <SelectTrigger className="w-[140px] h-9 bg-white/30 dark:bg-background/10 border border-white/10 backdrop-blur-xl hover:bg-white/50 dark:hover:bg-white/5 transition-all duration-300 shadow-lg text-foreground/90 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-70 pointer-events-none" />
                   <SelectValue className="relative z-10" />
                 </SelectTrigger>
@@ -124,33 +118,6 @@ export function Header({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              {/* Source Selector */}
-              {sources && selectedSource && onSourceChange && (
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Server className="mr-4 h-4 w-4" />
-                    <span>Source</span>
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuItem
-                      onClick={() => onSourceChange("all")}
-                      className={selectedSource === "all" ? "bg-accent" : ""}
-                    >
-                      All Sources
-                    </DropdownMenuItem>
-                    {sources.map((source) => (
-                      <DropdownMenuItem
-                        key={source}
-                        onClick={() => onSourceChange(source)}
-                        className={selectedSource === source ? "bg-accent" : ""}
-                      >
-                        {source}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-              )}
-
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-4 h-4 w-4" />
