@@ -192,6 +192,11 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
               month={month}
               onMonthChange={onMonthChange}
               className="rounded-md border"
+              disabled={(date) => {
+                const currentMonth = month.getMonth();
+                const currentYear = month.getFullYear();
+                return date.getMonth() !== currentMonth || date.getFullYear() !== currentYear;
+              }}
               classNames={{
                 day_selected: "bg-primary text-primary-foreground rounded-md",
                 day_today: "",

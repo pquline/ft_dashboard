@@ -413,13 +413,14 @@
   transition: background 0.2s, border 0.2s, box-shadow 0.2s;
   position: relative;
   overflow: hidden;
+  padding: 1.2rem;
 }
 .btn-glass::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(20,20,30,0.18) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(20,20,30,0.04) 100%);
   border-radius: inherit;
   z-index: 1;
 }

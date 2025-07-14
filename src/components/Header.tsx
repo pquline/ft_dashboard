@@ -94,7 +94,7 @@ export function Header({
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-70 pointer-events-none" />
                   <SelectValue className="relative z-10" />
                 </SelectTrigger>
-                <SelectContent className="dropdown-glass border border-white/20 backdrop-blur-xl">
+                <SelectContent className="dropdown-glass !bg-transparent !border-0 !shadow-none">
                   {months.map((month) => (
                     <SelectItem key={month.value} value={month.value} className="hover:bg-accent/30 focus:bg-accent/50 transition-all duration-200">
                       {month.label}
