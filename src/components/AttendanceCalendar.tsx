@@ -9,7 +9,6 @@ import { AttendancePeriod } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
   period: AttendancePeriod;
-  selectedSource: string;
   month: Date;
   onMonthChange: (date: Date) => void;
 }
@@ -22,7 +21,7 @@ interface DayData {
   hasSessions: boolean;
 }
 
-export function AttendanceCalendar({ period, selectedSource, month, onMonthChange }: AttendanceCalendarProps) {
+export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const lastMonthRef = React.useRef<string>('');
 
@@ -85,8 +84,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
 
     const filteredSessions = daySessions.filter(session => {
       if (session.source === 'locations') return false;
-      if (selectedSource === 'all') return true;
-      return session.source === selectedSource;
+      return true;
     });
 
     const sessions = filteredSessions.map(session => {
@@ -104,7 +102,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
       };
     }).filter(session => session.duration > 0);
     return sessions;
-  }, [selectedDate, period.entries, selectedSource]);
+  }, [selectedDate, period.entries]);
 
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
     const from = new Date(period.from_date);
@@ -178,10 +176,7 @@ export function AttendanceCalendar({ period, selectedSource, month, onMonthChang
           <CardHeader className="pb-3">
             <CardTitle>Attendance Calendar in {getPeriodMonthName(period.from_date, period.to_date)}</CardTitle>
             <CardDescription>
-              {selectedSource === 'all'
-                ? 'Click on any day to view session details (All sources)'
-                : `Click on any day to view session details (${selectedSource} source)`
-              }
+              Click on any day to view session details
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1 flex items-center justify-center h-full">

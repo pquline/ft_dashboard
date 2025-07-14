@@ -122,6 +122,15 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
     .reduce((total, detail) => total + parseISODuration(detail.duration), 0);
 }
 
+export function getDailyAttendance(period: AttendancePeriod) {
+  return period.daily_attendances.map(day => ({
+    ...day,
+    total: parseISODuration(day.total_attendance),
+    onSite: parseISODuration(day.total_on_site_attendance),
+    offSite: parseISODuration(day.total_off_site_attendance),
+  }));
+}
+
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
   if (source === 'all') {
     return period.daily_attendances.map(day => ({

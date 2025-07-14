@@ -8,15 +8,12 @@ import { DashboardContent } from "@/components/dashboard/DashboardContent";
 export function DashboardClient({
   data,
   defaultMonth,
-  availableSources,
 }: {
   data: AttendanceData;
   defaultMonth: string;
-  availableSources: string[];
 }) {
   const {
     selectedMonth,
-    selectedSource,
     currentPeriod,
     months,
     total,
@@ -25,26 +22,20 @@ export function DashboardClient({
     chartData,
     sourceData,
     handleMonthChange,
-    handleSourceChange,
-  } = useDashboardState(data, defaultMonth, availableSources);
+  } = useDashboardState(data, defaultMonth);
 
   return (
     <DashboardLayout
       data={data}
       months={months}
       selectedMonth={selectedMonth}
-      availableSources={availableSources}
-      selectedSource={selectedSource}
       onMonthChange={handleMonthChange}
-      onSourceChange={handleSourceChange}
     >
       {/* Only render DashboardContent if currentPeriod is defined */}
       {currentPeriod && (
         <DashboardContent
           data={data}
           currentPeriod={currentPeriod}
-          selectedSource={selectedSource}
-          availableSources={availableSources}
           total={total}
           onSite={onSite}
           offSite={offSite}

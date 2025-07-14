@@ -27,13 +27,11 @@ interface SourcesDistributionChartProps {
     type: "none";
   }>;
   currentPeriod: AttendancePeriod;
-  selectedSource: SourceType;
 }
 
 export function SourcesDistributionChart({
   sourceData,
   currentPeriod,
-  selectedSource,
 }: SourcesDistributionChartProps) {
   const pieChartConfig = {
     ...sourceData.reduce(
@@ -61,9 +59,7 @@ export function SourcesDistributionChart({
             : "selected month"}
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          {selectedSource === "all"
-            ? "Time spent by source type (All sources)"
-            : `Time spent by ${selectedSource} source`}
+          Time spent by source type
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
