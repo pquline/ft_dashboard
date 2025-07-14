@@ -17,10 +17,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { BarChart, Calendar, LogOut, Moon, Server, Sun } from 'lucide-react';
+import { BarChart, LogOut, Moon, Server, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import React from 'react';
+import { Badge } from './ui/badge';
 
 interface HeaderProps {
   login: string;
@@ -78,26 +79,23 @@ export function Header({
 
         <div className="flex items-center space-x-4">
           {/* Quick Stats Display */}
-          <div className="hidden md:flex items-center space-x-3 px-4 py-2 rounded-lg glass-hover">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-slow"></div>
-              <span className="text-sm font-medium text-foreground/80">Live</span>
-            </div>
-            <div className="w-px h-4 bg-border/50"></div>
-            <span className="text-sm text-muted-foreground">{login}</span>
-          </div>
+          <Badge
+            variant="outline"
+            className="bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl text-foreground/90 hover:bg-white/70 dark:hover:bg-[rgba(24,28,40,0.65)] transition-all duration-300 shadow-lg"
+          >
+            <span className="text-sm font-medium">{login}</span>
+          </Badge>
 
           {/* Month Selector */}
           {months && selectedMonth && onMonthChange && (
             <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-foreground/70" />
               <Select value={selectedMonth} onValueChange={onMonthChange}>
-                <SelectTrigger className="w-[140px] h-9 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl">
+                <SelectTrigger className="w-[140px] h-9 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl hover:bg-white/70 dark:hover:bg-[rgba(24,28,40,0.65)] transition-all duration-300 shadow-lg text-foreground/90">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white/90 dark:bg-[rgba(24,28,40,0.95)] border border-white/20 backdrop-blur-xl">
                   {months.map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
+                    <SelectItem key={month.value} value={month.value} className="hover:bg-white/20 dark:hover:bg-[rgba(24,28,40,0.3)]">
                       {month.label}
                     </SelectItem>
                   ))}
