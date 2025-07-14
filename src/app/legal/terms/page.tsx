@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  AlertTriangle,
-  ArrowLeft,
-  CheckCircle,
-  FileText,
-  Scale,
-  Users,
+	AlertTriangle,
+	ArrowLeft,
+	CheckCircle,
+	FileText,
+	Scale,
+	Users,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -96,8 +96,8 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              These Terms of Service ("Terms") govern your use of ft_dashboard
-              ("Service"), a bridge application that connects your browser to
+              These Terms of Service (&ldquo;Terms&rdquo;) govern your use of ft_dashboard
+              (&ldquo;Service&rdquo;), a bridge application that connects your browser to
               the 42 Paris API for attendance data visualization.
             </p>
             <p>
@@ -165,7 +165,7 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              The service is provided free of charge and "as is" without any
+              The service is provided free of charge and &ldquo;as is&rdquo; without any
               warranties.
             </p>
             <p>
