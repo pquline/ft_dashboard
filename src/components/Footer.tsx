@@ -22,12 +22,6 @@ export function Footer() {
 
           <div className="flex items-center space-x-6 text-sm">
             <Link
-              href="/legal"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
-            >
-              Legal
-            </Link>
-            <Link
               href="/legal/privacy"
               className="text-muted-foreground hover:text-primary transition-colors duration-200"
             >
@@ -38,12 +32,6 @@ export function Footer() {
               className="text-muted-foreground hover:text-primary transition-colors duration-200"
             >
               Terms
-            </Link>
-            <Link
-              href="/legal/cookies"
-              className="text-muted-foreground hover:text-primary transition-colors duration-200"
-            >
-              Cookies
             </Link>
           </div>
         </div>

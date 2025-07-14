@@ -49,14 +49,14 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen gradient-bg interactive-bg">
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
+                {/* Header */}
         <div className="mb-8">
           <Link
-            href="/legal"
+            href="/"
             className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors duration-300 mb-6 group"
           >
             <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-            Back to Legal Information
+            Back to Dashboard
           </Link>
 
           <div className="flex items-center gap-4 mb-6">
@@ -153,18 +153,18 @@ export default function PrivacyPolicyPage() {
           </CardContent>
         </Card>
 
-        {/* Navigation */}
+                {/* Navigation */}
         <div className="flex justify-between items-center mt-12 pt-8 border-t border-border/50">
           <Link
-            href="/legal"
-            className="btn-glass inline-flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105"
+            href="/"
+            className="btn-glass inline-flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 focus-ring"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Legal
+            Back to Dashboard
           </Link>
           <Link
             href="/legal/terms"
-            className="btn-glass inline-flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105"
+            className="btn-glass inline-flex items-center px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:scale-105 focus-ring"
           >
             Terms of Service
             <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
