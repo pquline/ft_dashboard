@@ -9,40 +9,40 @@ export default function PrivacyPolicyPage() {
       title: 'Information We Collect',
       icon: User,
       content: [
-        'Personal information (login credentials, profile data)',
-        'Usage data and analytics',
-        'Session information and cookies',
-        'Device and browser information'
+        'Session cookie from 42 Paris dashboard for authentication',
+        'Attendance data fetched from 42 Paris API',
+        'User profile information (login, image) from 42 Paris',
+        'No personal data is stored on our servers'
       ]
     },
     {
       title: 'How We Use Your Information',
       icon: Eye,
       content: [
-        'Provide and maintain the dashboard service',
-        'Analyze usage patterns and improve functionality',
-        'Ensure security and prevent fraud',
-        'Communicate with you about service updates'
+        'Authenticate users with 42 Paris dashboard',
+        'Fetch and display attendance analytics',
+        'Provide attendance tracking and visualization',
+        'No usage analytics or tracking is performed'
       ]
     },
     {
       title: 'Data Protection',
       icon: Lock,
       content: [
-        'Encryption of sensitive data in transit and at rest',
-        'Regular security audits and updates',
-        'Limited access to personal information',
-        'Compliance with data protection regulations'
+        'Session cookies are encrypted and secure',
+        'All API requests use HTTPS encryption',
+        'No data is stored permanently on our servers',
+        'Session data expires after 24 hours'
       ]
     },
     {
       title: 'Data Retention',
       icon: Calendar,
       content: [
-        'Session data is retained only during active sessions',
-        'Analytics data is anonymized and retained for 12 months',
-        'Account data is retained until account deletion',
-        'Backup data is retained for 30 days'
+        'Session cookies expire after 24 hours',
+        'No data is retained after session expiration',
+        'No analytics or usage data is collected',
+        'No backup or permanent storage of user data'
       ]
     }
   ];
@@ -83,12 +83,12 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground">
             <p>
-              At ft_dashboard, we are committed to protecting your privacy and ensuring the security of your personal information.
-              This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our dashboard service.
+              At ft_dashboard, we are committed to protecting your privacy. This Privacy Policy explains how we handle your information
+              when you use our attendance dashboard service, which connects to the 42 Paris API.
             </p>
             <p>
-              By using ft_dashboard, you agree to the collection and use of information in accordance with this policy.
-              We will not use or share your information with anyone except as described in this Privacy Policy.
+              We do not collect, store, or process any personal data on our servers. All data is fetched directly from 42 Paris
+              and displayed temporarily in your browser. Your session information is only stored in a secure cookie that expires after 24 hours.
             </p>
           </CardContent>
         </Card>
@@ -124,12 +124,12 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-muted-foreground">
             <p>
-              You have the right to access, correct, or delete your personal information. You can also request a copy of your data
-              or withdraw your consent at any time by contacting us through our support channels.
+              Since we do not store any personal data on our servers, there is no personal information to access, correct, or delete.
+              All your data remains under the control of 42 Paris and is subject to their privacy policy.
             </p>
             <p>
-              We will respond to your requests within 30 days and will not charge you for reasonable requests to access,
-              correct, or delete your personal information.
+              You can revoke access to your data at any time by clearing your browser cookies or logging out of the application.
+              Your session will automatically expire after 24 hours of inactivity.
             </p>
           </CardContent>
         </Card>

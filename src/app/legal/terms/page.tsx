@@ -20,7 +20,7 @@ export default function TermsOfServicePage() {
       icon: Users,
       content: [
         'You must use the service only for lawful purposes',
-        'You are responsible for maintaining the security of your account',
+        'You must have a valid 42 Paris account to access the service',
         'You must not attempt to gain unauthorized access to the system',
         'You must not interfere with or disrupt the service'
       ]
@@ -29,20 +29,20 @@ export default function TermsOfServicePage() {
       title: 'User Responsibilities',
       icon: AlertTriangle,
       content: [
-        'Provide accurate and complete information when required',
-        'Maintain the confidentiality of your login credentials',
+        'Provide a valid session cookie from 42 Paris dashboard',
+        'Maintain the confidentiality of your session information',
         'Report any security concerns immediately',
-        'Comply with all applicable laws and regulations'
+        'Comply with 42 Paris terms of service and applicable laws'
       ]
     },
     {
       title: 'Service Availability',
       icon: Scale,
       content: [
-        'We strive to maintain high availability but cannot guarantee 100% uptime',
+        'Service availability depends on 42 Paris API accessibility',
         'We may perform maintenance that temporarily affects service availability',
         'We are not liable for any damages caused by service interruptions',
-        'We will provide reasonable notice for planned maintenance'
+        'Service is provided "as is" without warranties'
       ]
     }
   ];
@@ -84,10 +84,11 @@ export default function TermsOfServicePage() {
           <CardContent className="space-y-4 text-muted-foreground">
             <p>
               These Terms of Service ("Terms") govern your use of ft_dashboard ("Service"), a dashboard application
-              that provides attendance tracking and analytics for educational institutions.
+              that provides attendance tracking and visualization by connecting to the 42 Paris API.
             </p>
             <p>
-              By using our Service, you agree to these Terms. If you disagree with any part of these terms,
+              By using our Service, you agree to these Terms and acknowledge that this service is a third-party
+              application that accesses data from 42 Paris. If you disagree with any part of these terms,
               then you may not access the Service.
             </p>
           </CardContent>
@@ -125,11 +126,11 @@ export default function TermsOfServicePage() {
           <CardContent className="space-y-4 text-muted-foreground">
             <p>
               The Service and its original content, features, and functionality are and will remain the exclusive property
-              of ft_dashboard and its licensors. The Service is protected by copyright, trademark, and other laws.
+              of ft_dashboard. The Service is protected by copyright and other laws.
             </p>
             <p>
               You may not reproduce, distribute, modify, create derivative works of, publicly display, publicly perform,
-              republish, download, store, or transmit any of the material on our Service.
+              republish, download, store, or transmit any of the material on our Service without permission.
             </p>
           </CardContent>
         </Card>
@@ -145,6 +146,7 @@ export default function TermsOfServicePage() {
             </p>
             <p>
               Our liability is limited to the amount you paid for the Service, if any, or $100, whichever is greater.
+              The service is provided free of charge and "as is" without any warranties.
             </p>
           </CardContent>
         </Card>
