@@ -65,7 +65,7 @@ export default function TermsOfServicePage() {
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">
                 Terms of Service
               </h1>
-              <p className="text-foreground/90">
+              <p className="text-muted-foreground">
                 Last updated: {new Date().toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -77,11 +77,11 @@ export default function TermsOfServicePage() {
         </div>
 
         {/* Introduction */}
-        <Card className="card-modern mb-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Introduction</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mb-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Introduction</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-muted-foreground relative z-10">
             <p>
               These Terms of Service ("Terms") govern your use of ft_dashboard ("Service"), a dashboard application
               that provides attendance tracking and visualization by connecting to the 42 Paris API.
@@ -97,19 +97,19 @@ export default function TermsOfServicePage() {
         {/* Main Sections */}
         <div className="space-y-6">
           {sections.map((section, index) => (
-            <Card key={index} className="card-modern">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <section.icon className="w-6 h-6 text-foreground" />
-                  <CardTitle className="text-xl font-semibold">{section.title}</CardTitle>
+            <Card key={index} className="card-modern glass-hover group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+                <CardTitle className="text-sm font-semibold text-foreground/80">{section.title}</CardTitle>
+                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                  <section.icon className="h-4 w-4 text-primary" />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <ul className="space-y-2">
                   {section.content.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-foreground/90">{item}</span>
+                      <span className="text-muted-foreground">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -119,11 +119,11 @@ export default function TermsOfServicePage() {
         </div>
 
         {/* Additional Sections */}
-        <Card className="card-modern mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Intellectual Property</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mt-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Intellectual Property</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-muted-foreground relative z-10">
             <p>
               The Service and its original content, features, and functionality are and will remain the exclusive property
               of ft_dashboard. The Service is protected by copyright and other laws.
@@ -135,11 +135,11 @@ export default function TermsOfServicePage() {
           </CardContent>
         </Card>
 
-        <Card className="card-modern mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Limitation of Liability</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mt-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Limitation of Liability</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-muted-foreground relative z-10">
             <p>
               In no event shall ft_dashboard, nor its directors, employees, partners, agents, suppliers, or affiliates,
               be liable for any indirect, incidental, special, consequential, or punitive damages.
@@ -151,11 +151,11 @@ export default function TermsOfServicePage() {
           </CardContent>
         </Card>
 
-        <Card className="card-modern mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Termination</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mt-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Termination</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-muted-foreground relative z-10">
             <p>
               We may terminate or suspend your account and bar access to the Service immediately, without prior notice
               or liability, under our sole discretion, for any reason whatsoever and without limitation.
@@ -167,11 +167,11 @@ export default function TermsOfServicePage() {
           </CardContent>
         </Card>
 
-        <Card className="card-modern mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Contact Information</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mt-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Contact Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-muted-foreground relative z-10">
             <p>
               If you have any questions about these Terms of Service, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>

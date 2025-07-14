@@ -77,11 +77,11 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Introduction */}
-        <Card className="card-modern mb-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Introduction</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mb-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Introduction</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               At ft_dashboard, we are committed to protecting your privacy. This Privacy Policy explains how we handle your information
               when you use our attendance dashboard service, which connects to the 42 Paris API.
@@ -96,14 +96,14 @@ export default function PrivacyPolicyPage() {
         {/* Main Sections */}
         <div className="space-y-6">
           {sections.map((section, index) => (
-            <Card key={index} className="card-modern">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <section.icon className="w-6 h-6 text-foreground" />
-                  <CardTitle className="text-xl font-semibold">{section.title}</CardTitle>
+            <Card key={index} className="card-modern glass-hover group overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+                <CardTitle className="text-sm font-semibold text-foreground/80">{section.title}</CardTitle>
+                <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                  <section.icon className="h-4 w-4 text-primary" />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <ul className="space-y-2">
                   {section.content.map((item, itemIndex) => (
                     <li key={itemIndex} className="flex items-start gap-3">
@@ -118,11 +118,11 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Additional Sections */}
-        <Card className="card-modern mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Your Rights</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mt-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Your Rights</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               Since we do not store any personal data on our servers, there is no personal information to access, correct, or delete.
               All your data remains under the control of 42 Paris and is subject to their privacy policy.
@@ -134,11 +134,11 @@ export default function PrivacyPolicyPage() {
           </CardContent>
         </Card>
 
-        <Card className="card-modern mt-8">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">Contact Us</CardTitle>
+        <Card className="card-modern glass-hover group overflow-hidden mt-8">
+          <CardHeader className="relative z-10">
+            <CardTitle className="text-sm font-semibold text-foreground/80">Contact Us</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 text-foreground/90">
+          <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               If you have any questions about this Privacy Policy or our data practices, please contact us via <Link href="mailto:dashboard@pfischof.com" className="text-primary hover:underline">email</Link>.
             </p>
