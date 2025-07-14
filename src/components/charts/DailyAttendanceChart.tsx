@@ -1,29 +1,27 @@
-import React from "react";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Cell,
-} from "recharts";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
-import { getPeriodMonthName } from "@/lib/utils";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
 import { CHART_COLORS } from "@/lib/constants";
-import { SourceType } from "@/types/attendance";
-import { AttendancePeriod } from '@/types/attendance';
+import { getPeriodMonthName } from "@/lib/utils";
+import { AttendancePeriod, SourceType } from "@/types/attendance";
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    XAxis,
+    YAxis,
+} from "recharts";
 
 interface DailyAttendanceChartProps {
   chartData: Array<{
@@ -80,9 +78,9 @@ export function DailyAttendanceChart({
         >
           <BarChart accessibilityLayer data={chartData}>
             <defs>
-              <linearGradient id="bar-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#ff8000" stop-opacity="1" />
-                <stop offset="100%" stop-color="var(--primary)" stop-opacity="1" />
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ff8000" stopOpacity="1" />
+                <stop offset="100%" stopColor="var(--primary)" stopOpacity="1" />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -139,7 +137,7 @@ export function DailyAttendanceChart({
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={selectedSource === 'all' ? 'url(#bar-glass-orange)' : '#2563eb'}
+                  fill={selectedSource === 'all' ? 'url(#gradient)' : '#2563eb'}
                   className="transition-all duration-300"
                 />
               ))}

@@ -1,25 +1,24 @@
-import React from "react";
 import {
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-} from "@/components/ui/chart";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
-import { getPeriodMonthName } from "@/lib/utils";
+import {
+    ChartConfig,
+    ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
+} from "@/components/ui/chart";
 import { CHART_COLORS } from "@/lib/constants";
-import { SourceType, AttendancePeriod } from "@/types/attendance";
+import { getPeriodMonthName } from "@/lib/utils";
+import { AttendancePeriod, SourceType } from "@/types/attendance";
+import {
+    Cell,
+    Pie,
+    PieChart,
+} from "recharts";
 
 interface SourcesDistributionChartProps {
   sourceData: Array<{
@@ -76,21 +75,21 @@ export function SourcesDistributionChart({
             <PieChart>
               {/* Glassmorphic SVG gradients */}
               <defs>
-                <linearGradient id="pie-glass-orange" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#ff8000" stop-opacity="1" />
-                  <stop offset="100%" stop-color="var(--primary)" stop-opacity="1" />
+                <linearGradient id="gradient-orange" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#ff8000" stopOpacity="1" />
+                  <stop offset="100%" stopColor="var(--primary)" stopOpacity="1" />
                 </linearGradient>
-                <linearGradient id="pie-glass-blue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#00c6fb" stop-opacity="1" />
-                  <stop offset="100%" stop-color="#005bea" stop-opacity="0.95" />
+                <linearGradient id="gradient-blue" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#00c6fb" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#005bea" stopOpacity="0.95" />
                 </linearGradient>
-                <linearGradient id="pie-glass-indigo" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#4f46e5" stop-opacity="1" />
-                  <stop offset="100%" stop-color="#6366f1" stop-opacity="0.95" />
+                <linearGradient id="gradient-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#4f46e5" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0.95" />
                 </linearGradient>
-                <linearGradient id="pie-glass-green" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#00ff99" stop-opacity="1" />
-                  <stop offset="100%" stop-color="#00e676" stop-opacity="0.95" />
+                <linearGradient id="gradient-green" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#00ff99" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#00e676" stopOpacity="0.95" />
                 </linearGradient>
               </defs>
               <Pie

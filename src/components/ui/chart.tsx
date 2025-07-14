@@ -1,11 +1,11 @@
 "use client"
 
-import * as React from "react"
-import * as RechartsPrimitive from "recharts"
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import type { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 import type { TooltipPayloadEntry } from 'recharts/types/state/tooltipSlice';
-import type { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
 
 function getPayloadFill(payload: unknown): string | undefined {
   if (payload && typeof payload === 'object' && 'fill' in payload && typeof (payload as { fill?: string }).fill === 'string') {
@@ -304,15 +304,15 @@ function ChartLegendContent({
         // If color is a gradient url, render a span with the matching gradient as background
         let swatchStyle = {};
         if (typeof color === 'string' && color.startsWith('url(')) {
-          // Map url(#pie-glass-*) to a matching CSS linear-gradient for legend swatch
-          if (color.includes('pie-glass-blue')) {
-            swatchStyle = { background: '#005bea' };
-          } else if (color.includes('pie-glass-orange')) {
-            swatchStyle = { background: '#ff8000' };
-          } else if (color.includes('pie-glass-green')) {
-            swatchStyle = { background: '#00e676' };
-          } else if (color.includes('pie-glass-indigo')) {
-            swatchStyle = { background: '#6366f1' };
+          // Map url(#gradient-*) to a matching CSS linear-gradient for legend swatch
+          if (color.includes('gradient-blue')) {
+            swatchStyle = { background: 'linear-gradient(135deg, #00c6fb 0%, #005bea 100%)' };
+          } else if (color.includes('gradient-orange')) {
+            swatchStyle = { background: 'linear-gradient(135deg, #ff8000 0%, #ff6b35 100%)' };
+          } else if (color.includes('gradient-green')) {
+            swatchStyle = { background: 'linear-gradient(135deg, #00ff99 0%, #00e676 100%)' };
+          } else if (color.includes('gradient-purple')) {
+            swatchStyle = { background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)' };
           }
         } else if (color) {
           swatchStyle = { background: color };
@@ -375,10 +375,9 @@ function getPayloadConfigFromPayload(
 }
 
 export {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  ChartStyle,
-}
+    ChartContainer, ChartLegend,
+    ChartLegendContent,
+    ChartStyle, ChartTooltip,
+    ChartTooltipContent
+};
+
