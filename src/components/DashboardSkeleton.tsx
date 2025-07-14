@@ -1,19 +1,28 @@
-import React from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Footer } from '@/components/Footer';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function DashboardSkeleton() {
   return (
     <div className="min-h-screen gradient-bg">
       {/* Skeleton Header */}
-      <header className="card-glass border-b border-white/10 shadow-lg w-full rounded-b-xl mb-6">
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <Skeleton className="w-8 h-8 md:w-10 md:h-10 rounded-lg skeleton-glass border border-white/10 shadow-sm" />
-            <Skeleton className="h-8 w-32 rounded-lg skeleton-glass border border-white/10 shadow-sm" />
+      <header className="glass border-b border-border/50 backdrop-blur-xl sticky top-0 z-50 w-full animate-fade-in-up shadow-lg">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
+          <div className="flex items-center gap-4">
+            {/* Logo skeleton - hidden on mobile */}
+            <Skeleton className="hidden md:block w-10 h-10 md:w-12 md:h-12 rounded-xl skeleton-glass border border-white/10 shadow-2xl" />
+            <Skeleton className="h-8 md:h-10 w-32 md:w-40 rounded-lg skeleton-glass border border-white/10 shadow-sm" />
           </div>
-          <Skeleton className="w-10 h-10 rounded-full skeleton-glass border border-white/10 shadow-sm" />
+
+          <div className="flex items-center space-x-4">
+            {/* Month Selector skeleton */}
+            <div className="flex items-center space-x-2">
+              <Skeleton className="w-[140px] h-9 rounded-lg skeleton-glass border border-white/10 shadow-sm" />
+            </div>
+
+            {/* Avatar skeleton */}
+            <Skeleton className="w-10 h-10 rounded-full skeleton-glass border border-white/10 shadow-sm" />
+          </div>
         </div>
       </header>
 

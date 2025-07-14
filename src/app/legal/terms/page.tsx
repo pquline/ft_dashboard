@@ -230,7 +230,7 @@ export default function TermsOfServicePage() {
             className="btn-glass font-semibold py-3 transition-all duration-300 focus-ring relative z-10"
           >
             <Link href="/">
-              Back to Dashboard
+              Dashboard
               <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
             </Link>
           </Button>

@@ -1,9 +1,9 @@
 export const CHART_COLORS = {
   PIE_COLORS: [
-    'url(#pie-glass-blue)',   // Vibrant blue glass gradient
-    'url(#pie-glass-orange)', // Vibrant orange glass gradient
-    'url(#pie-glass-green)',  // Vibrant green glass gradient
-    'url(#pie-glass-indigo)', // Vibrant indigo glass gradient
+    'url(#gradient-blue)',   // Vibrant blue glass gradient
+    'url(#gradient-orange)', // Vibrant orange glass gradient
+    'url(#gradient-green)',  // Vibrant green glass gradient
+    'url(#gradient-purple)', // Vibrant purple glass gradient
   ],
   BAR_COLORS: {
     LOW: 'url(#bar-glass-low)',         // Soft slate glass gradient
