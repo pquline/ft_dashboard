@@ -413,6 +413,7 @@
   transition: background 0.2s, border 0.2s, box-shadow 0.2s;
   position: relative;
   overflow: hidden;
+  padding: 1.2rem;
 }
 .btn-glass::before {
   content: '';
