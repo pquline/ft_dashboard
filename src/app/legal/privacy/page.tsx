@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Calendar, Eye, Lock, Shield, User } from 'lucide-react';
 import Link from 'next/link';
 
@@ -52,18 +52,15 @@ export default function PrivacyPolicyPage() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {/* Header */}
         <div className="mb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors duration-300 mb-6 group"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-            Back to Dashboard
-          </Link>
+          <Button asChild variant="ghost" className="mb-6 group">
+            <Link href="/">
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
+              Back to Dashboard
+            </Link>
+          </Button>
 
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
-              <Shield className="w-6 h-6 text-foreground" />
-            </div>
+            <Shield className="w-12 h-12 text-foreground" />
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">
                 Privacy Policy
@@ -102,9 +99,7 @@ export default function PrivacyPolicyPage() {
             <Card key={index} className="card-modern">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
-                    <section.icon className="w-5 h-5 text-foreground" />
-                  </div>
+                  <section.icon className="w-6 h-6 text-foreground" />
                   <CardTitle className="text-xl font-semibold">{section.title}</CardTitle>
                 </div>
               </CardHeader>
