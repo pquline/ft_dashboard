@@ -45,7 +45,7 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
             <div className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               {total}
             </div>
-            <div className="text-xs text-muted-foreground mt-1 text-primary">
+            <div className="text-xs mt-1 text-primary">
               {((totalHours / 140) * 100).toFixed(0)}% of 140 hours
             </div>
           </div>
