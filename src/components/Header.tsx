@@ -100,15 +100,6 @@ export function Header({
             </div>
           )}
 
-          {/* Quick Stats Display */}
-          <Badge
-            variant="outline"
-            className="bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 backdrop-blur-xl text-foreground/90 hover:bg-white/70 dark:hover:bg-[rgba(24,28,40,0.65)] transition-all duration-300 shadow-lg glass-hover relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-transparent opacity-70 pointer-events-none group-hover:opacity-100 transition-opacity duration-300" />
-            <span className="text-sm font-medium relative z-10">{login}</span>
-          </Badge>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
