@@ -69,7 +69,7 @@ export function Header({
     <header className="glass border-b border-border/50 backdrop-blur-xl sticky top-0 z-50 w-full animate-fade-in-up shadow-lg">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-4 flex flex-row justify-between items-center gap-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
-          <Link href="/" className="group">
+          <Link href="/" className="group hidden md:block">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-white/60 dark:bg-[rgba(24,28,40,0.55)] border border-white/10 shadow-2xl rounded-xl flex items-center justify-center group-hover:shadow-xl transition-all duration-300 group-hover:scale-105 btn-modern relative overflow-hidden backdrop-blur-xl">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-70 pointer-events-none" />
               <BarChart
