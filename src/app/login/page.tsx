@@ -74,7 +74,11 @@ export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [browserInfo, setBrowserInfo] = useState(getBrowserInstructions());
+  const [browserInfo, setBrowserInfo] = useState({
+    devTools: 'F12 or right-click → Inspect',
+    storage: 'Application/Storage → Cookies',
+    browser: 'your browser'
+  });
 
   useEffect(() => {
     setBrowserInfo(getBrowserInstructions());
