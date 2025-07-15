@@ -1,18 +1,90 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, BarChart } from 'lucide-react';
+import { Info, BarChart, Copy, Check } from 'lucide-react';
 import Link from 'next/link';
+
+// Cross-browser cookie utility
+const setCookie = (name: string, value: string, days: number = 1) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+
+  // Try multiple cookie formats for better browser compatibility
+  const cookieString = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+
+  try {
+    document.cookie = cookieString;
+    // Fallback for older browsers
+    if (!document.cookie.includes(name)) {
+      document.cookie = `${name}=${value}; path=/`;
+    }
+  } catch (error) {
+    console.warn('Cookie setting failed:', error);
+  }
+};
+
+const clearCookie = (name: string) => {
+  try {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
+  } catch (error) {
+    console.warn('Cookie clearing failed:', error);
+  }
+};
+
+// Detect browser for better instructions
+const getBrowserInstructions = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  if (userAgent.includes('chrome') || userAgent.includes('chromium')) {
+    return {
+      devTools: 'F12 or Ctrl+Shift+I (Cmd+Option+I on Mac)',
+      storage: 'Application tab → Storage → Cookies',
+      browser: 'Chrome'
+    };
+  } else if (userAgent.includes('firefox')) {
+    return {
+      devTools: 'F12 or Ctrl+Shift+I (Cmd+Option+I on Mac)',
+      storage: 'Storage tab → Cookies',
+      browser: 'Firefox'
+    };
+  } else if (userAgent.includes('safari')) {
+    return {
+      devTools: 'Cmd+Option+I',
+      storage: 'Storage tab → Cookies',
+      browser: 'Safari'
+    };
+  } else if (userAgent.includes('edge')) {
+    return {
+      devTools: 'F12 or Ctrl+Shift+I',
+      storage: 'Application tab → Storage → Cookies',
+      browser: 'Edge'
+    };
+  } else {
+    return {
+      devTools: 'F12 or right-click → Inspect',
+      storage: 'Application/Storage → Cookies',
+      browser: 'your browser'
+    };
+  }
+};
 
 export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [browserInfo, setBrowserInfo] = useState(getBrowserInstructions());
+
+  // Update browser info on mount (for SSR compatibility)
+  useEffect(() => {
+    setBrowserInfo(getBrowserInstructions());
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,20 +92,61 @@ export default function LoginPage() {
     setError('');
 
     try {
-      document.cookie = `session=${sessionCookie}; path=/; max-age=86400`;
-      const response = await fetch('/api/attendance');
+      setCookie('session', sessionCookie, 1);
+
+      // Small delay to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const response = await fetch('/api/attendance', {
+        method: 'GET',
+        credentials: 'include', // Include cookies in request
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (response.ok) {
+        // Use router.push for better navigation
         window.location.href = '/';
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ error: 'Failed to authenticate' }));
         setError(errorData.error || 'Failed to authenticate');
-        document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        clearCookie('session');
       }
-    } catch {
-      setError('Network error. Please try again.');
-      document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please check your connection and try again.');
+      clearCookie('session');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const copyInstructions = async () => {
+    const instructions = `1. Go to https://dashboard.42paris.fr/attendance
+2. Open Developer Tools (${browserInfo.devTools})
+3. Go to ${browserInfo.storage}
+4. Copy the value of the "session" cookie`;
+
+    try {
+      await navigator.clipboard.writeText(instructions);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = instructions;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (fallbackError) {
+        console.warn('Copy failed:', fallbackError);
+      }
+      document.body.removeChild(textArea);
     }
   };
 
@@ -68,6 +181,9 @@ export default function LoginPage() {
                   onChange={(e) => setSessionCookie(e.target.value)}
                   required
                   className="focus-ring transition-all duration-200 bg-card/50 border-border/50 focus:border-primary/50"
+                  autoComplete="off"
+                  spellCheck="false"
+                  aria-describedby="cookie-help"
                 />
               </div>
 
@@ -77,37 +193,56 @@ export default function LoginPage() {
                 </Alert>
               )}
 
-              <Alert className="border-orange-500/20 bg-orange-500/10">
-                <Info className="h-4 w-4 text-foreground" />
-                <AlertDescription className="text-foreground">
-                  <strong className="text-foreground">How to get your session cookie:</strong>
-                  <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
-                    <li>
-                      Go to{' '}
-                      <Link
-                        href="https://dashboard.42paris.fr/attendance"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
-                      >
-                        42 Dashboard
-                      </Link>
-                    </li>
-                    <li>Open Developer Tools (F12)</li>
-                    <li>Go to Application/Storage → Cookies</li>
-                    <li>Copy the value of the &quot;session&quot; cookie</li>
-                  </ol>
-                </AlertDescription>
+              <Alert className="border-orange-500/20 bg-orange-500/10" id="cookie-help">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-2">
+                    <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
+                    <AlertDescription className="text-foreground">
+                      <strong className="text-foreground">How to get your session cookie:</strong>
+                      <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
+                        <li>
+                          Go to{' '}
+                          <Link
+                            href="https://dashboard.42paris.fr/attendance"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
+                          >
+                            42 Dashboard
+                          </Link>
+                        </li>
+                        <li>Open Developer Tools ({browserInfo.devTools})</li>
+                        <li>Go to {browserInfo.storage}</li>
+                        <li>Copy the value of the &quot;session&quot; cookie</li>
+                      </ol>
+                    </AlertDescription>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={copyInstructions}
+                    className="flex-shrink-0 ml-2 h-8 w-8 p-0"
+                    aria-label="Copy instructions"
+                  >
+                    {copied ? (
+                      <Check className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
               </Alert>
 
               <Button
                 type="submit"
                 className="btn-glass w-full font-semibold py-3 transition-all duration-300 focus-ring relative z-10"
                 disabled={isLoading}
+                aria-describedby={error ? "error-message" : undefined}
               >
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" role="status" aria-label="Loading"></div>
                     <span>Authenticating...</span>
                   </div>
                 ) : (
