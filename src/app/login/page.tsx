@@ -158,10 +158,10 @@ export default function LoginPage() {
                 </Alert>
               )}
 
-              <Alert className="border-orange-500/20 bg-orange-500/10" id="cookie-help">
-                <div className="flex items-start space-x-3 w-full">
+              <Alert className="border-orange-500/20 bg-orange-500/10 w-full" id="cookie-help">
+                <div className="flex items-start w-full gap-3">
                   <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
-                  <AlertDescription className="text-foreground flex-1 w-full">
+                  <AlertDescription className="text-foreground flex-1 min-w-0">
                     <strong className="text-foreground">How to get your session cookie:</strong>
                     <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
                       <li>
