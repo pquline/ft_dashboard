@@ -39,13 +39,13 @@ const getBrowserInstructions = () => {
 
   if (userAgent.includes('chrome') || userAgent.includes('chromium')) {
     return {
-      devTools: 'F12 or Ctrl+Shift+I (Cmd+Option+I on Mac)',
+      devTools: 'F12 (Cmd+Option+I on Mac)',
       storage: 'Application tab → Storage → Cookies',
       browser: 'Chrome'
     };
   } else if (userAgent.includes('firefox')) {
     return {
-      devTools: 'F12 or Ctrl+Shift+I (Cmd+Option+I on Mac)',
+      devTools: 'F12 (Cmd+Option+I on Mac)',
       storage: 'Storage tab → Cookies',
       browser: 'Firefox'
     };
@@ -57,7 +57,7 @@ const getBrowserInstructions = () => {
     };
   } else if (userAgent.includes('edge')) {
     return {
-      devTools: 'F12 or Ctrl+Shift+I',
+      devTools: 'F12 (Cmd+Option+I on Mac)',
       storage: 'Application tab → Storage → Cookies',
       browser: 'Edge'
     };
@@ -96,7 +96,7 @@ export default function LoginPage() {
 
       const response = await fetch('/api/attendance', {
         method: 'GET',
-        credentials: 'include', // Include cookies in request
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
