@@ -162,7 +162,7 @@ export default function LoginPage() {
                 <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
                 <AlertDescription className="text-foreground flex-1 min-w-0">
                   <strong className="text-foreground">How to get your session cookie:</strong>
-                  <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
+                  <ol className="mt-3 list-decimal space-y-2 text-sm">
                     <li>
                       Go to{' '}
                       <Link
@@ -174,7 +174,7 @@ export default function LoginPage() {
                         42 Dashboard
                       </Link>
                     </li>
-                    <li>Open Developer Tools ({browserInfo.devTools})</li>
+                    <li>Open Developer Tools<br/><span className="text-foreground/80 text-xs">({browserInfo.devTools})</span></li>
                     <li>Go to {browserInfo.storage}</li>
                     <li>Copy the value of the &quot;session&quot; cookie</li>
                   </ol>
