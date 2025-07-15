@@ -158,29 +158,27 @@ export default function LoginPage() {
                 </Alert>
               )}
 
-              <Alert className="border-orange-500/20 bg-orange-500/10 w-full" id="cookie-help">
-                <div className="flex items-start w-full gap-3">
-                  <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
-                  <AlertDescription className="text-foreground flex-1 min-w-0">
-                    <strong className="text-foreground">How to get your session cookie:</strong>
-                    <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
-                      <li>
-                        Go to{' '}
-                        <Link
-                          href="https://dashboard.42paris.fr/attendance"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
-                        >
-                          42 Dashboard
-                        </Link>
-                      </li>
-                      <li>Open Developer Tools ({browserInfo.devTools})</li>
-                      <li>Go to {browserInfo.storage}</li>
-                      <li>Copy the value of the &quot;session&quot; cookie</li>
-                    </ol>
-                  </AlertDescription>
-                </div>
+              <Alert className="border-orange-500/20 bg-orange-500/10 w-full !flex !items-start gap-3" id="cookie-help">
+                <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
+                <AlertDescription className="text-foreground flex-1 min-w-0">
+                  <strong className="text-foreground">How to get your session cookie:</strong>
+                  <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
+                    <li>
+                      Go to{' '}
+                      <Link
+                        href="https://dashboard.42paris.fr/attendance"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
+                      >
+                        42 Dashboard
+                      </Link>
+                    </li>
+                    <li>Open Developer Tools ({browserInfo.devTools})</li>
+                    <li>Go to {browserInfo.storage}</li>
+                    <li>Copy the value of the &quot;session&quot; cookie</li>
+                  </ol>
+                </AlertDescription>
               </Alert>
 
               <Button
