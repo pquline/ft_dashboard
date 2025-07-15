@@ -6,20 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, BarChart, Copy, Check } from 'lucide-react';
+import { Info, BarChart } from 'lucide-react';
 import Link from 'next/link';
 
-// Cross-browser cookie utility
 const setCookie = (name: string, value: string, days: number = 1) => {
   const expires = new Date();
   expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
 
-  // Try multiple cookie formats for better browser compatibility
   const cookieString = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
 
   try {
     document.cookie = cookieString;
-    // Fallback for older browsers
     if (!document.cookie.includes(name)) {
       document.cookie = `${name}=${value}; path=/`;
     }
@@ -37,7 +34,6 @@ const clearCookie = (name: string) => {
   }
 };
 
-// Detect browser for better instructions
 const getBrowserInstructions = () => {
   const userAgent = navigator.userAgent.toLowerCase();
 
@@ -78,10 +74,8 @@ export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
   const [browserInfo, setBrowserInfo] = useState(getBrowserInstructions());
 
-  // Update browser info on mount (for SSR compatibility)
   useEffect(() => {
     setBrowserInfo(getBrowserInstructions());
   }, []);
@@ -94,7 +88,6 @@ export default function LoginPage() {
     try {
       setCookie('session', sessionCookie, 1);
 
-      // Small delay to ensure cookie is set
       await new Promise(resolve => setTimeout(resolve, 100));
 
       const response = await fetch('/api/attendance', {
@@ -107,7 +100,6 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        // Use router.push for better navigation
         window.location.href = '/';
       } else {
         const errorData = await response.json().catch(() => ({ error: 'Failed to authenticate' }));
@@ -120,33 +112,6 @@ export default function LoginPage() {
       clearCookie('session');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const copyInstructions = async () => {
-    const instructions = `1. Go to https://dashboard.42paris.fr/attendance
-2. Open Developer Tools (${browserInfo.devTools})
-3. Go to ${browserInfo.storage}
-4. Copy the value of the "session" cookie`;
-
-    try {
-      await navigator.clipboard.writeText(instructions);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = instructions;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (fallbackError) {
-        console.warn('Copy failed:', fallbackError);
-      }
-      document.body.removeChild(textArea);
     }
   };
 
@@ -194,43 +159,27 @@ export default function LoginPage() {
               )}
 
               <Alert className="border-orange-500/20 bg-orange-500/10" id="cookie-help">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-2">
-                    <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
-                    <AlertDescription className="text-foreground">
-                      <strong className="text-foreground">How to get your session cookie:</strong>
-                      <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
-                        <li>
-                          Go to{' '}
-                          <Link
-                            href="https://dashboard.42paris.fr/attendance"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
-                          >
-                            42 Dashboard
-                          </Link>
-                        </li>
-                        <li>Open Developer Tools ({browserInfo.devTools})</li>
-                        <li>Go to {browserInfo.storage}</li>
-                        <li>Copy the value of the &quot;session&quot; cookie</li>
-                      </ol>
-                    </AlertDescription>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={copyInstructions}
-                    className="flex-shrink-0 ml-2 h-8 w-8 p-0"
-                    aria-label="Copy instructions"
-                  >
-                    {copied ? (
-                      <Check className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
+                <div className="flex items-start space-x-3 w-full">
+                  <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
+                  <AlertDescription className="text-foreground flex-1 w-full">
+                    <strong className="text-foreground">How to get your session cookie:</strong>
+                    <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
+                      <li>
+                        Go to{' '}
+                        <Link
+                          href="https://dashboard.42paris.fr/attendance"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center space-x-1 text-foreground font-bold hover:underline transition-colors duration-200"
+                        >
+                          42 Dashboard
+                        </Link>
+                      </li>
+                      <li>Open Developer Tools ({browserInfo.devTools})</li>
+                      <li>Go to {browserInfo.storage}</li>
+                      <li>Copy the value of the &quot;session&quot; cookie</li>
+                    </ol>
+                  </AlertDescription>
                 </div>
               </Alert>
 
