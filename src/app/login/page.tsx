@@ -178,7 +178,7 @@ export default function LoginPage() {
                         42 Dashboard
                       </Link>
                     </li>
-                    <li>Open Developer Tools<br/><span className="text-foreground/80 text-xs">({browserInfo.devTools})</span></li>
+                    <li>Open Developer Tools<br/><span className="text-foreground/80 text-xs">{browserInfo.devTools}</span></li>
                     <li>Go to {browserInfo.storage}</li>
                     <li>Copy the value of the &quot;session&quot; cookie</li>
                   </ol>
