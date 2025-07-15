@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,10 +9,80 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info, BarChart } from 'lucide-react';
 import Link from 'next/link';
 
+const setCookie = (name: string, value: string, days: number = 1) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+
+  const cookieString = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+
+  try {
+    document.cookie = cookieString;
+    if (!document.cookie.includes(name)) {
+      document.cookie = `${name}=${value}; path=/`;
+    }
+  } catch (error) {
+    console.warn('Cookie setting failed:', error);
+  }
+};
+
+const clearCookie = (name: string) => {
+  try {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
+  } catch (error) {
+    console.warn('Cookie clearing failed:', error);
+  }
+};
+
+const getBrowserInstructions = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  if (userAgent.includes('chrome') || userAgent.includes('chromium')) {
+    return {
+      devTools: 'F12 or Ctrl+Shift+I (Cmd+Option+I on Mac)',
+      storage: 'Application tab → Storage → Cookies',
+      browser: 'Chrome'
+    };
+  } else if (userAgent.includes('firefox')) {
+    return {
+      devTools: 'F12 or Ctrl+Shift+I (Cmd+Option+I on Mac)',
+      storage: 'Storage tab → Cookies',
+      browser: 'Firefox'
+    };
+  } else if (userAgent.includes('safari')) {
+    return {
+      devTools: 'Cmd+Option+I',
+      storage: 'Storage tab → Cookies',
+      browser: 'Safari'
+    };
+  } else if (userAgent.includes('edge')) {
+    return {
+      devTools: 'F12 or Ctrl+Shift+I',
+      storage: 'Application tab → Storage → Cookies',
+      browser: 'Edge'
+    };
+  } else {
+    return {
+      devTools: 'F12 or right-click → Inspect',
+      storage: 'Application/Storage → Cookies',
+      browser: 'your browser'
+    };
+  }
+};
+
 export default function LoginPage() {
   const [sessionCookie, setSessionCookie] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [browserInfo, setBrowserInfo] = useState({
+    devTools: 'F12 or right-click → Inspect',
+    storage: 'Application/Storage → Cookies',
+    browser: 'your browser'
+  });
+
+  useEffect(() => {
+    setBrowserInfo(getBrowserInstructions());
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,18 +90,30 @@ export default function LoginPage() {
     setError('');
 
     try {
-      document.cookie = `session=${sessionCookie}; path=/; max-age=86400`;
-      const response = await fetch('/api/attendance');
+      setCookie('session', sessionCookie, 1);
+
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const response = await fetch('/api/attendance', {
+        method: 'GET',
+        credentials: 'include', // Include cookies in request
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (response.ok) {
         window.location.href = '/';
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ error: 'Failed to authenticate' }));
         setError(errorData.error || 'Failed to authenticate');
-        document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        clearCookie('session');
       }
-    } catch {
-      setError('Network error. Please try again.');
-      document.cookie = 'session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please check your connection and try again.');
+      clearCookie('session');
     } finally {
       setIsLoading(false);
     }
@@ -68,6 +150,9 @@ export default function LoginPage() {
                   onChange={(e) => setSessionCookie(e.target.value)}
                   required
                   className="focus-ring transition-all duration-200 bg-card/50 border-border/50 focus:border-primary/50"
+                  autoComplete="off"
+                  spellCheck="false"
+                  aria-describedby="cookie-help"
                 />
               </div>
 
@@ -77,11 +162,11 @@ export default function LoginPage() {
                 </Alert>
               )}
 
-              <Alert className="border-orange-500/20 bg-orange-500/10">
-                <Info className="h-4 w-4 text-foreground" />
-                <AlertDescription className="text-foreground">
+              <Alert className="border-orange-500/20 bg-orange-500/10 w-full !flex !items-start gap-3" id="cookie-help">
+                <Info className="h-4 w-4 text-foreground mt-0.5 flex-shrink-0" />
+                <AlertDescription className="text-foreground flex-1 min-w-0">
                   <strong className="text-foreground">How to get your session cookie:</strong>
-                  <ol className="mt-3 list-decimal list-inside space-y-2 text-sm">
+                  <ol className="mt-3 list-decimal space-y-2 text-sm">
                     <li>
                       Go to{' '}
                       <Link
@@ -93,8 +178,8 @@ export default function LoginPage() {
                         42 Dashboard
                       </Link>
                     </li>
-                    <li>Open Developer Tools (F12)</li>
-                    <li>Go to Application/Storage → Cookies</li>
+                    <li>Open Developer Tools<br/><span className="text-foreground/80 text-xs">({browserInfo.devTools})</span></li>
+                    <li>Go to {browserInfo.storage}</li>
                     <li>Copy the value of the &quot;session&quot; cookie</li>
                   </ol>
                 </AlertDescription>
@@ -104,10 +189,11 @@ export default function LoginPage() {
                 type="submit"
                 className="btn-glass w-full font-semibold py-3 transition-all duration-300 focus-ring relative z-10"
                 disabled={isLoading}
+                aria-describedby={error ? "error-message" : undefined}
               >
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" role="status" aria-label="Loading"></div>
                     <span>Authenticating...</span>
                   </div>
                 ) : (
