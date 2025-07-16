@@ -21,6 +21,7 @@ import { BarChart, LogOut, Moon, Sun, RefreshCw } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
+import { useCachedData } from "@/hooks/useCachedData";
 
 interface HeaderProps {
   login: string;
@@ -44,12 +45,14 @@ export function Header({
   const { setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const { clearCache } = useCachedData();
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleLogout = () => {
+    clearCache();
     document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     window.location.href = "/login";
   };
