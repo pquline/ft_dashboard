@@ -1,8 +1,5 @@
 import Link from "next/link";
 
-// Ideally, import from package.json, but for now, hardcode the version
-const VERSION = "0.1.0";
-
 export function Footer() {
   return (
     <footer className="shadow-2xl rounded-t-2xl mt-12 border-t border-white/10 bg-white/30 dark:bg-[rgba(24,28,40,0.18)] backdrop-blur-xl">
@@ -19,7 +16,6 @@ export function Footer() {
               >
                 <span>pquline</span>
               </Link>
-              <span className="ml-2 text-xs text-gray-500">v{VERSION}</span>
               <span className="text-yellow-500 animate-pulse">{" █"}</span>
             </span>
           </div>
