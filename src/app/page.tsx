@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { AttendanceData } from '@/types/attendance';
-import { DashboardClient } from '@/components/DashboardClient';
+import { CachedDashboardClient } from '@/components/CachedDashboardClient';
 import { DashboardSkeleton } from '@/components/DashboardSkeleton';
 import { Suspense } from 'react';
 
@@ -34,7 +34,14 @@ async function DashboardContent() {
   const data = await fetchAttendanceData(sessionCookie);
   const defaultMonth = data.attendance[0]?.from_date || '';
 
-  return <DashboardClient data={data} defaultMonth={defaultMonth} />;
+  return (
+    <CachedDashboardClient
+      initialData={data}
+      defaultMonth={defaultMonth}
+      login={data.login}
+      imageUrl={data.image_url}
+    />
+  );
 }
 
 export default function DashboardPage() {
