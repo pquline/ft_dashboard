@@ -8,6 +8,7 @@ A modern dashboard application for 42 students to view their attendance data. Bu
 - **Client-side Caching**: Attendance data is cached in the browser for 5 minutes, enabling instant reloads and reduced API calls
 - **Manual Data Refresh**: Users can manually refresh their data at any time via the header dropdown menu
 - **Cache Status Indicator**: The dashboard displays whether data is cached or fresh, and when it was last updated
+- **Privacy on Logout**: Cached attendance data is cleared when you log out
 - **Modern UI**: Clean, responsive design using shadcn/ui components
 - **Interactive Charts**: Data visualization using Recharts
 - **Loading States**: Skeleton loading components for better UX
@@ -71,6 +72,7 @@ The dashboard will then fetch your data from the 42 API using your session.
 - On page reload, cached data is used for instant loading if still valid.
 - Users can manually refresh data from the header dropdown menu.
 - The dashboard shows cache status and last updated time.
+- **Cached attendance data is automatically cleared when you log out, ensuring your data is not accessible to future users on the same device.**
 
 ## Project Structure
 
