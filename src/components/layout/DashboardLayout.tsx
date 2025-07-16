@@ -10,6 +10,8 @@ interface DashboardLayoutProps {
   months: Array<{ value: string; label: string }>;
   selectedMonth: string;
   onMonthChange: (newMonth: string) => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 export function DashboardLayout({
@@ -18,6 +20,8 @@ export function DashboardLayout({
   months,
   selectedMonth,
   onMonthChange,
+  onRefresh,
+  isRefreshing,
 }: DashboardLayoutProps) {
   useInteractiveBackground();
   return (
@@ -28,6 +32,8 @@ export function DashboardLayout({
         months={months}
         selectedMonth={selectedMonth}
         onMonthChange={onMonthChange}
+        onRefresh={onRefresh}
+        isRefreshing={isRefreshing}
       />
       <div className="relative z-10">
         {children}

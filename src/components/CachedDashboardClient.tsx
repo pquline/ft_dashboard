@@ -5,7 +5,6 @@ import { AttendanceData } from '@/types/attendance';
 import { useCachedData } from '@/hooks/useCachedData';
 import { useDashboardState } from '@/hooks/useDashboardState';
 import { DashboardContent } from '@/components/dashboard';
-import { Header } from '@/components/Header';
 import { DashboardLayout } from '@/components/layout';
 
 interface CachedDashboardClientProps {
@@ -34,6 +33,7 @@ export function CachedDashboardClient({
   const [currentData, setCurrentData] = useState<AttendanceData>(initialData);
   const [sessionCookie, setSessionCookie] = useState<string>('');
 
+  // Get session cookie on mount
   useEffect(() => {
     const cookie = document.cookie
       .split('; ')
@@ -45,6 +45,7 @@ export function CachedDashboardClient({
     }
   }, []);
 
+  // Initialize data from cache or initial data
   useEffect(() => {
     if (data) {
       setCurrentData(data);
@@ -53,6 +54,7 @@ export function CachedDashboardClient({
     }
   }, [data, initialData]);
 
+  // Load data on mount if we have session cookie
   useEffect(() => {
     if (sessionCookie) {
       getData(sessionCookie).then(setCurrentData).catch(console.error);
@@ -102,16 +104,9 @@ export function CachedDashboardClient({
       months={dashboardState.months}
       selectedMonth={dashboardState.selectedMonth}
       onMonthChange={dashboardState.handleMonthChange}
+      onRefresh={handleRefresh}
+      isRefreshing={isLoading}
     >
-      <Header
-        login={login}
-        imageUrl={imageUrl}
-        months={dashboardState.months}
-        selectedMonth={dashboardState.selectedMonth}
-        onMonthChange={dashboardState.handleMonthChange}
-        onRefresh={handleRefresh}
-        isRefreshing={isLoading}
-      />
       <DashboardContent
         data={currentData}
         currentPeriod={dashboardState.currentPeriod}
