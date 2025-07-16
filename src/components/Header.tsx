@@ -17,10 +17,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { BarChart, LogOut, Moon, Sun } from "lucide-react";
+import { BarChart, LogOut, Moon, Sun, RefreshCw } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import React from "react";
+import { useCachedData } from "@/hooks/useCachedData";
 
 interface HeaderProps {
   login: string;
@@ -28,6 +29,8 @@ interface HeaderProps {
   months?: { value: string; label: string }[];
   selectedMonth?: string;
   onMonthChange?: (value: string) => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }
 
 export function Header({
@@ -36,16 +39,20 @@ export function Header({
   months,
   selectedMonth,
   onMonthChange,
+  onRefresh,
+  isRefreshing,
 }: HeaderProps) {
   const { setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const { clearCache } = useCachedData();
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleLogout = () => {
+    clearCache();
     document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     window.location.href = "/login";
   };
@@ -118,6 +125,13 @@ export function Header({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+              {onRefresh && (
+                <DropdownMenuItem onClick={onRefresh} disabled={isRefreshing}>
+                  <RefreshCw className={`mr-2 h-4 w-4 text-foreground ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+                </DropdownMenuItem>
+              )}
+
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-4 h-4 w-4" />

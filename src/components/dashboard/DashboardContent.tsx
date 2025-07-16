@@ -25,6 +25,9 @@ interface DashboardContentProps {
     type: "none";
   }>;
   onMonthChange: (newMonth: string) => void;
+  isLoading?: boolean;
+  isCacheValid?: boolean;
+  lastUpdated?: number;
 }
 
 export function DashboardContent({
@@ -40,6 +43,7 @@ export function DashboardContent({
   return (
     <div className="container mx-auto px-6 max-w-7xl">
       <div className="space-y-8 mt-8 animate-fade-in-up">
+
         <DashboardSummaryCards
           total={total}
           onSite={onSite}
