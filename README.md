@@ -23,15 +23,19 @@ A modern dashboard for 42 students to view their attendance data. Built with Nex
    cd ft_dashboard
    npm install
    ```
-
 2. Run the development server:
    ```bash
    npm run dev
    ```
-
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 > You need a valid 42 session cookie to use the dashboard.
+
+## How it works
+
+- Attendance data is fetched from the 42 API and cached in your browser for fast reloads.
+- You can manually refresh your data from the header dropdown.
+- Cached data is cleared automatically when you log out.
 
 ## Project Structure
 
@@ -43,6 +47,12 @@ src/
 ├── lib/            # Utilities
 └── types/          # TypeScript types
 ```
+
+## Contributing
+
+- Fork the repository and create a feature branch.
+- Make your changes and open a pull request.
+- Please use conventional commits and update the CHANGELOG.md.
 
 ## License
 
