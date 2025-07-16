@@ -5,7 +5,9 @@ A modern dashboard application for 42 students to view their attendance data. Bu
 ## Features
 
 - **Authentication**: Session-based authentication using 42 API session cookies
-- **Live Data**: Real-time data fetching from the 42 API
+- **Client-side Caching**: Attendance data is cached in the browser for 5 minutes, enabling instant reloads and reduced API calls
+- **Manual Data Refresh**: Users can manually refresh their data at any time via the header dropdown menu
+- **Cache Status Indicator**: The dashboard displays whether data is cached or fresh, and when it was last updated
 - **Modern UI**: Clean, responsive design using shadcn/ui components
 - **Interactive Charts**: Data visualization using Recharts
 - **Loading States**: Skeleton loading components for better UX
@@ -63,6 +65,13 @@ To access the dashboard, you need to authenticate with your 42 session:
 
 The dashboard will then fetch your data from the 42 API using your session.
 
+## Caching & Refresh
+
+- Attendance data is cached in the browser (localStorage) for 5 minutes.
+- On page reload, cached data is used for instant loading if still valid.
+- Users can manually refresh data from the header dropdown menu.
+- The dashboard shows cache status and last updated time.
+
 ## Project Structure
 
 ```
@@ -74,7 +83,10 @@ src/
 │   └── page.tsx            # Dashboard page
 ├── components/             # React components
 │   ├── dashboard/          # Dashboard-specific components
+│   ├── CachedDashboardClient.tsx # Main dashboard client with caching logic
 │   └── ui/                 # shadcn/ui components
+├── hooks/                  # Custom React hooks
+│   └── useCachedData.ts    # Client-side caching hook
 ├── lib/                    # Utility functions
 └── types/                  # TypeScript type definitions
 ```
