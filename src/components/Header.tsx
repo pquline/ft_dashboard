@@ -122,6 +122,13 @@ export function Header({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+              {onRefresh && (
+                <DropdownMenuItem onClick={onRefresh} disabled={isRefreshing}>
+                  <RefreshCw className={`mr-2 h-4 w-4 text-foreground ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+                </DropdownMenuItem>
+              )}
+
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <Sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 mr-4 h-4 w-4" />
@@ -140,13 +147,6 @@ export function Header({
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
-
-              {onRefresh && (
-                <DropdownMenuItem onClick={onRefresh} disabled={isRefreshing}>
-                  <RefreshCw className={`mr-2 h-4 w-4 text-foreground ${isRefreshing ? 'animate-spin' : ''}`} />
-                  <span>{isRefreshing ? 'Refreshing...' : 'Refresh Data'}</span>
-                </DropdownMenuItem>
-              )}
 
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4 text-foreground" />

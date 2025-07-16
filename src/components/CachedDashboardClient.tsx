@@ -17,8 +17,6 @@ interface CachedDashboardClientProps {
 export function CachedDashboardClient({
   initialData,
   defaultMonth,
-  login,
-  imageUrl,
 }: CachedDashboardClientProps) {
   const {
     data,
@@ -33,7 +31,6 @@ export function CachedDashboardClient({
   const [currentData, setCurrentData] = useState<AttendanceData>(initialData);
   const [sessionCookie, setSessionCookie] = useState<string>('');
 
-  // Get session cookie on mount
   useEffect(() => {
     const cookie = document.cookie
       .split('; ')
@@ -45,7 +42,6 @@ export function CachedDashboardClient({
     }
   }, []);
 
-  // Initialize data from cache or initial data
   useEffect(() => {
     if (data) {
       setCurrentData(data);
@@ -54,7 +50,6 @@ export function CachedDashboardClient({
     }
   }, [data, initialData]);
 
-  // Load data on mount if we have session cookie
   useEffect(() => {
     if (sessionCookie) {
       getData(sessionCookie).then(setCurrentData).catch(console.error);
