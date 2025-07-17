@@ -82,24 +82,36 @@ export function SourcesHeatmap({
     const firstDate = new Date(dailyData[0].date);
     const lastDate = new Date(dailyData[dailyData.length - 1].date);
 
+    // Find the first Sunday before or on the first date
+    const startDate = new Date(firstDate);
+    const dayOfWeek = startDate.getDay();
+    startDate.setDate(startDate.getDate() - dayOfWeek);
+
+    // Find the last Saturday after or on the last date
+    const endDate = new Date(lastDate);
+    const endDayOfWeek = endDate.getDay();
+    const daysToAdd = (6 - endDayOfWeek + 7) % 7;
+    endDate.setDate(endDate.getDate() + daysToAdd);
+
     // Calculate the total number of weeks needed
-    const startDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
-    const endDate = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0);
     const totalWeeks = Math.ceil((endDate.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
 
-    // Create a 7 x totalWeeks grid
+    // Create a 7 x totalWeeks grid (7 days of week x number of weeks)
     const grid: (DailyData | null)[][] = Array(7).fill(null).map(() => Array(totalWeeks).fill(null));
 
-    // Fill the grid
-    dailyData.forEach(day => {
-      const date = new Date(day.date);
-      const weekIndex = Math.floor((date.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
-      const dayIndex = date.getDay();
+    // Fill the grid with all possible dates in the range
+    for (let week = 0; week < totalWeeks; week++) {
+      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+        const currentDate = new Date(startDate.getTime() + (week * 7 + dayOfWeek) * 24 * 60 * 60 * 1000);
+        const dateString = currentDate.toISOString().split('T')[0];
 
-      if (weekIndex < totalWeeks && dayIndex < 7) {
-        grid[dayIndex][weekIndex] = day;
+        // Find if we have data for this date
+        const dayData = dailyData.find(day => day.date === dateString);
+        if (dayData) {
+          grid[dayOfWeek][week] = dayData;
+        }
       }
-    });
+    }
 
     // Create month headers
     const monthHeaders: { month: string; year: number; weekIndex: number }[] = [];
