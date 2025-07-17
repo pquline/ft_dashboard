@@ -79,7 +79,7 @@ export function DashboardContent({
 
           {/* Sources Heatmap */}
           <SourcesHeatmap
-            currentPeriod={currentPeriod}
+            data={data}
           />
         </div>
       </div>

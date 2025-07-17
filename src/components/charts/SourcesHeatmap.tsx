@@ -7,10 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getPeriodMonthName, parseISODuration, formatDuration } from "@/lib/utils";
-import { AttendancePeriod } from "@/types/attendance";
+import { AttendanceData, AttendancePeriod } from "@/types/attendance";
 
 interface SourcesHeatmapProps {
-  currentPeriod: AttendancePeriod;
+  data: AttendanceData;
 }
 
 interface DailyData {
@@ -23,28 +23,49 @@ interface DailyData {
 }
 
 export function SourcesHeatmap({
-  currentPeriod,
+  data,
 }: SourcesHeatmapProps) {
-  // Process daily attendance data
-  const processDailyData = (): DailyData[] => {
-    if (!currentPeriod?.daily_attendances) return [];
+  // Process all daily attendance data from all periods
+  const processAllDailyData = (): DailyData[] => {
+    if (!data?.attendance) return [];
 
-    return currentPeriod.daily_attendances.map((day) => {
-      const date = new Date(day.date);
-      const hours = parseISODuration(day.total_attendance) / 3600;
+    const allDailyData: DailyData[] = [];
 
-      return {
-        date: day.date,
-        hours,
-        dayOfWeek: date.getDay(),
-        month: date.getMonth(),
-        year: date.getFullYear(),
-        day: date.getDate(),
-      };
-    }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    // Collect all daily attendance data from all periods
+    data.attendance.forEach((period) => {
+      if (period.daily_attendances) {
+        period.daily_attendances.forEach((day) => {
+          const date = new Date(day.date);
+          const hours = parseISODuration(day.total_attendance) / 3600;
+
+          allDailyData.push({
+            date: day.date,
+            hours,
+            dayOfWeek: date.getDay(),
+            month: date.getMonth(),
+            year: date.getFullYear(),
+            day: date.getDate(),
+          });
+        });
+      }
+    });
+
+    // Remove duplicates and sort by date
+    const uniqueData = allDailyData.reduce((acc, current) => {
+      const existing = acc.find(item => item.date === current.date);
+      if (!existing) {
+        acc.push(current);
+      } else {
+        // If duplicate exists, sum the hours
+        existing.hours += current.hours;
+      }
+      return acc;
+    }, [] as DailyData[]);
+
+    return uniqueData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
 
-  const dailyData = processDailyData();
+  const dailyData = processAllDailyData();
   const totalHours = dailyData.reduce((sum, day) => sum + day.hours, 0);
   const maxHours = Math.max(...dailyData.map(day => day.hours), 1);
 
@@ -106,6 +127,25 @@ export function SourcesHeatmap({
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  // Calculate date range for subtitle
+  const getDateRange = () => {
+    if (dailyData.length === 0) return '';
+
+    const firstDate = new Date(dailyData[0].date);
+    const lastDate = new Date(dailyData[dailyData.length - 1].date);
+
+    const firstFormatted = firstDate.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric'
+    });
+    const lastFormatted = lastDate.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric'
+    });
+
+    return `${firstFormatted} - ${lastFormatted}`;
+  };
+
   return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
@@ -113,7 +153,7 @@ export function SourcesHeatmap({
           Daily Attendance Heatmap
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          Daily attendance patterns • {totalHours.toFixed(1)}h total
+          All attendance since the beginning • {totalHours.toFixed(1)}h total • {getDateRange()}
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
@@ -128,7 +168,7 @@ export function SourcesHeatmap({
                   <div key={monthData.key} className="border rounded-lg border-border/50 p-4 glass">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="font-semibold text-foreground/90">
-                        {monthName} ({totalHours.toFixed(0)}h)
+                        {monthName} {monthData.year} ({totalHours.toFixed(0)}h)
                       </h3>
                     </div>
 
@@ -224,7 +264,7 @@ export function SourcesHeatmap({
             </div>
 
             {/* Summary Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div className="border rounded-lg border-border/50 p-3 glass">
                 <div className="text-sm text-muted-foreground mb-1">Total Days</div>
                 <div className="text-lg font-bold text-foreground">
@@ -245,6 +285,12 @@ export function SourcesHeatmap({
                   {maxHours.toFixed(1)}h
                 </div>
               </div>
+              <div className="border rounded-lg border-border/50 p-3 glass">
+                <div className="text-sm text-muted-foreground mb-1">Months</div>
+                <div className="text-lg font-bold text-foreground">
+                  {monthGroups.length}
+                </div>
+              </div>
             </div>
           </div>
         ) : (
@@ -254,8 +300,7 @@ export function SourcesHeatmap({
                 <span className="text-2xl">📅</span>
               </div>
               <p>
-                No daily attendance data available for
-                selected month
+                No daily attendance data available
               </p>
             </div>
           </div>
