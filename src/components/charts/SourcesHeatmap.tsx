@@ -104,7 +104,8 @@ export function SourcesHeatmap({
       })
       .sort((a, b) => new Date(a.year, a.month).getTime() - new Date(b.year, b.month).getTime());
 
-    return monthBlocks;
+    // Take only the last 12 months
+    return monthBlocks.slice(-12);
   };
 
   const monthBlocks = createMonthlyBlocks();
@@ -128,7 +129,7 @@ export function SourcesHeatmap({
     // Create a 7 x totalWeeks grid for this month
     const grid: (DailyData | null)[][] = Array(7).fill(null).map(() => Array(totalWeeks).fill(null));
 
-    // Fill the grid with the month's days
+    // Fill the grid with the month's days in correct order
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       const dayOfWeek = date.getDay();
