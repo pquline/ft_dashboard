@@ -133,15 +133,17 @@ export function SourcesHeatmap({
       // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
 
-      // Add the day to the appropriate column
-      columns[dayOfWeek].push(dayData || {
-        date: dateString,
-        hours: 0,
-        dayOfWeek,
-        month,
-        year,
-        day,
-      });
+      // Add the day to the appropriate column (only if it belongs to this month)
+      if (date.getMonth() === month) {
+        columns[dayOfWeek].push(dayData || {
+          date: dateString,
+          hours: 0,
+          dayOfWeek,
+          month,
+          year,
+          day,
+        });
+      }
     }
 
     // Sort each column by day number to ensure chronological order
