@@ -32,12 +32,9 @@ export function SourcesHeatmap({
     const allDailyData: DailyData[] = [];
 
     data.attendance.forEach((period) => {
-      // Use the same data processing as Sessions card and bar chart
       if (period.entries) {
-        // Calculate daily totals from individual session entries (same as Sessions card)
         const dailyTotals = new Map<string, number>();
 
-        // Filter out 'locations' entries and calculate daily totals
         period.entries
           .filter(entry => entry.source !== 'locations')
           .forEach(entry => {
@@ -54,7 +51,6 @@ export function SourcesHeatmap({
             dailyTotals.set(dateString, dailyTotals.get(dateString)! + duration);
           });
 
-        // Add all days from the period
         period.daily_attendances.forEach((day) => {
           const date = new Date(day.date);
           const hours = (dailyTotals.get(day.date) || 0) / 3600;
@@ -69,7 +65,6 @@ export function SourcesHeatmap({
           });
         });
       } else {
-        // Fallback: use the scaling approach (same as bar chart fallback)
         const filteredDetailedAttendance = period.detailed_attendance.filter(detail => detail.name !== 'locations');
         const totalFilteredDuration = filteredDetailedAttendance.reduce((total, detail) =>
           total + parseISODuration(detail.duration), 0
@@ -152,30 +147,49 @@ export function SourcesHeatmap({
     const { year, month, days } = monthData;
     const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'long' });
 
+    // Get the first day of the month and the last day
+    const firstDayOfMonth = new Date(year, month, 1);
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
 
-    const columns: DailyData[][] = Array(7).fill(null).map(() => []);
+    // Calculate the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
+    // Convert to our system where Monday = 0, Sunday = 6
+    let firstDayOfWeek = firstDayOfMonth.getDay();
+    firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
 
+    // Create a 6x7 grid (6 weeks max, 7 days per week)
+    const grid: (DailyData | null)[][] = Array(6).fill(null).map(() => Array(7).fill(null));
+
+    // Fill the grid with all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      let dayOfWeek = date.getDay();
-      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-
       const dateString = date.toISOString().split('T')[0];
 
+      // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
 
-      if (date.getMonth() === month && dayData) {
-        columns[dayOfWeek].push(dayData);
+      // Calculate position in the grid
+      const weekIndex = Math.floor((day - 1 + firstDayOfWeek) / 7);
+      const dayOfWeek = (day - 1 + firstDayOfWeek) % 7;
+
+      if (weekIndex < 6) { // Ensure we don't exceed our grid
+        if (dayData) {
+          grid[weekIndex][dayOfWeek] = dayData;
+        } else {
+          // Create a placeholder for days without data
+          grid[weekIndex][dayOfWeek] = {
+            date: dateString,
+            hours: 0,
+            dayOfWeek: dayOfWeek,
+            month: month,
+            year: year,
+            day: day,
+          };
+        }
       }
     }
 
-    columns.forEach(column => {
-      column.sort((a, b) => a.day - b.day);
-    });
-
-    return { monthName, columns, totalHours: monthData.totalHours, year };
+    return { monthName, grid, totalHours: monthData.totalHours, year };
   };
 
   const monthBlocks = createMonthlyBlocks();
@@ -219,7 +233,7 @@ export function SourcesHeatmap({
                         {/* Monthly Calendar Blocks */}
             <div className="grid grid-cols-6 gap-4">
               {monthBlocks.map((monthBlock) => {
-                const { monthName, columns, totalHours, year } = createMonthGrid(monthBlock);
+                const { monthName, grid, totalHours, year } = createMonthGrid(monthBlock);
 
                 return (
                   <div key={monthBlock.key} className="border rounded-lg border-border/50 p-3 glass">
@@ -240,92 +254,65 @@ export function SourcesHeatmap({
 
                     {/* Calendar grid */}
                     <div className="grid grid-cols-7 gap-0.5">
-                      {columns.map((column, columnIndex) => (
-                        <div key={`column-${columnIndex}`} className="flex flex-col gap-0.5">
-                          {column.map((day, dayIndex) => {
-                            const intensity = getColorIntensity(day.hours);
-                            const hasData = day.hours > 0;
+                      {grid.map((week, weekIndex) => (
+                        week.map((day, dayIndex) => {
+                          if (!day) return <div key={`empty-${weekIndex}-${dayIndex}`} className="w-5 h-5" />;
 
-                            return (
-                              <div
-                                key={`${day.date}`}
-                                className={`w-5 h-5 rounded-[8px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
-                                  hasData
-                                    ? 'text-white shadow-lg'
-                                    : 'text-muted-foreground bg-muted/30'
-                                }`}
-                                style={{
-                                  background: hasData
-                                    ? `linear-gradient(135deg,
-                                        rgba(255, 105, 0, ${0.3 + intensity * 0.7}) 0%,
-                                        rgba(255, 105, 0, ${0.2 + intensity * 0.8}) 100%)`
-                                    : undefined,
-                                  border: hasData
-                                    ? `1px solid rgba(255, 105, 0, ${0.3 + intensity * 0.4})`
-                                    : undefined,
-                                  boxShadow: hasData
-                                    ? `0 2px 8px rgba(255, 105, 0, ${0.2 + intensity * 0.3})`
-                                    : undefined,
-                                }}
-                                title={`${day.date}: ${day.hours.toFixed(1)}h`}
-                              >
-                                {day.day}
+                          const intensity = getColorIntensity(day.hours);
+                          const hasData = day.hours > 0;
 
-                                {/* Hover tooltip effect */}
-                                {hasData && (
-                                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none z-10 glass-tooltip">
-                                    <div className="font-medium text-foreground">{day.date}</div>
-                                    <div className="grid gap-1.5">
-                                      <div className="flex w-full flex-wrap items-stretch gap-2">
-                                        <div
-                                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] border border-border"
-                                          style={{
-                                            background: `linear-gradient(135deg,
-                                              hsl(var(--primary) / ${0.3 + intensity * 0.7}) 0%,
-                                              hsl(var(--primary) / ${0.2 + intensity * 0.8}) 100%)`,
-                                            borderColor: `hsl(var(--primary) / ${0.3 + intensity * 0.4})`
-                                          }}
-                                        />
-                                        <div className="flex flex-1 justify-between leading-none">
-                                          <span className="text-foreground font-mono font-medium tabular-nums">
-                                            {(() => {
-                                              const hours = Math.floor(day.hours);
-                                              const minutes = Math.round((day.hours - hours) * 60);
-                                              return `${hours}h ${minutes}m`;
-                                            })()}
-                                          </span>
-                                        </div>
+                          return (
+                            <div
+                              key={`${day.date}`}
+                              className={`w-5 h-5 rounded-[8px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
+                                hasData
+                                  ? 'text-white shadow-lg'
+                                  : 'text-muted-foreground bg-muted/30'
+                              }`}
+                              style={{
+                                background: hasData
+                                  ? `linear-gradient(135deg,
+                                      rgba(255, 105, 0, ${0.3 + intensity * 0.7}) 0%,
+                                      rgba(255, 105, 0, ${0.2 + intensity * 0.8}) 100%)`
+                                  : undefined,
+                                border: hasData
+                                  ? `1px solid rgba(255, 105, 0, ${0.3 + intensity * 0.4})`
+                                  : undefined,
+                                boxShadow: hasData
+                                  ? `0 2px 8px rgba(255, 105, 0, ${0.2 + intensity * 0.3})`
+                                  : undefined,
+                              }}
+                              title={`${day.date}: ${day.hours.toFixed(1)}h`}
+                            >
+                              <div>{day.day}</div>
+
+                              {/* Hover tooltip effect */}
+                              {hasData && (
+                                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none z-10 glass-tooltip">
+                                  <div className="font-medium text-foreground text-right">{day.date}</div>
+                                  <div className="grid gap-1.5">
+                                    <div className="flex w-full flex-wrap items-stretch gap-2">
+                                      <div className="flex flex-1 justify-end leading-none">
+                                        <span className="text-foreground font-medium">
+                                          {(() => {
+                                            const hours = Math.floor(day.hours);
+                                            const minutes = Math.round((day.hours - hours) * 60);
+                                            return `${hours}h ${minutes}m`;
+                                          })()}
+                                        </span>
                                       </div>
                                     </div>
                                   </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
                       ))}
                     </div>
                   </div>
                 );
               })}
-            </div>
-
-            {/* Summary Stats */}
-            <div className="grid grid-cols-2 gap-6">
-              <div className="border rounded-lg border-border/50 p-3 glass">
-                <div className="text-sm text-muted-foreground mb-1">Average/Day</div>
-                <div className="text-lg font-bold text-foreground">
-                  {dailyData.filter(day => day.hours > 0).length > 0
-                    ? (totalHours / dailyData.filter(day => day.hours > 0).length).toFixed(0)
-                    : '0'}h {Math.round((totalHours / dailyData.filter(day => day.hours > 0).length % 1) * 60)}m
-                </div>
-              </div>
-              <div className="border rounded-lg border-border/50 p-3 glass">
-                <div className="text-sm text-muted-foreground mb-1">Max/Day</div>
-                <div className="text-lg font-bold text-foreground">
-                  {maxHours.toFixed(0)}h {Math.round((maxHours % 1) * 60)}m
-                </div>
-              </div>
             </div>
           </div>
         ) : (
