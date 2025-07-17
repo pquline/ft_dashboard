@@ -223,14 +223,14 @@ export function SourcesHeatmap({
                                 style={{
                                   background: hasData
                                     ? `linear-gradient(135deg,
-                                        rgba(223, 151, 108, ${0.3 + intensity * 0.7}) 0%,
-                                        rgba(223, 151, 108, ${0.2 + intensity * 0.8}) 100%)`
+                                        rgba(255, 105, 0, ${0.3 + intensity * 0.7}) 0%,
+                                        rgba(255, 105, 0, ${0.2 + intensity * 0.8}) 100%)`
                                     : undefined,
                                   border: hasData
-                                    ? `1px solid rgba(223, 151, 108, ${0.3 + intensity * 0.4})`
+                                    ? `1px solid rgba(255, 105, 0, ${0.3 + intensity * 0.4})`
                                     : undefined,
                                   boxShadow: hasData
-                                    ? `0 2px 8px rgba(223, 151, 108, ${0.2 + intensity * 0.3})`
+                                    ? `0 2px 8px rgba(255, 105, 0, ${0.2 + intensity * 0.3})`
                                     : undefined,
                                 }}
                                 title={`${day.date}: ${day.hours.toFixed(1)}h`}
@@ -239,8 +239,23 @@ export function SourcesHeatmap({
 
                                 {/* Hover tooltip effect */}
                                 {hasData && (
-                                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background px-2 py-1 rounded text-xs opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                                    {day.hours.toFixed(1)}h
+                                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md rounded-xl border px-3 py-2 text-xs shadow-2xl opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10 glass-tooltip">
+                                    <div className="font-medium text-foreground">{day.date}</div>
+                                    <div className="flex items-center gap-2 mt-1">
+                                      <div
+                                        className="h-2.5 w-2.5 shrink-0 rounded-[2px] border border-border"
+                                        style={{
+                                          background: `linear-gradient(135deg,
+                                            hsl(var(--primary) / ${0.3 + intensity * 0.7}) 0%,
+                                            hsl(var(--primary) / ${0.2 + intensity * 0.8}) 100%)`,
+                                          borderColor: `hsl(var(--primary) / ${0.3 + intensity * 0.4})`
+                                        }}
+                                      />
+                                      <span className="text-muted-foreground">Attendance</span>
+                                      <span className="text-foreground font-mono font-medium tabular-nums ml-auto">
+                                        {day.hours.toFixed(1)}h
+                                      </span>
+                                    </div>
                                   </div>
                                 )}
                               </div>
