@@ -223,14 +223,14 @@ export function SourcesHeatmap({
                                 style={{
                                   background: hasData
                                     ? `linear-gradient(135deg,
-                                        rgba(77, 192, 181, ${0.3 + intensity * 0.7}) 0%,
-                                        rgba(77, 192, 181, ${0.2 + intensity * 0.8}) 100%)`
+                                        rgba(223, 151, 108, ${0.3 + intensity * 0.7}) 0%,
+                                        rgba(223, 151, 108, ${0.2 + intensity * 0.8}) 100%)`
                                     : undefined,
                                   border: hasData
-                                    ? `1px solid rgba(77, 192, 181, ${0.3 + intensity * 0.4})`
+                                    ? `1px solid rgba(223, 151, 108, ${0.3 + intensity * 0.4})`
                                     : undefined,
                                   boxShadow: hasData
-                                    ? `0 2px 8px rgba(77, 192, 181, ${0.2 + intensity * 0.3})`
+                                    ? `0 2px 8px rgba(223, 151, 108, ${0.2 + intensity * 0.3})`
                                     : undefined,
                                 }}
                                 title={`${day.date}: ${day.hours.toFixed(1)}h`}
