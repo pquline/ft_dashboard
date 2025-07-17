@@ -253,7 +253,11 @@ export function SourcesHeatmap({
                                       />
                                       <span className="text-muted-foreground">Attendance</span>
                                       <span className="text-foreground font-mono font-medium tabular-nums ml-auto">
-                                        {day.hours.toFixed(1)}h
+                                        {(() => {
+                                          const hours = Math.floor(day.hours);
+                                          const minutes = Math.round((day.hours - hours) * 60);
+                                          return `${hours}h ${minutes}m`;
+                                        })()}
                                       </span>
                                     </div>
                                   </div>
