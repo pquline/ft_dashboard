@@ -108,8 +108,6 @@ export function SourcesHeatmap({
     return monthBlocks.slice(-12);
   };
 
-  const monthBlocks = createMonthlyBlocks();
-
   // Create a calendar grid for a specific month
   const createMonthGrid = (monthData: typeof monthBlocks[0]) => {
     const { year, month, days } = monthData;
@@ -120,13 +118,16 @@ export function SourcesHeatmap({
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
 
-    // Create 7 columns (one for each day of the week)
+    // Create 7 columns (one for each day of the week, Monday = 0, Sunday = 6)
     const columns: DailyData[][] = Array(7).fill(null).map(() => []);
 
     // Fill each column with days that fall on that day of the week
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      const dayOfWeek = date.getDay();
+      // Convert Sunday (0) to 6, Monday (1) to 0, etc. to make Monday the first day
+      let dayOfWeek = date.getDay();
+      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Monday = 0, Sunday = 6
+
       const dateString = date.toISOString().split('T')[0];
 
       // Find if we have attendance data for this date
@@ -151,7 +152,8 @@ export function SourcesHeatmap({
     return { monthName, columns, totalHours: monthData.totalHours };
   };
 
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthBlocks = createMonthlyBlocks();
+  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   // Calculate date range for subtitle
   const getDateRange = () => {
