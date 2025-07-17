@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartTooltipContent } from "@/components/ui/chart";
+
 import { getPeriodMonthName, parseISODuration, formatDuration } from "@/lib/utils";
 import { AttendanceData, AttendancePeriod } from "@/types/attendance";
 
@@ -240,28 +240,33 @@ export function SourcesHeatmap({
 
                                                                 {/* Hover tooltip effect */}
                                 {hasData && (
-                                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
-                                    <ChartTooltipContent
-                                      active={true}
-                                      payload={[{
-                                        value: day.hours,
-                                        name: "Attendance",
-                                        dataKey: "attendance",
-                                        payload: {
-                                          date: day.date,
-                                          color: `linear-gradient(135deg,
-                                            hsl(var(--primary) / ${0.3 + intensity * 0.7}) 0%,
-                                            hsl(var(--primary) / ${0.2 + intensity * 0.8}) 100%)`
-                                        }
-                                      }]}
-                                      label={day.date}
-                                      formatter={(value: unknown) => {
-                                        const numValue = typeof value === "number" ? value : parseFloat(String(value));
-                                        const hours = Math.floor(numValue);
-                                        const minutes = Math.round((numValue - hours) * 60);
-                                        return `${hours}h ${minutes}m`;
-                                      }}
-                                    />
+                                  <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none z-10 glass-tooltip">
+                                    <div className="font-medium text-foreground">{day.date}</div>
+                                    <div className="grid gap-1.5">
+                                      <div className="flex w-full flex-wrap items-stretch gap-2">
+                                        <div
+                                          className="h-2.5 w-2.5 shrink-0 rounded-[2px] border border-border"
+                                          style={{
+                                            background: `linear-gradient(135deg,
+                                              hsl(var(--primary) / ${0.3 + intensity * 0.7}) 0%,
+                                              hsl(var(--primary) / ${0.2 + intensity * 0.8}) 100%)`,
+                                            borderColor: `hsl(var(--primary) / ${0.3 + intensity * 0.4})`
+                                          }}
+                                        />
+                                        <div className="flex flex-1 justify-between leading-none">
+                                          <div className="grid gap-1.5">
+                                            <span className="text-muted-foreground">Attendance</span>
+                                          </div>
+                                          <span className="text-foreground font-mono font-medium tabular-nums">
+                                            {(() => {
+                                              const hours = Math.floor(day.hours);
+                                              const minutes = Math.round((day.hours - hours) * 60);
+                                              return `${hours}h ${minutes}m`;
+                                            })()}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 )}
                               </div>
