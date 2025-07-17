@@ -216,15 +216,6 @@ export function SourcesHeatmap({
                       {columns.map((column, columnIndex) => (
                         <div key={`column-${columnIndex}`} className="flex flex-col gap-1">
                           {column.map((day, dayIndex) => {
-                            if (!day) {
-                              return (
-                                <div
-                                  key={`${monthBlock.key}-${columnIndex}-${dayIndex}`}
-                                  className="w-8 h-8 rounded-sm bg-muted/20"
-                                />
-                              );
-                            }
-
                             const intensity = getColorIntensity(day.hours);
                             const hasData = day.hours > 0;
 
