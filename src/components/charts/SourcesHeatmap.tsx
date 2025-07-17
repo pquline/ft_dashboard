@@ -143,6 +143,11 @@ export function SourcesHeatmap({
       });
     }
 
+    // Sort each column by day number to ensure chronological order
+    columns.forEach(column => {
+      column.sort((a, b) => a.day - b.day);
+    });
+
     return { monthName, columns, totalHours: monthData.totalHours };
   };
 
