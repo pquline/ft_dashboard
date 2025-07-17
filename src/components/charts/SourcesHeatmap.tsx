@@ -152,45 +152,45 @@ export function SourcesHeatmap({
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
 
-        // Calculate the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
+    // Calculate the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
     // Convert to our system where Monday = 0, Sunday = 6
     let firstDayOfWeek = firstDayOfMonth.getDay();
     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
 
-    // Create a 6x7 grid (6 weeks max, 7 days per week)
-    const grid: (DailyData | null)[][] = Array(6).fill(null).map(() => Array(7).fill(null));
+    // Build a flat array of all days in the month
+    const dayArray: (DailyData | null)[] = [];
 
-    // Fill the grid with all days of the month
+    // Pad the first week with nulls if the month doesn't start on Monday
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      dayArray.push(null);
+    }
+
+    // Fill in the days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       const dateString = date.toISOString().split('T')[0];
-
-      // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
-
-            // Calculate position in the grid
-      // firstDayOfWeek tells us where day 1 should start (0-6)
-      // day - 1 gives us the offset from day 1
-      // firstDayOfWeek + (day - 1) gives us the absolute position
-      const absolutePosition = firstDayOfWeek + (day - 1);
-      const weekIndex = Math.floor(absolutePosition / 7);
-      const dayOfWeek = absolutePosition % 7;
-
-      if (weekIndex < 6) { // Ensure we don't exceed our grid
-        if (dayData) {
-          grid[weekIndex][dayOfWeek] = dayData;
-        } else {
-          // Create a placeholder for days without data
-          grid[weekIndex][dayOfWeek] = {
-            date: dateString,
-            hours: 0,
-            dayOfWeek: dayOfWeek,
-            month: month,
-            year: year,
-            day: day,
-          };
+      dayArray.push(
+        dayData || {
+          date: dateString,
+          hours: 0,
+          dayOfWeek: (firstDayOfWeek + day - 1) % 7,
+          month: month,
+          year: year,
+          day: day,
         }
-      }
+      );
+    }
+
+    // Pad the last week with nulls if needed
+    while (dayArray.length % 7 !== 0) {
+      dayArray.push(null);
+    }
+
+    // Convert the flat array into a 2D grid (weeks)
+    const grid: (DailyData | null)[][] = [];
+    for (let i = 0; i < dayArray.length; i += 7) {
+      grid.push(dayArray.slice(i, i + 7));
     }
 
     return { monthName, grid, totalHours: monthData.totalHours, year };
