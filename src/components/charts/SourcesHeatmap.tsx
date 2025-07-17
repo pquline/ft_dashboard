@@ -153,10 +153,13 @@ export function SourcesHeatmap({
 
   // Calculate date range for subtitle
   const getDateRange = () => {
-    if (dailyData.length === 0) return '';
+    if (monthBlocks.length === 0) return '';
 
-    const firstDate = new Date(dailyData[0].date);
-    const lastDate = new Date(dailyData[dailyData.length - 1].date);
+    const firstMonth = monthBlocks[0];
+    const lastMonth = monthBlocks[monthBlocks.length - 1];
+
+    const firstDate = new Date(firstMonth.year, firstMonth.month, 1);
+    const lastDate = new Date(lastMonth.year, lastMonth.month + 1, 0); // Last day of the month
 
     const firstFormatted = firstDate.toLocaleDateString('en-US', {
       month: 'short',
@@ -177,7 +180,7 @@ export function SourcesHeatmap({
           Daily Attendance Heatmap
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          {totalHours.toFixed(0)}h {Math.round((totalHours % 1) * 60)}m total • {getDateRange()}
+          {Math.round(totalHours / 24)} day{Math.round(totalHours % 24) != 1 ? 's' : ''} {Math.round(totalHours % 24)} hour{Math.round(totalHours % 24) != 1 ? 's' : ''} {Math.round((totalHours % 1) * 60)} minute{Math.round((totalHours % 1) * 60) != 1 ? 's' : ''} total • {getDateRange()}
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
@@ -216,7 +219,7 @@ export function SourcesHeatmap({
                             return (
                               <div
                                 key={`${day.date}`}
-                                className={`w-6 h-6 rounded-[2px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
+                                className={`w-6 h-6 rounded-[10px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
                                   hasData
                                     ? 'text-white shadow-lg'
                                     : 'text-muted-foreground bg-muted/30'
