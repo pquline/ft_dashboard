@@ -129,23 +129,38 @@ export function SourcesHeatmap({
     // Create a 7 x totalWeeks grid for this month
     const grid: (DailyData | null)[][] = Array(7).fill(null).map(() => Array(totalWeeks).fill(null));
 
-    // Fill the grid with the month's days in correct order
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day);
-      const dayOfWeek = date.getDay();
-      const weekIndex = Math.floor((day - 1 + startDayOfWeek) / 7);
+    // Fill the grid with the month's days in proper calendar order
+    let currentDay = 1;
+    for (let week = 0; week < totalWeeks; week++) {
+      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+        // Skip cells before the first day of the month
+        if (week === 0 && dayOfWeek < startDayOfWeek) {
+          continue;
+        }
 
-      if (weekIndex < totalWeeks && dayOfWeek < 7) {
+        // Stop if we've filled all days of the month
+        if (currentDay > daysInMonth) {
+          break;
+        }
+
+        // Create the date for this day
+        const date = new Date(year, month, currentDay);
         const dateString = date.toISOString().split('T')[0];
+
+        // Find if we have attendance data for this date
         const dayData = days.find(d => d.date === dateString);
-        grid[dayOfWeek][weekIndex] = dayData || {
+
+        // Place the day in the grid
+        grid[dayOfWeek][week] = dayData || {
           date: dateString,
           hours: 0,
           dayOfWeek,
           month,
           year,
-          day,
+          day: currentDay,
         };
+
+        currentDay++;
       }
     }
 
