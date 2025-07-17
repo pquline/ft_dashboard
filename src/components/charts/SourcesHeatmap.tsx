@@ -112,7 +112,7 @@ export function SourcesHeatmap({
   // Create a calendar grid for a specific month
   const createMonthGrid = (monthData: typeof monthBlocks[0]) => {
     const { year, month, days } = monthData;
-    const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'short' });
+    const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'long' });
 
     // Find the first day of the month
     const firstDayOfMonth = new Date(year, month, 1);
@@ -145,7 +145,7 @@ export function SourcesHeatmap({
       column.sort((a, b) => a.day - b.day);
     });
 
-    return { monthName, columns, totalHours: monthData.totalHours };
+    return { monthName, columns, totalHours: monthData.totalHours, year };
   };
 
   const monthBlocks = createMonthlyBlocks();
@@ -177,7 +177,7 @@ export function SourcesHeatmap({
           Daily Attendance Heatmap
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          All attendance since the beginning • {totalHours.toFixed(1)}h total • {getDateRange()}
+          {totalHours.toFixed(0)}h {Math.round((totalHours % 1) * 60)}m total • {getDateRange()}
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
@@ -186,13 +186,13 @@ export function SourcesHeatmap({
                         {/* Monthly Calendar Blocks */}
             <div className="grid grid-cols-6 gap-4">
               {monthBlocks.map((monthBlock) => {
-                const { monthName, columns, totalHours } = createMonthGrid(monthBlock);
+                const { monthName, columns, totalHours, year } = createMonthGrid(monthBlock);
 
                 return (
                   <div key={monthBlock.key} className="border rounded-lg border-border/50 p-3 glass">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-semibold text-foreground/90 text-sm">
-                        {monthName} ({totalHours.toFixed(0)}h)
+                        {monthName} {year} ({totalHours.toFixed(0)}h)
                       </h3>
                     </div>
 
@@ -216,7 +216,7 @@ export function SourcesHeatmap({
                             return (
                               <div
                                 key={`${day.date}`}
-                                className={`w-6 h-6 rounded-sm flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
+                                className={`w-6 h-6 rounded-[2px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
                                   hasData
                                     ? 'text-white shadow-lg'
                                     : 'text-muted-foreground bg-muted/30'
