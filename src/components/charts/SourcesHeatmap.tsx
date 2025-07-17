@@ -7,8 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { getPeriodMonthName, parseISODuration, formatDuration } from "@/lib/utils";
-import { AttendanceData, AttendancePeriod } from "@/types/attendance";
+import { parseISODuration } from "@/lib/utils";
+import { AttendanceData } from "@/types/attendance";
 
 interface SourcesHeatmapProps {
   data: AttendanceData;
@@ -26,18 +26,64 @@ interface DailyData {
 export function SourcesHeatmap({
   data,
 }: SourcesHeatmapProps) {
-  // Process all daily attendance data from all periods
   const processAllDailyData = (): DailyData[] => {
     if (!data?.attendance) return [];
 
     const allDailyData: DailyData[] = [];
 
-    // Collect all daily attendance data from all periods
     data.attendance.forEach((period) => {
-      if (period.daily_attendances) {
+      // Use the same data processing as Sessions card and bar chart
+      if (period.entries) {
+        // Calculate daily totals from individual session entries (same as Sessions card)
+        const dailyTotals = new Map<string, number>();
+
+        // Filter out 'locations' entries and calculate daily totals
+        period.entries
+          .filter(entry => entry.source !== 'locations')
+          .forEach(entry => {
+            const date = new Date(entry.time_period.begin_at);
+            const dateString = date.toISOString().split('T')[0];
+
+            const beginAt = new Date(entry.time_period.begin_at);
+            const endAt = new Date(entry.time_period.end_at);
+            const duration = (endAt.getTime() - beginAt.getTime()) / 1000; // duration in seconds
+
+            if (!dailyTotals.has(dateString)) {
+              dailyTotals.set(dateString, 0);
+            }
+            dailyTotals.set(dateString, dailyTotals.get(dateString)! + duration);
+          });
+
+        // Add all days from the period
         period.daily_attendances.forEach((day) => {
           const date = new Date(day.date);
-          const hours = parseISODuration(day.total_attendance) / 3600;
+          const hours = (dailyTotals.get(day.date) || 0) / 3600;
+
+          allDailyData.push({
+            date: day.date,
+            hours,
+            dayOfWeek: date.getDay(),
+            month: date.getMonth(),
+            year: date.getFullYear(),
+            day: date.getDate(),
+          });
+        });
+      } else {
+        // Fallback: use the scaling approach (same as bar chart fallback)
+        const filteredDetailedAttendance = period.detailed_attendance.filter(detail => detail.name !== 'locations');
+        const totalFilteredDuration = filteredDetailedAttendance.reduce((total, detail) =>
+          total + parseISODuration(detail.duration), 0
+        );
+        const totalOriginalDuration = period.daily_attendances.reduce((total, day) =>
+          total + parseISODuration(day.total_attendance), 0
+        );
+
+        const scaleRatio = totalOriginalDuration > 0 ? totalFilteredDuration / totalOriginalDuration : 0;
+
+        period.daily_attendances.forEach((day) => {
+          const date = new Date(day.date);
+          const originalHours = parseISODuration(day.total_attendance) / 3600;
+          const hours = originalHours * scaleRatio;
 
           allDailyData.push({
             date: day.date,
@@ -51,13 +97,11 @@ export function SourcesHeatmap({
       }
     });
 
-    // Remove duplicates and sort by date
     const uniqueData = allDailyData.reduce((acc, current) => {
       const existing = acc.find(item => item.date === current.date);
       if (!existing) {
         acc.push(current);
       } else {
-        // If duplicate exists, sum the hours
         existing.hours += current.hours;
       }
       return acc;
@@ -70,17 +114,14 @@ export function SourcesHeatmap({
   const totalHours = dailyData.reduce((sum, day) => sum + day.hours, 0);
   const maxHours = Math.max(...dailyData.map(day => day.hours), 1);
 
-  // Get color intensity based on hours
   const getColorIntensity = (hours: number) => {
     const intensity = Math.min(hours / maxHours, 1);
     return intensity;
   };
 
-  // Create separate monthly calendar blocks
   const createMonthlyBlocks = () => {
     if (dailyData.length === 0) return [];
 
-    // Group data by month
     const monthlyData: Record<string, DailyData[]> = {};
 
     dailyData.forEach(day => {
@@ -91,7 +132,6 @@ export function SourcesHeatmap({
       monthlyData[monthKey].push(day);
     });
 
-    // Convert to array and sort chronologically
     const monthBlocks = Object.entries(monthlyData)
       .map(([key, days]) => {
         const firstDay = days[0];
@@ -105,52 +145,32 @@ export function SourcesHeatmap({
       })
       .sort((a, b) => new Date(a.year, a.month).getTime() - new Date(b.year, b.month).getTime());
 
-    // Take only the last 12 months
     return monthBlocks.slice(-12);
   };
 
-  // Create a calendar grid for a specific month
   const createMonthGrid = (monthData: typeof monthBlocks[0]) => {
     const { year, month, days } = monthData;
     const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'long' });
 
-    // Find the first day of the month
-    const firstDayOfMonth = new Date(year, month, 1);
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
 
-    // Create 7 columns (one for each day of the week, Monday = 0, Sunday = 6)
     const columns: DailyData[][] = Array(7).fill(null).map(() => []);
 
-    // Fill each column with days that fall on that day of the week
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
-      // Convert Sunday (0) to 6, Monday (1) to 0, etc. to make Monday the first day
       let dayOfWeek = date.getDay();
-      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Monday = 0, Sunday = 6
+      dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
       const dateString = date.toISOString().split('T')[0];
 
-      // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
 
-      // Create a day object for all days, with 0 hours if no data exists
-      const dayObject: DailyData = {
-        date: dateString,
-        hours: dayData ? dayData.hours : 0,
-        dayOfWeek: dayOfWeek,
-        month: month,
-        year: year,
-        day: day,
-      };
-
-      // Add the day if it belongs to this month (show all days, even with no data)
-      if (date.getMonth() === month) {
-        columns[dayOfWeek].push(dayObject);
+      if (date.getMonth() === month && dayData) {
+        columns[dayOfWeek].push(dayData);
       }
     }
 
-    // Sort each column by day number to ensure chronological order
     columns.forEach(column => {
       column.sort((a, b) => a.day - b.day);
     });
@@ -229,7 +249,7 @@ export function SourcesHeatmap({
                             return (
                               <div
                                 key={`${day.date}`}
-                                className={`w-6 h-6 rounded-[10px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
+                                className={`w-5 h-5 rounded-[8px] flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
                                   hasData
                                     ? 'text-white shadow-lg'
                                     : 'text-muted-foreground bg-muted/30'
@@ -267,9 +287,6 @@ export function SourcesHeatmap({
                                           }}
                                         />
                                         <div className="flex flex-1 justify-between leading-none">
-                                          <div className="grid gap-1.5">
-                                            <span className="text-muted-foreground">Attendance</span>
-                                          </div>
                                           <span className="text-foreground font-mono font-medium tabular-nums">
                                             {(() => {
                                               const hours = Math.floor(day.hours);
