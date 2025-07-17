@@ -134,9 +134,19 @@ export function SourcesHeatmap({
       // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
 
-      // Only add the day if it belongs to this month AND has attendance data
-      if (date.getMonth() === month && dayData && dayData.hours > 0) {
-        columns[dayOfWeek].push(dayData);
+      // Create a day object for all days, with 0 hours if no data exists
+      const dayObject: DailyData = {
+        date: dateString,
+        hours: dayData ? dayData.hours : 0,
+        dayOfWeek: dayOfWeek,
+        month: month,
+        year: year,
+        day: day,
+      };
+
+      // Add the day if it belongs to this month (show all days, even with no data)
+      if (date.getMonth() === month) {
+        columns[dayOfWeek].push(dayObject);
       }
     }
 
@@ -149,7 +159,7 @@ export function SourcesHeatmap({
   };
 
   const monthBlocks = createMonthlyBlocks();
-  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   // Calculate date range for subtitle
   const getDateRange = () => {
