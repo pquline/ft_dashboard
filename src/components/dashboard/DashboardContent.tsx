@@ -2,7 +2,7 @@ import React from "react";
 import { AttendanceCalendar } from "@/components/AttendanceCalendar";
 import { DashboardSummaryCards } from "@/components/DashboardSummaryCards";
 import { DailyAttendanceChart } from "@/components/charts/DailyAttendanceChart";
-import { SourcesHeatmap } from "@/components/charts/SourcesHeatmap";
+import { SourcesHeatmap } from "@/components/charts/AttendanceHeatmap";
 import { getMainMonth } from "@/lib/utils";
 import { AttendanceData, AttendancePeriod } from "@/types/attendance";
 
