@@ -124,12 +124,49 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 }
 
 export function getDailyAttendance(period: AttendancePeriod) {
-  return period.daily_attendances.map(day => ({
-    ...day,
-    total: parseISODuration(day.total_attendance),
-    onSite: parseISODuration(day.total_on_site_attendance),
-    offSite: parseISODuration(day.total_off_site_attendance),
-  }));
+  // Filter out 'locations' from detailed_attendance to match the Sessions card calculation
+  const filteredDetailedAttendance = period.detailed_attendance.filter(detail => detail.name !== 'locations');
+
+  // Calculate total duration excluding 'locations'
+  const totalFilteredDuration = filteredDetailedAttendance.reduce((total, detail) =>
+    total + parseISODuration(detail.duration), 0
+  );
+
+  // Calculate total duration including 'locations' (original)
+  const totalOriginalDuration = period.daily_attendances.reduce((total, day) =>
+    total + parseISODuration(day.total_attendance), 0
+  );
+
+  // If there's no original data or no filtered data, return zeros
+  if (totalOriginalDuration === 0 || totalFilteredDuration === 0) {
+    return period.daily_attendances.map(day => ({
+      ...day,
+      total: 0,
+      onSite: 0,
+      offSite: 0,
+    }));
+  }
+
+  // Calculate the ratio to scale down daily attendance data
+  const scaleRatio = totalFilteredDuration / totalOriginalDuration;
+
+  return period.daily_attendances.map(day => {
+    const dayTotal = parseISODuration(day.total_attendance);
+    const dayOnSite = parseISODuration(day.total_on_site_attendance);
+    const dayOffSite = parseISODuration(day.total_off_site_attendance);
+
+    // Scale down the values to exclude 'locations'
+    const scaledTotal = dayTotal * scaleRatio;
+    const scaledOnSite = dayOnSite * scaleRatio;
+    const scaledOffSite = dayOffSite * scaleRatio;
+
+    return {
+      ...day,
+      total: scaledTotal,
+      onSite: scaledOnSite,
+      offSite: scaledOffSite,
+    };
+  });
 }
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
