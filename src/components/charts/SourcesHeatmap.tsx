@@ -152,7 +152,7 @@ export function SourcesHeatmap({
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
 
-    // Calculate the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
+        // Calculate the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
     // Convert to our system where Monday = 0, Sunday = 6
     let firstDayOfWeek = firstDayOfMonth.getDay();
     firstDayOfWeek = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
@@ -168,9 +168,13 @@ export function SourcesHeatmap({
       // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
 
-      // Calculate position in the grid
-      const weekIndex = Math.floor((day - 1 + firstDayOfWeek) / 7);
-      const dayOfWeek = (day - 1 + firstDayOfWeek) % 7;
+            // Calculate position in the grid
+      // firstDayOfWeek tells us where day 1 should start (0-6)
+      // day - 1 gives us the offset from day 1
+      // firstDayOfWeek + (day - 1) gives us the absolute position
+      const absolutePosition = firstDayOfWeek + (day - 1);
+      const weekIndex = Math.floor(absolutePosition / 7);
+      const dayOfWeek = absolutePosition % 7;
 
       if (weekIndex < 6) { // Ensure we don't exceed our grid
         if (dayData) {
