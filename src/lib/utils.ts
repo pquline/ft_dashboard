@@ -124,12 +124,81 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 }
 
 export function getDailyAttendance(period: AttendancePeriod) {
-  return period.daily_attendances.map(day => ({
-    ...day,
-    total: parseISODuration(day.total_attendance),
-    onSite: parseISODuration(day.total_on_site_attendance),
-    offSite: parseISODuration(day.total_off_site_attendance),
-  }));
+  // If we have individual entries, calculate daily totals from them (same as Sessions card)
+  if (period.entries) {
+    const dailyTotals = new Map<string, { total: number; onSite: number; offSite: number }>();
+
+    // Filter out 'locations' entries and calculate daily totals
+    period.entries
+      .filter(entry => entry.source !== 'locations')
+      .forEach(entry => {
+        const date = new Date(entry.time_period.begin_at);
+        const dateString = date.toISOString().split('T')[0];
+
+        const beginAt = new Date(entry.time_period.begin_at);
+        const endAt = new Date(entry.time_period.end_at);
+        const duration = (endAt.getTime() - beginAt.getTime()) / 1000; // duration in seconds
+
+        if (!dailyTotals.has(dateString)) {
+          dailyTotals.set(dateString, { total: 0, onSite: 0, offSite: 0 });
+        }
+
+        const current = dailyTotals.get(dateString)!;
+        current.total += duration;
+        // For now, assume all sessions are on-site (this matches the Sessions card logic)
+        current.onSite += duration;
+      });
+
+    // Map the calculated totals to the daily_attendances structure
+    return period.daily_attendances.map(day => {
+      const calculated = dailyTotals.get(day.date) || { total: 0, onSite: 0, offSite: 0 };
+      return {
+        ...day,
+        total: calculated.total,
+        onSite: calculated.onSite,
+        offSite: calculated.offSite,
+      };
+    });
+  }
+
+  // Fallback: use the scaling approach if no entries are available
+  const filteredDetailedAttendance = period.detailed_attendance.filter(detail => detail.name !== 'locations');
+
+  const totalFilteredDuration = filteredDetailedAttendance.reduce((total, detail) =>
+    total + parseISODuration(detail.duration), 0
+  );
+
+  const totalOriginalDuration = period.daily_attendances.reduce((total, day) =>
+    total + parseISODuration(day.total_attendance), 0
+  );
+
+  if (totalOriginalDuration === 0 || totalFilteredDuration === 0) {
+    return period.daily_attendances.map(day => ({
+      ...day,
+      total: 0,
+      onSite: 0,
+      offSite: 0,
+    }));
+  }
+
+  const scaleRatio = totalFilteredDuration / totalOriginalDuration;
+
+  return period.daily_attendances.map(day => {
+    const dayTotal = parseISODuration(day.total_attendance);
+    const dayOnSite = parseISODuration(day.total_on_site_attendance);
+    const dayOffSite = parseISODuration(day.total_off_site_attendance);
+
+    const scaledTotal = dayTotal * scaleRatio;
+    const scaledOnSite = dayOnSite * scaleRatio;
+    const scaledOffSite = dayOffSite * scaleRatio;
+
+    return {
+      ...day,
+      total: scaledTotal,
+      onSite: scaledOnSite,
+      offSite: scaledOffSite,
+    };
+  });
 }
 
 export function getDailyAttendanceForSource(period: AttendancePeriod, source: string) {
