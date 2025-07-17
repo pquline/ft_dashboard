@@ -113,56 +113,44 @@ export function SourcesHeatmap({
       }
     }
 
-    // Create month headers
-    const monthHeaders: { month: string; year: number; weekIndex: number }[] = [];
-    let currentMonth = startDate.getMonth();
-    let currentYear = startDate.getFullYear();
+    // Create month headers based on actual month boundaries
+    const monthHeaders: { month: string; year: number; weekIndex: number; dayOfMonth: number }[] = [];
 
+    // Find the first day of each month in our grid
     for (let week = 0; week < totalWeeks; week++) {
-      const weekStartDate = new Date(startDate.getTime() + week * 7 * 24 * 60 * 60 * 1000);
-      const weekMonth = weekStartDate.getMonth();
-      const weekYear = weekStartDate.getFullYear();
+      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+        const currentDate = new Date(startDate.getTime() + (week * 7 + dayOfWeek) * 24 * 60 * 60 * 1000);
 
-      if (weekMonth !== currentMonth || weekYear !== currentYear) {
-        monthHeaders.push({
-          month: new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'short' }),
-          year: currentYear,
-          weekIndex: week
-        });
-        currentMonth = weekMonth;
-        currentYear = weekYear;
+        // Check if this is the first day of a month
+        if (currentDate.getDate() === 1) {
+          monthHeaders.push({
+            month: currentDate.toLocaleDateString('en-US', { month: 'short' }),
+            year: currentDate.getFullYear(),
+            weekIndex: week,
+            dayOfMonth: dayOfWeek
+          });
+        }
       }
     }
 
-    // Add the last month
-    monthHeaders.push({
-      month: new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'short' }),
-      year: currentYear,
-      weekIndex: totalWeeks
-    });
+    // Create year headers based on actual year boundaries
+    const yearHeaders: { year: number; weekIndex: number; dayOfMonth: number }[] = [];
 
-    // Create year headers
-    const yearHeaders: { year: number; weekIndex: number }[] = [];
-    let currentYearHeader = startDate.getFullYear();
-
+    // Find the first day of each year in our grid
     for (let week = 0; week < totalWeeks; week++) {
-      const weekStartDate = new Date(startDate.getTime() + week * 7 * 24 * 60 * 60 * 1000);
-      const weekYear = weekStartDate.getFullYear();
+      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+        const currentDate = new Date(startDate.getTime() + (week * 7 + dayOfWeek) * 24 * 60 * 60 * 1000);
 
-      if (weekYear !== currentYearHeader) {
-        yearHeaders.push({
-          year: currentYearHeader,
-          weekIndex: week
-        });
-        currentYearHeader = weekYear;
+        // Check if this is January 1st
+        if (currentDate.getMonth() === 0 && currentDate.getDate() === 1) {
+          yearHeaders.push({
+            year: currentDate.getFullYear(),
+            weekIndex: week,
+            dayOfMonth: dayOfWeek
+          });
+        }
       }
     }
-
-    // Add the last year
-    yearHeaders.push({
-      year: currentYearHeader,
-      weekIndex: totalWeeks
-    });
 
     return { grid, monthHeaders, yearHeaders };
   };
@@ -245,64 +233,64 @@ export function SourcesHeatmap({
 
                 {/* Calendar grid */}
                 <div className="grid gap-1" style={{ gridTemplateColumns: '4rem repeat(auto-fit, 1.5rem)' }}>
-                  {grid.map((week, weekIndex) =>
-                    week.map((day, dayIndex) => {
-                      if (dayIndex === 0) {
-                        // Day name column
-                        return (
-                          <div key={`day-${weekIndex}`} className="text-xs text-muted-foreground text-center font-medium w-16">
-                            {dayNames[weekIndex]}
-                          </div>
-                        );
-                      }
+                  {/* Render each row (day of week) */}
+                  {grid.map((weekRow, dayOfWeekIndex) => (
+                    <React.Fragment key={`row-${dayOfWeekIndex}`}>
+                      {/* Day name */}
+                      <div className="text-xs text-muted-foreground text-center font-medium w-16">
+                        {dayNames[dayOfWeekIndex]}
+                      </div>
 
-                      if (!day) {
+                      {/* Render each week column for this day of week */}
+                      {weekRow.map((day, weekIndex) => {
+                        if (!day) {
+                          return (
+                            <div
+                              key={`${dayOfWeekIndex}-${weekIndex}`}
+                              className="w-6 h-6 rounded-sm bg-muted/20"
+                            />
+                          );
+                        }
+
+                        const intensity = getColorIntensity(day.hours);
+                        const hasData = day.hours > 0;
+
                         return (
                           <div
-                            key={`${weekIndex}-${dayIndex}`}
-                            className="w-6 h-6 rounded-sm bg-muted/20"
-                          />
+                            key={`${day.date}`}
+                            className={`w-6 h-6 rounded-sm flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
+                              hasData
+                                ? 'text-white shadow-lg'
+                                : 'text-muted-foreground bg-muted/30'
+                            }`}
+                            style={{
+                              background: hasData
+                                ? `linear-gradient(135deg,
+                                    rgba(77, 192, 181, ${0.3 + intensity * 0.7}) 0%,
+                                    rgba(77, 192, 181, ${0.2 + intensity * 0.8}) 100%)`
+                                : undefined,
+                              border: hasData
+                                ? `1px solid rgba(77, 192, 181, ${0.3 + intensity * 0.4})`
+                                : undefined,
+                              boxShadow: hasData
+                                ? `0 2px 8px rgba(77, 192, 181, ${0.2 + intensity * 0.3})`
+                                : undefined,
+                            }}
+                            title={`${day.date}: ${day.hours.toFixed(1)}h`}
+                          >
+                            {day.day}
+
+                            {/* Hover tooltip effect */}
+                            {hasData && (
+                              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background px-2 py-1 rounded text-xs opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                                {day.hours.toFixed(1)}h
+                              </div>
+                            )}
+                          </div>
                         );
-                      }
-
-                      const intensity = getColorIntensity(day.hours);
-                      const hasData = day.hours > 0;
-
-                      return (
-                        <div
-                          key={`${day.date}`}
-                          className={`w-6 h-6 rounded-sm flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
-                            hasData
-                              ? 'text-white shadow-lg'
-                              : 'text-muted-foreground bg-muted/30'
-                          }`}
-                          style={{
-                            background: hasData
-                              ? `linear-gradient(135deg,
-                                  rgba(77, 192, 181, ${0.3 + intensity * 0.7}) 0%,
-                                  rgba(77, 192, 181, ${0.2 + intensity * 0.8}) 100%)`
-                              : undefined,
-                            border: hasData
-                              ? `1px solid rgba(77, 192, 181, ${0.3 + intensity * 0.4})`
-                              : undefined,
-                            boxShadow: hasData
-                              ? `0 2px 8px rgba(77, 192, 181, ${0.2 + intensity * 0.3})`
-                              : undefined,
-                          }}
-                          title={`${day.date}: ${day.hours.toFixed(1)}h`}
-                        >
-                          {day.day}
-
-                          {/* Hover tooltip effect */}
-                          {hasData && (
-                            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background px-2 py-1 rounded text-xs opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                              {day.hours.toFixed(1)}h
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })
-                  )}
+                      })}
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
             </div>
