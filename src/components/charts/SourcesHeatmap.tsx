@@ -147,6 +147,12 @@ export function SourcesHeatmap({
     const { year, month, days } = monthData;
     const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'long' });
 
+    // Filter days to only include those in the current month
+    const filteredDays = days.filter(d => {
+      const dMonth = new Date(d.date).getMonth();
+      return dMonth === month;
+    });
+
     // Get the first day of the month and the last day
     const firstDayOfMonth = new Date(year, month, 1);
     const lastDayOfMonth = new Date(year, month + 1, 0);
@@ -169,7 +175,7 @@ export function SourcesHeatmap({
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day);
       const dateString = date.toISOString().split('T')[0];
-      const dayData = days.find(d => d.date === dateString);
+      const dayData = filteredDays.find(d => d.date === dateString);
       dayArray.push(
         dayData || {
           date: dateString,
