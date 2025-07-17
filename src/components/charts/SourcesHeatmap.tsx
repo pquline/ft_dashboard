@@ -75,87 +75,82 @@ export function SourcesHeatmap({
     return intensity;
   };
 
-  // Create a single unified grid for all data
-  const createUnifiedGrid = () => {
-    if (dailyData.length === 0) return { grid: [], monthHeaders: [], yearHeaders: [] };
+  // Create separate monthly calendar blocks
+  const createMonthlyBlocks = () => {
+    if (dailyData.length === 0) return [];
 
-    const firstDate = new Date(dailyData[0].date);
-    const lastDate = new Date(dailyData[dailyData.length - 1].date);
+    // Group data by month
+    const monthlyData: Record<string, DailyData[]> = {};
 
-    // Find the first Sunday before or on the first date
-    const startDate = new Date(firstDate);
-    const dayOfWeek = startDate.getDay();
-    startDate.setDate(startDate.getDate() - dayOfWeek);
-
-    // Find the last Saturday after or on the last date
-    const endDate = new Date(lastDate);
-    const endDayOfWeek = endDate.getDay();
-    const daysToAdd = (6 - endDayOfWeek + 7) % 7;
-    endDate.setDate(endDate.getDate() + daysToAdd);
-
-    // Calculate the total number of weeks needed
-    const totalWeeks = Math.ceil((endDate.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000));
-
-    // Create a 7 x totalWeeks grid (7 days of week x number of weeks)
-    const grid: (DailyData | null)[][] = Array(7).fill(null).map(() => Array(totalWeeks).fill(null));
-
-    // Fill the grid with all possible dates in the range
-    for (let week = 0; week < totalWeeks; week++) {
-      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-        const currentDate = new Date(startDate.getTime() + (week * 7 + dayOfWeek) * 24 * 60 * 60 * 1000);
-        const dateString = currentDate.toISOString().split('T')[0];
-
-        // Find if we have data for this date
-        const dayData = dailyData.find(day => day.date === dateString);
-        if (dayData) {
-          grid[dayOfWeek][week] = dayData;
-        }
+    dailyData.forEach(day => {
+      const monthKey = `${day.year}-${day.month}`;
+      if (!monthlyData[monthKey]) {
+        monthlyData[monthKey] = [];
       }
-    }
+      monthlyData[monthKey].push(day);
+    });
 
-    // Create month headers based on actual month boundaries
-    const monthHeaders: { month: string; year: number; weekIndex: number; dayOfMonth: number }[] = [];
+    // Convert to array and sort chronologically
+    const monthBlocks = Object.entries(monthlyData)
+      .map(([key, days]) => {
+        const firstDay = days[0];
+        return {
+          key,
+          year: firstDay.year,
+          month: firstDay.month,
+          days,
+          totalHours: days.reduce((sum, day) => sum + day.hours, 0),
+        };
+      })
+      .sort((a, b) => new Date(a.year, a.month).getTime() - new Date(b.year, b.month).getTime());
 
-    // Find the first day of each month in our grid
-    for (let week = 0; week < totalWeeks; week++) {
-      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-        const currentDate = new Date(startDate.getTime() + (week * 7 + dayOfWeek) * 24 * 60 * 60 * 1000);
-
-        // Check if this is the first day of a month
-        if (currentDate.getDate() === 1) {
-          monthHeaders.push({
-            month: currentDate.toLocaleDateString('en-US', { month: 'short' }),
-            year: currentDate.getFullYear(),
-            weekIndex: week,
-            dayOfMonth: dayOfWeek
-          });
-        }
-      }
-    }
-
-    // Create year headers based on actual year boundaries
-    const yearHeaders: { year: number; weekIndex: number; dayOfMonth: number }[] = [];
-
-    // Find the first day of each year in our grid
-    for (let week = 0; week < totalWeeks; week++) {
-      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-        const currentDate = new Date(startDate.getTime() + (week * 7 + dayOfWeek) * 24 * 60 * 60 * 1000);
-
-        // Check if this is January 1st
-        if (currentDate.getMonth() === 0 && currentDate.getDate() === 1) {
-          yearHeaders.push({
-            year: currentDate.getFullYear(),
-            weekIndex: week,
-            dayOfMonth: dayOfWeek
-          });
-        }
-      }
-    }
-
-    return { grid, monthHeaders, yearHeaders };
+    return monthBlocks;
   };
 
-  const { grid, monthHeaders, yearHeaders } = createUnifiedGrid();
+  const monthBlocks = createMonthlyBlocks();
+
+  // Create a calendar grid for a specific month
+  const createMonthGrid = (monthData: typeof monthBlocks[0]) => {
+    const { year, month, days } = monthData;
+    const monthName = new Date(year, month).toLocaleDateString('en-US', { month: 'short' });
+
+    // Find the first day of the month
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startDayOfWeek = firstDayOfMonth.getDay();
+
+    // Find the last day of the month
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const daysInMonth = lastDayOfMonth.getDate();
+
+    // Calculate how many weeks we need (max 6 weeks for any month)
+    const totalWeeks = Math.ceil((daysInMonth + startDayOfWeek) / 7);
+
+    // Create a 7 x totalWeeks grid for this month
+    const grid: (DailyData | null)[][] = Array(7).fill(null).map(() => Array(totalWeeks).fill(null));
+
+    // Fill the grid with the month's days
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const dayOfWeek = date.getDay();
+      const weekIndex = Math.floor((day - 1 + startDayOfWeek) / 7);
+
+      if (weekIndex < totalWeeks && dayOfWeek < 7) {
+        const dateString = date.toISOString().split('T')[0];
+        const dayData = days.find(d => d.date === dateString);
+        grid[dayOfWeek][weekIndex] = dayData || {
+          date: dateString,
+          hours: 0,
+          dayOfWeek,
+          month,
+          year,
+          day,
+        };
+      }
+    }
+
+    return { monthName, grid, totalHours: monthData.totalHours };
+  };
+
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   // Calculate date range for subtitle
@@ -190,109 +185,83 @@ export function SourcesHeatmap({
       <CardContent className="pt-0 relative z-10">
         {dailyData.length > 0 ? (
           <div className="space-y-6">
-            {/* Year Headers */}
-            <div className="flex items-center gap-2">
-              {yearHeaders.map((header, index) => (
-                <div key={header.year} className="flex items-center">
-                  <span className="text-sm font-semibold text-foreground/80 px-2 py-1 rounded bg-muted/30">
-                    {header.year}
-                  </span>
-                  {index < yearHeaders.length - 1 && (
-                    <div className="w-4 h-px bg-border mx-2" />
-                  )}
-                </div>
-              ))}
-            </div>
+            {/* Monthly Calendar Blocks */}
+            <div className="space-y-6">
+              {monthBlocks.map((monthBlock) => {
+                const { monthName, grid, totalHours } = createMonthGrid(monthBlock);
 
-            {/* Month Headers */}
-            <div className="flex items-center gap-1">
-              <div className="w-16" /> {/* Spacer for day names */}
-              {monthHeaders.map((header, index) => (
-                <div key={`${header.month}-${header.year}-${index}`} className="flex items-center">
-                  <span className="text-xs text-muted-foreground px-1">
-                    {header.month}
-                  </span>
-                  {index < monthHeaders.length - 1 && (
-                    <div className="w-2 h-px bg-border mx-1" />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Main Heatmap Grid */}
-            <div className="border rounded-lg border-border/50 p-4 glass overflow-x-auto">
-              <div className="inline-block min-w-full">
-                {/* Day names header */}
-                <div className="grid grid-cols-7 gap-1 mb-2" style={{ gridTemplateColumns: '4rem repeat(auto-fit, 1.5rem)' }}>
-                  {dayNames.map((dayName) => (
-                    <div key={dayName} className="text-xs text-muted-foreground text-center font-medium w-16">
-                      {dayName}
+                return (
+                  <div key={monthBlock.key} className="border rounded-lg border-border/50 p-4 glass">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-semibold text-foreground/90">
+                        {monthName} ({totalHours.toFixed(0)}h)
+                      </h3>
                     </div>
-                  ))}
-                </div>
 
-                {/* Calendar grid */}
-                <div className="grid gap-1" style={{ gridTemplateColumns: '4rem repeat(auto-fit, 1.5rem)' }}>
-                  {/* Render each row (day of week) */}
-                  {grid.map((weekRow, dayOfWeekIndex) => (
-                    <React.Fragment key={`row-${dayOfWeekIndex}`}>
-                      {/* Day name */}
-                      <div className="text-xs text-muted-foreground text-center font-medium w-16">
-                        {dayNames[dayOfWeekIndex]}
-                      </div>
+                    {/* Day names header */}
+                    <div className="grid grid-cols-7 gap-1 mb-2">
+                      {dayNames.map((dayName) => (
+                        <div key={dayName} className="text-xs text-muted-foreground text-center font-medium">
+                          {dayName}
+                        </div>
+                      ))}
+                    </div>
 
-                      {/* Render each week column for this day of week */}
-                      {weekRow.map((day, weekIndex) => {
-                        if (!day) {
+                    {/* Calendar grid */}
+                    <div className="grid grid-cols-7 gap-1">
+                      {grid.map((week, weekIndex) =>
+                        week.map((day, dayIndex) => {
+                          if (!day) {
+                            return (
+                              <div
+                                key={`${monthBlock.key}-${weekIndex}-${dayIndex}`}
+                                className="w-8 h-8 rounded-sm bg-muted/20"
+                              />
+                            );
+                          }
+
+                          const intensity = getColorIntensity(day.hours);
+                          const hasData = day.hours > 0;
+
                           return (
                             <div
-                              key={`${dayOfWeekIndex}-${weekIndex}`}
-                              className="w-6 h-6 rounded-sm bg-muted/20"
-                            />
+                              key={`${day.date}`}
+                              className={`w-8 h-8 rounded-sm flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
+                                hasData
+                                  ? 'text-white shadow-lg'
+                                  : 'text-muted-foreground bg-muted/30'
+                              }`}
+                              style={{
+                                background: hasData
+                                  ? `linear-gradient(135deg,
+                                      rgba(77, 192, 181, ${0.3 + intensity * 0.7}) 0%,
+                                      rgba(77, 192, 181, ${0.2 + intensity * 0.8}) 100%)`
+                                  : undefined,
+                                border: hasData
+                                  ? `1px solid rgba(77, 192, 181, ${0.3 + intensity * 0.4})`
+                                  : undefined,
+                                boxShadow: hasData
+                                  ? `0 2px 8px rgba(77, 192, 181, ${0.2 + intensity * 0.3})`
+                                  : undefined,
+                              }}
+                              title={`${day.date}: ${day.hours.toFixed(1)}h`}
+                            >
+                              {day.day}
+
+                              {/* Hover tooltip effect */}
+                              {hasData && (
+                                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background px-2 py-1 rounded text-xs opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                                  {day.hours.toFixed(1)}h
+                                </div>
+                              )}
+                            </div>
                           );
-                        }
-
-                        const intensity = getColorIntensity(day.hours);
-                        const hasData = day.hours > 0;
-
-                        return (
-                          <div
-                            key={`${day.date}`}
-                            className={`w-6 h-6 rounded-sm flex items-center justify-center text-xs font-medium transition-all duration-200 hover:scale-110 cursor-pointer group/cell relative ${
-                              hasData
-                                ? 'text-white shadow-lg'
-                                : 'text-muted-foreground bg-muted/30'
-                            }`}
-                            style={{
-                              background: hasData
-                                ? `linear-gradient(135deg,
-                                    rgba(77, 192, 181, ${0.3 + intensity * 0.7}) 0%,
-                                    rgba(77, 192, 181, ${0.2 + intensity * 0.8}) 100%)`
-                                : undefined,
-                              border: hasData
-                                ? `1px solid rgba(77, 192, 181, ${0.3 + intensity * 0.4})`
-                                : undefined,
-                              boxShadow: hasData
-                                ? `0 2px 8px rgba(77, 192, 181, ${0.2 + intensity * 0.3})`
-                                : undefined,
-                            }}
-                            title={`${day.date}: ${day.hours.toFixed(1)}h`}
-                          >
-                            {day.day}
-
-                            {/* Hover tooltip effect */}
-                            {hasData && (
-                              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background px-2 py-1 rounded text-xs opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                                {day.hours.toFixed(1)}h
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
+                        })
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Legend */}
@@ -343,9 +312,9 @@ export function SourcesHeatmap({
                 </div>
               </div>
               <div className="border rounded-lg border-border/50 p-3 glass">
-                <div className="text-sm text-muted-foreground mb-1">Weeks</div>
+                <div className="text-sm text-muted-foreground mb-1">Months</div>
                 <div className="text-lg font-bold text-foreground">
-                  {grid[0]?.length || 0}
+                  {monthBlocks.length}
                 </div>
               </div>
             </div>
