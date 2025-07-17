@@ -133,16 +133,9 @@ export function SourcesHeatmap({
       // Find if we have attendance data for this date
       const dayData = days.find(d => d.date === dateString);
 
-      // Add the day to the appropriate column (only if it belongs to this month)
-      if (date.getMonth() === month) {
-        columns[dayOfWeek].push(dayData || {
-          date: dateString,
-          hours: 0,
-          dayOfWeek,
-          month,
-          year,
-          day,
-        });
+      // Only add the day if it belongs to this month AND has attendance data
+      if (date.getMonth() === month && dayData && dayData.hours > 0) {
+        columns[dayOfWeek].push(dayData);
       }
     }
 
