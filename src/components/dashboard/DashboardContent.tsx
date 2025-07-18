@@ -2,10 +2,9 @@ import React from "react";
 import { AttendanceCalendar } from "@/components/AttendanceCalendar";
 import { DashboardSummaryCards } from "@/components/DashboardSummaryCards";
 import { DailyAttendanceChart } from "@/components/charts/DailyAttendanceChart";
-import { SourcesDistributionChart } from "@/components/charts/SourcesDistributionChart";
-import { SourcesDetailsTable } from "@/components/tables/SourcesDetailsTable";
 import { getMainMonth } from "@/lib/utils";
 import { AttendanceData, AttendancePeriod } from "@/types/attendance";
+import { AttendanceHeatmapCard } from "@/components/AttendanceHeatmapCard";
 
 interface DashboardContentProps {
   data: AttendanceData;
@@ -78,16 +77,9 @@ export function DashboardContent({
             />
           )}
 
-          {/* Sources Breakdown */}
+          {/* Attendance Heatmap */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <SourcesDistributionChart
-              sourceData={sourceData}
-              currentPeriod={currentPeriod}
-            />
-
-            <SourcesDetailsTable
-              currentPeriod={currentPeriod}
-            />
+            <AttendanceHeatmapCard data={data} />
           </div>
         </div>
       </div>
