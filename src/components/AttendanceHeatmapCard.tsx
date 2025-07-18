@@ -60,6 +60,22 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     },
   ];
   const attendance = hasAttendance ? data.attendance : mockAttendance;
+
+  // Flatten all daily_attendances from all periods
+  const allDailyAttendances = attendance.flatMap(period => period.daily_attendances || []);
+  // Only use days with a valid date
+  const dailyValues = allDailyAttendances
+    .filter(day => day.date)
+    .map(day => ({
+      date: day.date,
+      count: parseFloat(day.total_attendance) || 0,
+    }));
+
+  // Find the earliest and latest date for the heatmap range
+  const allDates = dailyValues.map(v => v.date).sort();
+  const startDate = allDates[0] || attendance[0].from_date;
+  const endDate = allDates[allDates.length - 1] || attendance[attendance.length - 1].to_date;
+
   return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
@@ -72,12 +88,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
         <CalendarHeatmap
-          startDate={attendance[0].from_date}
-          endDate={attendance[attendance.length - 1].to_date}
-          values={attendance.map((period) => ({
-            date: period.from_date,
-            count: parseFloat(period.total_attendance) || 0,
-          }))}
+          startDate={startDate}
+          endDate={endDate}
+          values={dailyValues}
         />
       </CardContent>
     </Card>
