@@ -1,6 +1,5 @@
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import CalendarHeatmap from "./CalendarHeatmap";
 
 interface AttendanceHeatmapCardProps {
   data: AttendanceData;
@@ -87,11 +86,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
-        <CalendarHeatmap
-          startDate={startDate}
-          endDate={endDate}
-          values={dailyValues}
-        />
+        {/* TODO: Implement the attendance heatmap here */}
       </CardContent>
     </Card>
   );
