@@ -58,9 +58,6 @@ export function DashboardContent({
             currentPeriod={currentPeriod}
           />
 
-          {/* Sources Distribution Chart */}
-          <SourcesDistributionChart sourceData={sourceData} />
-
           {/* Daily Attendance Calendar */}
           {currentPeriod && (
             <AttendanceCalendar

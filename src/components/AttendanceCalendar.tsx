@@ -226,7 +226,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
             {selectedDateSessions.length > 0 ? (
               <>
                 {/* Daily Totals by Source */}
-                <div className='border rounded-md border-border/50 p-3 glass'>
+                <div className='border rounded-md border-border/50 p-3'>
                   <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Daily Totals by Source</h4>
                   <div className="flex flex-wrap gap-4 items-center">
                     {(() => {
@@ -238,7 +238,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                         return acc;
                       }, {} as Record<string, number>);
                       return Object.entries(sourceTotals).map(([source, totalDuration]) => (
-                        <div key={source} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30 shadow-sm backdrop-blur-md">
+                        <div key={source} className="flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30">
                           <Badge variant="outline" className="text-xs px-2 py-1 border-orange-500/40 text-orange-500 bg-orange-500/10">{source}</Badge>
                           <span className="text-sm text-foreground ml-1">{formatDuration(totalDuration)}</span>
                         </div>
@@ -248,7 +248,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                 </div>
 
                 {/* Individual Sessions */}
-                <div className='border rounded-md border-border/50 p-2 glass'>
+                <div className='border rounded-md border-border/50 p-2'>
                   <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Individual Sessions</h4>
                   <Table>
                     <TableHeader>
