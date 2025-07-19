@@ -66,6 +66,13 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       })
     })
 
+    // Debug: Log final heatmap data
+    console.log('Final heatmap data:', Object.entries(dataMap).map(([date, seconds]) => ({
+      date,
+      hours: (seconds / 3600).toFixed(2),
+      seconds
+    })).filter(item => item.seconds > 86400));
+
     return dataMap
   }, [attendance])
 

@@ -237,6 +237,9 @@ export function getDailyAttendance(period: AttendancePeriod) {
 
       const totalDuration = prioritizedEntries.reduce((sum, entry) => sum + entry.duration, 0);
 
+      // Debug: Log all daily totals to see what's happening
+      console.log(`getDailyAttendance: ${dateString}: ${totalDuration}s (${(totalDuration/3600).toFixed(2)}h) from ${entries.length} entries`);
+
       // Debug: Log high duration days
       if (totalDuration > 86400) {
         console.warn(`getDailyAttendance: High duration for ${dateString}: ${totalDuration}s (${(totalDuration/3600).toFixed(2)}h) from ${entries.length} entries`);
