@@ -1,1 +1,0 @@
-export { SourcesDetailsTable } from "./SourcesDetailsTable";

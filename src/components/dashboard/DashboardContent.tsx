@@ -36,7 +36,6 @@ export function DashboardContent({
   onSite,
   offSite,
   chartData,
-  sourceData,
   onMonthChange,
 }: Omit<DashboardContentProps, 'currentPeriod'> & { currentPeriod: AttendancePeriod }) {
   return (

@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useMemo } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { parseISODuration, formatDuration, getDailyAttendance, filterDailyAttendancesToMainMonth } from "@/lib/utils";
+import { parseISODuration, formatDuration } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
   data: AttendanceData;
@@ -12,15 +12,6 @@ interface AttendanceHeatmapCardProps {
 
 const formatSeconds = (seconds: number): string => {
   return formatDuration(seconds)
-}
-
-const getAttendanceColor = (seconds: number, maxSeconds: number) => {
-  if (seconds === 0) return "bg-gray-100"
-
-  const intensity = Math.min(seconds / maxSeconds, 1)
-
-  const greenIntensity = Math.floor(intensity * 500)
-  return `bg-green-${Math.max(100, Math.min(500, greenIntensity))}`
 }
 
 const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
@@ -42,24 +33,15 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 }
 
 export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
-  const attendance = data.attendance || [];
-  const [hoveredDate, setHoveredDate] = useState<string | null>(null)
-  const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null)
+  const attendance = useMemo(() => data.attendance || [], [data.attendance]);
 
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
-    console.log("Processing attendance data:", attendance)
-
     attendance.forEach(period => {
-      console.log("Processing period:", period.from_date, "to", period.to_date)
-
-      console.log("Raw daily_attendances:", period.daily_attendances)
-
       period.daily_attendances?.forEach(day => {
         const dateStr = day.date
         const totalSeconds = parseISODuration(day.total_attendance)
-        console.log(`Date: ${dateStr}, Raw duration: ${day.total_attendance}, Seconds: ${totalSeconds}`)
 
         if (!dataMap[dateStr] || dataMap[dateStr] < totalSeconds) {
           dataMap[dateStr] = totalSeconds
@@ -67,7 +49,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       })
     })
 
-    console.log("Final attendance data map:", dataMap)
     return dataMap
   }, [attendance])
 
@@ -88,13 +69,12 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     const today = new Date()
 
     const startDate = new Date(today.getFullYear(), today.getMonth() - 11, 1)
-    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0) // 0th day of next month = last day of current month
+    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
 
     return { startDate, endDate }
   }, [attendance])
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-  const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
 
   const getMonthsWithData = () => {
     const monthsToShow: { month: string; year: number; monthIndex: number; actualYear: number }[] = []
@@ -198,16 +178,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
-                              onMouseEnter={(e) => {
-                                if (date) {
-                                  setHoveredDate(dateStr)
-                                  setMousePosition({ x: e.clientX, y: e.clientY })
-                                }
-                              }}
-                              onMouseLeave={() => {
-                                setHoveredDate(null)
-                                setMousePosition(null)
-                              }}
                               title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
                             >
                               {date && (
