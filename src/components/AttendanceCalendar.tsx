@@ -271,6 +271,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                             {new Date(session.beginAt).toLocaleTimeString('en-US', {
                               hour: '2-digit',
                               minute: '2-digit',
+                              second: '2-digit',
                               hour12: false
                             })}
                           </TableCell>
@@ -278,6 +279,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                             {new Date(session.endAt).toLocaleTimeString('en-US', {
                               hour: '2-digit',
                               minute: '2-digit',
+                              second: '2-digit',
                               hour12: false
                             })}
                           </TableCell>
