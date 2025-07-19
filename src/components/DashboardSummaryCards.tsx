@@ -118,7 +118,7 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
                 style={{ width: `${onSitePercentage}%` }}
               ></div>
               <div
-                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 transition-all duration-500"
+                className="bg-gradient-to-r from-red-500 to-red-600 h-2 transition-all duration-500"
                 style={{ width: `${offSitePercentage}%` }}
               ></div>
             </div>
