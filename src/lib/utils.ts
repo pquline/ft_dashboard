@@ -18,6 +18,7 @@ function getSourcePriority(source: string): number {
 }
 
 export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: string; source: string; duration: number }>) {
+  // Sort sessions by priority (highest first), then by start time
   const sortedSessions = sessions.sort((a, b) => {
     const priorityDiff = getSourcePriority(b.source) - getSourcePriority(a.source);
     if (priorityDiff !== 0) return priorityDiff;
@@ -31,18 +32,46 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
     const sessionStart = new Date(session.beginAt).getTime();
     const sessionEnd = new Date(session.endAt).getTime();
 
-    let hasOverlap = false;
-    for (const range of coveredTimeRanges) {
-      if (sessionStart < range.end && sessionEnd > range.start) {
-        hasOverlap = true;
-        break;
+    // Find non-overlapping portions of this session
+    let remainingRanges = [{ start: sessionStart, end: sessionEnd }];
+
+    for (const coveredRange of coveredTimeRanges) {
+      const newRemainingRanges: Array<{ start: number; end: number }> = [];
+
+      for (const range of remainingRanges) {
+        // If no overlap, keep the entire range
+        if (range.end <= coveredRange.start || range.start >= coveredRange.end) {
+          newRemainingRanges.push(range);
+          continue;
+        }
+
+        // Split the range around the covered portion
+        if (range.start < coveredRange.start) {
+          newRemainingRanges.push({ start: range.start, end: coveredRange.start });
+        }
+        if (range.end > coveredRange.end) {
+          newRemainingRanges.push({ start: coveredRange.end, end: range.end });
+        }
+      }
+
+      remainingRanges = newRemainingRanges;
+    }
+
+    // Add non-overlapping portions to prioritized sessions
+    for (const range of remainingRanges) {
+      if (range.end > range.start) {
+        const duration = (range.end - range.start) / 1000; // Convert to seconds
+        prioritizedSessions.push({
+          beginAt: new Date(range.start).toISOString(),
+          endAt: new Date(range.end).toISOString(),
+          source: session.source,
+          duration
+        });
       }
     }
 
-    if (!hasOverlap) {
-      prioritizedSessions.push(session);
-      coveredTimeRanges.push({ start: sessionStart, end: sessionEnd });
-    }
+    // Add this session's full range to covered ranges
+    coveredTimeRanges.push({ start: sessionStart, end: sessionEnd });
   }
 
   return prioritizedSessions;
