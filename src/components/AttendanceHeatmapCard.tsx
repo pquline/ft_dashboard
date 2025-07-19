@@ -102,18 +102,17 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       }
     }
 
-    let earliestDate = new Date()
+    // Start from August 1st, 2024
+    const startDate = new Date(2024, 7, 1) // August is month 7 (0-indexed)
+
+    // End date is the latest date from all periods
     let latestDate = new Date(0)
-
     attendance.forEach(period => {
-      const fromDate = new Date(period.from_date)
       const toDate = new Date(period.to_date)
-
-      if (fromDate < earliestDate) earliestDate = fromDate
       if (toDate > latestDate) latestDate = toDate
     })
 
-    return { startDate: earliestDate, endDate: latestDate }
+    return { startDate, endDate: latestDate }
   }, [attendance])
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -264,21 +263,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
             })}
           </div>
         </div>
-
-        {/* Floating Tooltip */}
-        {hoveredDate && mousePosition && (
-          <div
-            className="fixed z-50 border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl glass-tooltip pointer-events-none"
-            style={{
-              left: mousePosition.x + 10,
-              top: mousePosition.y - 10,
-              transform: 'translateY(-100%)'
-            }}
-          >
-            <div className="font-medium">{formatDate(new Date(hoveredDate))}</div>
-            <div className="text-muted-foreground">Attendance: {formatSeconds(attendanceData[hoveredDate] || 0)}</div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
