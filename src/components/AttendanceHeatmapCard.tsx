@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { parseISODuration, formatDuration } from "@/lib/utils";
+import { parseISODuration, formatDuration, getDailyAttendance, filterDailyAttendancesToMainMonth } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
   data: AttendanceData;
@@ -28,7 +28,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendance = data.attendance || [];
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
 
-  // Process attendance data to create a map of date -> total seconds
+  // Process attendance data using the same logic as other components
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
@@ -36,12 +36,19 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
     attendance.forEach(period => {
       console.log("Processing period:", period.from_date, "to", period.to_date)
-      console.log("Daily attendances:", period.daily_attendances)
 
-      period.daily_attendances?.forEach(daily => {
-        const dateStr = daily.date
-        const totalSeconds = parseISODuration(daily.total_attendance)
-        console.log(`Date: ${dateStr}, Duration: ${daily.total_attendance}, Seconds: ${totalSeconds}`)
+      // Use the same getDailyAttendance function as other components
+      const dailyData = getDailyAttendance(period)
+      console.log("Daily data from getDailyAttendance:", dailyData)
+
+      // Filter to main month like other components do
+      const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
+      console.log("Filtered daily data:", filteredData)
+
+      filteredData.forEach(day => {
+        const dateStr = day.date
+        const totalSeconds = day.total // This is already in seconds from getDailyAttendance
+        console.log(`Date: ${dateStr}, Total seconds: ${totalSeconds}`)
         dataMap[dateStr] = (dataMap[dateStr] || 0) + totalSeconds
       })
     })
@@ -64,8 +71,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     let latestDate = new Date(0)
 
     attendance.forEach(period => {
-      period.daily_attendances?.forEach(daily => {
-        const date = new Date(daily.date)
+      const dailyData = getDailyAttendance(period)
+      const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
+
+      filteredData.forEach(day => {
+        const date = new Date(day.date)
         if (date < earliestDate) earliestDate = date
         if (date > latestDate) latestDate = date
       })
