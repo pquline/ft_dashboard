@@ -99,7 +99,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
   const maxAttendance = useMemo(() => {
     const values = Object.values(attendanceData)
-    return values.length > 0 ? Math.max(...values) : 0
+    const max = values.length > 0 ? Math.max(...values) : 0
+    console.log('Max attendance for styling:', max, 'seconds', (max/3600).toFixed(2), 'hours');
+    return max
   }, [attendanceData])
 
   const { startDate, endDate } = useMemo(() => {
@@ -243,6 +245,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           // Debug: Log date matching for specific dates
                           if (date && (date.getDate() === 4 || date.getDate() === 8) && date.getMonth() === 9 && date.getFullYear() === 2024) {
                             console.log(`Rendering ${dateStr}: found ${seconds}s (${(seconds/3600).toFixed(2)}h) in attendanceData`);
+                            const style = getAttendanceStyle(seconds, maxAttendance);
+                            console.log(`Style for ${dateStr}:`, style);
                           }
 
                           return (
