@@ -33,10 +33,12 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 }
 
 export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
+  console.log('AttendanceHeatmapCard received data with', data.attendance?.length || 0, 'periods');
   const attendance = useMemo(() => data.attendance || [], [data.attendance]);
 
   const attendanceData = useMemo(() => {
     console.log('attendanceData useMemo called with attendance:', attendance.length, 'periods');
+    console.log('attendance periods:', attendance.map(p => `${p.from_date} to ${p.to_date}`));
     const dataMap: { [key: string]: number } = {}
 
     attendance.forEach(period => {
