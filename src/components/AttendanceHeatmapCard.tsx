@@ -39,79 +39,29 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
-    // Debug: Log the attendance prop at the start
-    console.log('AttendanceHeatmapCard received attendance:', attendance);
-
-    // Debug: Log the number of periods being processed
-    console.log(`Heatmap processing ${attendance.length} periods`);
-
     attendance.forEach(period => {
       // Use the same processed data as the bars chart
       const processedDailyData = getDailyAttendance(period)
 
-      // Debug: Log period info
-      console.log(`Period ${period.from_date} to ${period.to_date}: ${processedDailyData.length} days`);
-
       processedDailyData.forEach(day => {
         const dateStr = day.date
         const totalSeconds = day.total
-
-        // Debug: Log each day being processed
-        console.log(`Processing day ${dateStr}: ${totalSeconds}s (${(totalSeconds/3600).toFixed(2)}h)`);
-
-        // Debug logging for production issues
-        if (totalSeconds > 86400) {
-          console.warn(`High attendance detected for ${dateStr}: ${totalSeconds}s (${(totalSeconds/3600).toFixed(2)}h) from period ${period.from_date} to ${period.to_date}`);
-        }
 
         // Cap at 24 hours (86400 seconds) per day to prevent unrealistic values
         const cappedSeconds = Math.min(totalSeconds, 86400)
 
         if (!dataMap[dateStr] || dataMap[dateStr] < cappedSeconds) {
           dataMap[dateStr] = cappedSeconds
-          console.log(`Stored ${dateStr}: ${cappedSeconds}s (${(cappedSeconds/3600).toFixed(2)}h)`);
-        } else {
-          console.log(`Skipped ${dateStr}: existing value ${dataMap[dateStr]}s is higher than ${cappedSeconds}s`);
         }
       })
     })
-
-    // Debug: Log final heatmap data
-    console.log('Final heatmap data:', Object.entries(dataMap).map(([date, seconds]) => ({
-      date,
-      hours: (seconds / 3600).toFixed(2),
-      seconds
-    })).filter(item => item.seconds > 86400));
-
-    // Debug: Log all heatmap data
-    console.log('All heatmap data:', Object.entries(dataMap).map(([date, seconds]) => ({
-      date,
-      hours: (seconds / 3600).toFixed(2),
-      seconds
-    })));
-
-    // Debug: Log sample dates to check format
-    const sampleDates = ['2024-10-04', '2024-10-08', '2024-11-02', '2024-12-01'];
-    console.log('Sample date lookups:', sampleDates.map(date => ({
-      date,
-      found: dataMap[date] || 'NOT FOUND',
-      hours: dataMap[date] ? (dataMap[date] / 3600).toFixed(2) : 'N/A'
-    })));
-
-    // Debug: Log the actual dataMap object
-    console.log('dataMap object:', dataMap);
-
-    // Debug: Log what we're returning
-    console.log('Returning attendanceData with keys:', Object.keys(dataMap).slice(0, 10), '...');
 
     return dataMap
   }, [attendance])
 
   const maxAttendance = useMemo(() => {
     const values = Object.values(attendanceData)
-    const max = values.length > 0 ? Math.max(...values) : 0
-    console.log('Max attendance for styling:', max, 'seconds', (max/3600).toFixed(2), 'hours');
-    return max
+    return values.length > 0 ? Math.max(...values) : 0
   }, [attendanceData])
 
   const { startDate, endDate } = useMemo(() => {
@@ -127,23 +77,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
     const startDate = new Date(today.getFullYear(), today.getMonth() - 11, 1)
     const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-
-    // Debug: Log the date range being used
-    console.log('Heatmap date range:', {
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
-      today: today.toISOString().split('T')[0]
-    });
-
-    // Debug: Log what months will be displayed
-    const monthsToShow = [];
-    const current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-    const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
-    while (current <= end) {
-      monthsToShow.push(`${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`);
-      current.setMonth(current.getMonth() + 1);
-    }
-    console.log('Months to display:', monthsToShow);
 
     return { startDate, endDate }
   }, [attendance])
@@ -229,9 +162,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
             {monthsToDisplay.map((monthInfo) => {
               const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
 
-              // Debug: Log what month is being rendered
-              console.log(`Rendering month: ${monthInfo.month} ${monthInfo.actualYear} (${monthInfo.actualYear}-${String(monthInfo.monthIndex + 1).padStart(2, '0')})`);
-
               return (
                 <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
                   {/* Month labels */}
@@ -251,17 +181,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             String(date.getMonth() + 1).padStart(2, '0') + '-' +
                             String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
-
-                          // Debug: Log date matching for specific dates
-                          if (date && (date.getDate() === 4 || date.getDate() === 8) && date.getMonth() === 9 && date.getFullYear() === 2024) {
-                            console.log(`Rendering ${dateStr}: found ${seconds}s (${(seconds/3600).toFixed(2)}h) in attendanceData`);
-                            console.log(`attendanceData[${dateStr}] =`, attendanceData[dateStr]);
-                            console.log(`dateStr = "${dateStr}"`);
-                            console.log(`seconds variable = ${seconds}`);
-                            console.log(`formatSeconds(${seconds}) = ${formatSeconds(seconds)}`);
-                            const style = getAttendanceStyle(seconds, maxAttendance);
-                            console.log(`Style for ${dateStr}:`, style);
-                          }
 
                           return (
                             <div
