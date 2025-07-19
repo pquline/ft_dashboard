@@ -29,7 +29,12 @@ const getAttendanceColor = (seconds: number, maxSeconds: number) => {
 
 // Helper function to get inline style for smooth gradient
 const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
-  if (seconds === 0) return { backgroundColor: '#f3f4f6' } // gray-100
+  if (seconds === 0) {
+    return {
+      backgroundColor: 'transparent',
+      borderColor: 'hsl(var(--primary) / 0.1)' // Very subtle border for 0 attendance
+    }
+  }
 
   // Calculate intensity as a percentage of the maximum attendance
   const intensity = Math.min(seconds / maxSeconds, 1)
