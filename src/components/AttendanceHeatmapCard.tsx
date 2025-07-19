@@ -102,8 +102,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       }
     }
 
-    // Start from August 1st, 2024
-    const startDate = new Date(2024, 7, 1) // August is month 7 (0-indexed)
+    // Start date: one year and one month before today
+    const today = new Date()
+    const startDate = new Date(today.getFullYear() - 1, today.getMonth() + 1, today.getDate())
 
     // End date is the latest date from all periods
     let latestDate = new Date(0)
