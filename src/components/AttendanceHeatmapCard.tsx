@@ -159,12 +159,17 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   }
 
   return (
-    <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
+    <Card className="relative overflow-hidden bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl group animate-slide-in-right">
+      {/* Glassmorphism background effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/10"></div>
+      <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-40 h-40 bg-gradient-to-tl from-blue-500/15 to-transparent rounded-full blur-3xl"></div>
+
       <CardHeader className="pb-4 relative z-10">
-        <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+        <CardTitle className="text-xl font-bold bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent drop-shadow-sm">
           Attendance Heatmap
         </CardTitle>
-        <CardDescription className="text-muted-foreground/80">
+        <CardDescription className="text-white/70 drop-shadow-sm">
           Hours spent on campus per day
         </CardDescription>
       </CardHeader>
@@ -178,7 +183,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
               return (
                 <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
                   {/* Month labels */}
-                  <div className="h-6 flex items-center justify-center text-xs text-gray-500 font-medium">
+                  <div className="h-6 flex items-center justify-center text-xs text-white/80 font-medium drop-shadow-sm">
                     {monthInfo.month}
                   </div>
 
@@ -194,7 +199,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-primary/70 relative flex items-center justify-center ${
+                              className={`w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-primary/70 hover:scale-110 relative flex items-center justify-center backdrop-blur-sm ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
