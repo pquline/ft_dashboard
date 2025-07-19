@@ -123,6 +123,16 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       today: today.toISOString().split('T')[0]
     });
 
+    // Debug: Log what months will be displayed
+    const monthsToShow = [];
+    const current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+    const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+    while (current <= end) {
+      monthsToShow.push(`${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`);
+      current.setMonth(current.getMonth() + 1);
+    }
+    console.log('Months to display:', monthsToShow);
+
     return { startDate, endDate }
   }, [attendance])
 
@@ -206,6 +216,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
             {/* Calendar grid */}
             {monthsToDisplay.map((monthInfo) => {
               const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
+
+              // Debug: Log what month is being rendered
+              console.log(`Rendering month: ${monthInfo.month} ${monthInfo.actualYear} (${monthInfo.actualYear}-${String(monthInfo.monthIndex + 1).padStart(2, '0')})`);
 
               return (
                 <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
