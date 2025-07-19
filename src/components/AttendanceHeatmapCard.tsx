@@ -26,10 +26,9 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   const opacity = Math.max(0.1, Math.min(1, 0.1 + (intensity * 0.9)))
   const borderOpacity = Math.max(0.05, Math.min(0.4, 0.05 + (intensity * 0.35)))
 
-  // Use rgba instead of color-mix for better browser compatibility
   return {
-    backgroundColor: `rgba(255, 128, 0, ${opacity})`, // Orange color with calculated opacity
-    borderColor: `rgba(255, 128, 0, ${borderOpacity})`,
+    backgroundColor: `color-mix(in srgb, var(--primary) ${opacity * 100}%, transparent)`,
+    borderColor: `color-mix(in srgb, var(--primary) ${borderOpacity * 250}%, transparent)`,
   }
 }
 
@@ -181,15 +180,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             String(date.getMonth() + 1).padStart(2, '0') + '-' +
                             String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
-
-                          // Debug: Track the seconds variable issue
-                          if (date && date.getDate() === 8 && date.getMonth() === 9 && date.getFullYear() === 2024) {
-                            console.log(`October 8th debugging:`);
-                            console.log(`  dateStr = "${dateStr}"`);
-                            console.log(`  attendanceData[${dateStr}] =`, attendanceData[dateStr]);
-                            console.log(`  seconds variable = ${seconds}`);
-                            console.log(`  formatSeconds(${seconds}) = "${formatSeconds(seconds)}"`);
-                          }
 
                           return (
                             <div
