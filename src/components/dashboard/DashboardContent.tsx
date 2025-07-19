@@ -71,14 +71,9 @@ export function DashboardContent({
             />
           )}
 
-          {/* Attendance Heatmap */}
+                    {/* Attendance Heatmap */}
           <div className="grid grid-cols-1 gap-8">
-            <AttendanceHeatmapCard data={{
-              $schema: data.$schema,
-              login: data.login,
-              image_url: data.image_url,
-              attendance: currentPeriod ? [currentPeriod] : []
-            }} />
+            <AttendanceHeatmapCard data={data} />
           </div>
         </div>
       </div>
