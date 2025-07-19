@@ -165,7 +165,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
           Attendance Heatmap
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          Hours spent on campus per day
+          Attendance per day ({startDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} - {endDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })})
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
@@ -194,7 +194,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-primary/70 hover:scale-110 relative flex items-center justify-center backdrop-blur-sm ${
+                              className={`w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-20 hover:scale-110 relative flex items-center justify-center backdrop-blur-sm ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}

@@ -57,7 +57,7 @@ export function DailyAttendanceChart({
             : "selected month"}
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          Hours spent on campus per day
+          Attendance per day in {getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date)}
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
