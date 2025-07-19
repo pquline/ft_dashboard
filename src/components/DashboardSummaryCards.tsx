@@ -31,13 +31,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
   // Calculate remaining hours (140 hours target - total hours)
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
-  const completedPercentage = (totalHours / 140) * 100;
-
-  // Circular progress chart calculations
-  const radius = 30;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (completedPercentage / 100) * circumference;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
@@ -79,52 +72,44 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
           </div>
         </CardHeader>
         <CardContent className="relative z-10">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-                {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
-              </div>
-              <div className="text-xs text-blue-500 font-medium mt-1">
-                {remainingPercentage.toFixed(0)}% remaining
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                To reach 140h target
-              </p>
+          <div className="text-center mb-4">
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+              {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
             </div>
+            <div className="text-xs text-blue-500 font-medium mt-1">
+              {remainingPercentage.toFixed(0)}% remaining
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              To reach 140h target
+            </p>
+          </div>
 
-            {/* Circular Progress Chart */}
-            <div className="relative">
-              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 80 80">
-                {/* Background circle */}
-                <circle
-                  cx="40"
-                  cy="40"
-                  r={radius}
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="transparent"
-                  className="text-muted/30"
-                />
-                {/* Progress circle */}
-                <circle
-                  cx="40"
-                  cy="40"
-                  r={radius}
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="transparent"
-                  strokeDasharray={strokeDasharray}
-                  strokeDashoffset={strokeDashoffset}
-                  strokeLinecap="round"
-                  className="text-blue-500 transition-all duration-500"
-                />
-              </svg>
-              {/* Center text */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs font-semibold text-blue-500">
-                  {completedPercentage.toFixed(0)}%
-                </span>
-              </div>
+          {/* Horizontal Bar Chart */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>0h</span>
+              <span>140h</span>
+            </div>
+            <div className="relative h-6 bg-muted/30 rounded-lg overflow-hidden">
+              {/* Completed hours bar */}
+              <div
+                className="absolute left-0 top-0 h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+                style={{ width: `${(totalHours / 140) * 100}%` }}
+              />
+              {/* Remaining hours indicator */}
+              <div
+                className="absolute top-0 h-full w-1 bg-blue-500 transition-all duration-500"
+                style={{ left: `${(totalHours / 140) * 100}%` }}
+              />
+              {/* Current position marker */}
+              <div
+                className="absolute top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm transition-all duration-500"
+                style={{ left: `calc(${(totalHours / 140) * 100}% - 6px)` }}
+              />
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="text-green-600 font-medium">Completed: {totalHours.toFixed(1)}h</span>
+              <span className="text-blue-600 font-medium">Remaining: {remainingHours.toFixed(1)}h</span>
             </div>
           </div>
         </CardContent>
