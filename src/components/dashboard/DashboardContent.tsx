@@ -2,6 +2,7 @@ import React from "react";
 import { AttendanceCalendar } from "@/components/AttendanceCalendar";
 import { DashboardSummaryCards } from "@/components/DashboardSummaryCards";
 import { DailyAttendanceChart } from "@/components/charts/DailyAttendanceChart";
+import { SourcesDistributionChart } from "@/components/charts/SourcesDistributionChart";
 import { getMainMonth } from "@/lib/utils";
 import { AttendanceData, AttendancePeriod } from "@/types/attendance";
 import { AttendanceHeatmapCard } from "@/components/AttendanceHeatmapCard";
@@ -36,6 +37,7 @@ export function DashboardContent({
   onSite,
   offSite,
   chartData,
+  sourceData,
   onMonthChange,
 }: Omit<DashboardContentProps, 'currentPeriod'> & { currentPeriod: AttendancePeriod }) {
   return (
@@ -55,6 +57,9 @@ export function DashboardContent({
             chartData={chartData}
             currentPeriod={currentPeriod}
           />
+
+          {/* Sources Distribution Chart */}
+          <SourcesDistributionChart sourceData={sourceData} />
 
           {/* Daily Attendance Calendar */}
           {currentPeriod && (
