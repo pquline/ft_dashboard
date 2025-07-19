@@ -34,15 +34,16 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   // Calculate intensity as a percentage of the maximum attendance
   const intensity = Math.min(seconds / maxSeconds, 1)
 
-  // Create a smooth gradient from light green to dark green
-  // Using HSL for better color control
-  const hue = 142 // Green hue
-  const saturation = 76 // Green saturation
-  const lightness = Math.max(20, 90 - (intensity * 70)) // From 90% to 20% lightness
+  // Use primary color with varying opacity
+  // More hours = less transparent (higher opacity)
+  const opacity = Math.max(0.1, Math.min(1, 0.1 + (intensity * 0.9))) // 0.1 to 1.0 opacity
+
+  // Border opacity also varies with intensity
+  const borderOpacity = Math.max(0.2, Math.min(1, 0.2 + (intensity * 0.8))) // 0.2 to 1.0 border opacity
 
   return {
-    backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-    borderColor: intensity > 0.5 ? '#16a34a' : '#d1fae5' // Darker border for darker squares
+    backgroundColor: `hsl(var(--primary) / ${opacity})`,
+    borderColor: `hsl(var(--primary) / ${borderOpacity})`,
   }
 }
 
@@ -230,7 +231,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3 h-3 rounded-sm border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
+                              className={`w-3 h-3 rounded-[3px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
