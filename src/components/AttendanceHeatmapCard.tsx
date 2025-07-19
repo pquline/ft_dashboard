@@ -39,6 +39,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
+    // Debug: Log the attendance prop at the start
+    console.log('AttendanceHeatmapCard received attendance:', attendance);
+
     // Debug: Log the number of periods being processed
     console.log(`Heatmap processing ${attendance.length} periods`);
 
@@ -97,6 +100,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
     // Debug: Log the actual dataMap object
     console.log('dataMap object:', dataMap);
+
+    // Debug: Log what we're returning
+    console.log('Returning attendanceData with keys:', Object.keys(dataMap).slice(0, 10), '...');
 
     return dataMap
   }, [attendance])
@@ -251,6 +257,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             console.log(`Rendering ${dateStr}: found ${seconds}s (${(seconds/3600).toFixed(2)}h) in attendanceData`);
                             console.log(`attendanceData[${dateStr}] =`, attendanceData[dateStr]);
                             console.log(`dateStr = "${dateStr}"`);
+                            console.log(`seconds variable = ${seconds}`);
+                            console.log(`formatSeconds(${seconds}) = ${formatSeconds(seconds)}`);
                             const style = getAttendanceStyle(seconds, maxAttendance);
                             console.log(`Style for ${dateStr}:`, style);
                           }
