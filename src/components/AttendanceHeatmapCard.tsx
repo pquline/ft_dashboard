@@ -73,6 +73,13 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       seconds
     })).filter(item => item.seconds > 86400));
 
+    // Debug: Log all heatmap data
+    console.log('All heatmap data:', Object.entries(dataMap).map(([date, seconds]) => ({
+      date,
+      hours: (seconds / 3600).toFixed(2),
+      seconds
+    })));
+
     return dataMap
   }, [attendance])
 
@@ -94,6 +101,13 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
     const startDate = new Date(today.getFullYear(), today.getMonth() - 11, 1)
     const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+
+    // Debug: Log the date range being used
+    console.log('Heatmap date range:', {
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
+      today: today.toISOString().split('T')[0]
+    });
 
     return { startDate, endDate }
   }, [attendance])
