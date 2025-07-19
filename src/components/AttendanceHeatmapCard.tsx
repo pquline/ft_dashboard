@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { parseISODuration, formatDuration } from "@/lib/utils";
+import { parseISODuration, formatDuration, getDailyAttendance } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
   data: AttendanceData;
@@ -39,9 +39,12 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     const dataMap: { [key: string]: number } = {}
 
     attendance.forEach(period => {
-      period.daily_attendances?.forEach(day => {
+      // Use the same processed data as the bars chart
+      const processedDailyData = getDailyAttendance(period)
+
+      processedDailyData.forEach(day => {
         const dateStr = day.date
-        const totalSeconds = parseISODuration(day.total_attendance)
+        const totalSeconds = day.total
 
         if (!dataMap[dateStr] || dataMap[dateStr] < totalSeconds) {
           dataMap[dateStr] = totalSeconds
