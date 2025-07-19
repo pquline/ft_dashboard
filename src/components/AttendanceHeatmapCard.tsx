@@ -182,6 +182,15 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
 
+                          // Debug: Track the seconds variable issue
+                          if (date && date.getDate() === 8 && date.getMonth() === 9 && date.getFullYear() === 2024) {
+                            console.log(`October 8th debugging:`);
+                            console.log(`  dateStr = "${dateStr}"`);
+                            console.log(`  attendanceData[${dateStr}] =`, attendanceData[dateStr]);
+                            console.log(`  seconds variable = ${seconds}`);
+                            console.log(`  formatSeconds(${seconds}) = "${formatSeconds(seconds)}"`);
+                          }
+
                           return (
                             <div
                               key={dayIndex}
