@@ -14,14 +14,36 @@ const formatSeconds = (seconds: number): string => {
   return formatDuration(seconds)
 }
 
-const getAttendanceColor = (seconds: number) => {
-  const hours = seconds / 3600
+// Helper function to get gradient color based on attendance intensity
+const getAttendanceColor = (seconds: number, maxSeconds: number) => {
   if (seconds === 0) return "bg-gray-100"
-  if (hours <= 1) return "bg-green-100" // 0-1 hour
-  if (hours <= 4) return "bg-green-200" // 1-4 hours
-  if (hours <= 6) return "bg-green-300" // 4-6 hours
-  if (hours <= 8) return "bg-green-400" // 6-8 hours
-  return "bg-green-500" // 8+ hours
+
+  // Calculate intensity as a percentage of the maximum attendance
+  const intensity = Math.min(seconds / maxSeconds, 1)
+
+  // Create a smooth gradient from light green to dark green
+  // Using CSS custom properties for dynamic color calculation
+  const greenIntensity = Math.floor(intensity * 500) // 100 to 500 for green shades
+  return `bg-green-${Math.max(100, Math.min(500, greenIntensity))}`
+}
+
+// Helper function to get inline style for smooth gradient
+const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
+  if (seconds === 0) return { backgroundColor: '#f3f4f6' } // gray-100
+
+  // Calculate intensity as a percentage of the maximum attendance
+  const intensity = Math.min(seconds / maxSeconds, 1)
+
+  // Create a smooth gradient from light green to dark green
+  // Using HSL for better color control
+  const hue = 142 // Green hue
+  const saturation = 76 // Green saturation
+  const lightness = Math.max(20, 90 - (intensity * 70)) // From 90% to 20% lightness
+
+  return {
+    backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+    borderColor: intensity > 0.5 ? '#16a34a' : '#d1fae5' // Darker border for darker squares
+  }
 }
 
 export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
@@ -32,30 +54,28 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
-    console.log("Processing attendance data:", attendance)
-
     attendance.forEach(period => {
-      console.log("Processing period:", period.from_date, "to", period.to_date)
-
       // Use the same getDailyAttendance function as other components
       const dailyData = getDailyAttendance(period)
-      console.log("Daily data from getDailyAttendance:", dailyData)
 
       // Filter to main month like other components do
       const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
-      console.log("Filtered daily data:", filteredData)
 
       filteredData.forEach(day => {
         const dateStr = day.date
         const totalSeconds = day.total // This is already in seconds from getDailyAttendance
-        console.log(`Date: ${dateStr}, Total seconds: ${totalSeconds}`)
         dataMap[dateStr] = (dataMap[dateStr] || 0) + totalSeconds
       })
     })
 
-    console.log("Final attendance data map:", dataMap)
     return dataMap
   }, [attendance])
+
+  // Calculate the maximum attendance value for gradient scaling
+  const maxAttendance = useMemo(() => {
+    const values = Object.values(attendanceData)
+    return values.length > 0 ? Math.max(...values) : 0
+  }, [attendanceData])
 
   // Calculate start and end dates from the data
   const { startDate, endDate } = useMemo(() => {
@@ -206,9 +226,10 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3 h-3 rounded-sm border border-gray-200 cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
-                                date ? getAttendanceColor(seconds) : "bg-transparent border-transparent"
+                              className={`w-3 h-3 rounded-sm border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
+                                date ? "" : "bg-transparent border-transparent"
                               }`}
+                              style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
                               onMouseEnter={() => date && setHoveredDate(dateStr)}
                               onMouseLeave={() => setHoveredDate(null)}
                               title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
