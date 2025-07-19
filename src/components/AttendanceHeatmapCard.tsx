@@ -26,9 +26,10 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   const opacity = Math.max(0.1, Math.min(1, 0.1 + (intensity * 0.9)))
   const borderOpacity = Math.max(0.05, Math.min(0.4, 0.05 + (intensity * 0.35)))
 
+  // Use rgba instead of color-mix for better browser compatibility
   return {
-    backgroundColor: `color-mix(in srgb, var(--primary) ${opacity * 100}%, transparent)`,
-    borderColor: `color-mix(in srgb, var(--primary) ${borderOpacity * 250}%, transparent)`,
+    backgroundColor: `rgba(255, 128, 0, ${opacity})`, // Orange color with calculated opacity
+    borderColor: `rgba(255, 128, 0, ${borderOpacity})`,
   }
 }
 
