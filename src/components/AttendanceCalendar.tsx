@@ -238,7 +238,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                         return acc;
                       }, {} as Record<string, number>);
                       return Object.entries(sourceTotals).map(([source, totalDuration]) => (
-                        <div key={source} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30">
+                        <div key={source} className="flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30">
                           <Badge variant="outline" className="text-xs px-2 py-1 border-orange-500/40 text-orange-500 bg-orange-500/10">{source}</Badge>
                           <span className="text-sm text-foreground ml-1">{formatDuration(totalDuration)}</span>
                         </div>
