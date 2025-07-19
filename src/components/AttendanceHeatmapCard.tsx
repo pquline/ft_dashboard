@@ -36,6 +36,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendance = useMemo(() => data.attendance || [], [data.attendance]);
 
   const attendanceData = useMemo(() => {
+    console.log('attendanceData useMemo called with attendance:', attendance.length, 'periods');
     const dataMap: { [key: string]: number } = {}
 
     attendance.forEach(period => {
@@ -54,6 +55,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         }
       })
     })
+
+    console.log('attendanceData useMemo returning dataMap with keys:', Object.keys(dataMap).slice(0, 10));
+    console.log('Sample data:', { '2024-10-08': dataMap['2024-10-08'] });
 
     return dataMap
   }, [attendance])
@@ -180,6 +184,17 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             String(date.getMonth() + 1).padStart(2, '0') + '-' +
                             String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
+
+                          // Debug: Check what's actually happening during rendering
+                          if (date && date.getDate() === 8 && date.getMonth() === 9 && date.getFullYear() === 2024) {
+                            console.log(`October 8th rendering check:`);
+                            console.log(`  dateStr = "${dateStr}"`);
+                            console.log(`  attendanceData object keys:`, Object.keys(attendanceData).slice(0, 5));
+                            console.log(`  attendanceData[${dateStr}] =`, attendanceData[dateStr]);
+                            console.log(`  seconds = ${seconds}`);
+                            console.log(`  formatSeconds(${seconds}) = "${formatSeconds(seconds)}"`);
+                            console.log(`  attendanceData object size:`, Object.keys(attendanceData).length);
+                          }
 
                           return (
                             <div
