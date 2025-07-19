@@ -94,7 +94,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   }, [attendance])
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"]
 
   const getMonthsWithData = () => {
     const monthsToShow: { month: string; year: number; monthIndex: number; actualYear: number }[] = []
@@ -169,15 +169,15 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
-        <div className="overflow-x-auto">
-          <div className="inline-flex gap-1">
+        <div className="w-full">
+          <div className="flex gap-0.5">
             {/* Day labels */}
-            <div className="flex flex-col gap-1 mr-2">
-              <div className="h-6"></div> {/* Space for month labels */}
-              {daysOfWeek.map((day, index) => (
+            <div className="flex flex-col gap-0.5 mr-1">
+              <div className="h-4"></div> {/* Space for month labels */}
+              {daysOfWeek.map((day) => (
                 <div
                   key={day}
-                  className="h-3 flex items-center text-xs text-gray-500 w-8"
+                  className="h-2.5 flex items-center text-xs text-gray-500 w-3"
                 >
                   {day}
                 </div>
@@ -189,16 +189,16 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
               const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
 
               return (
-                <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
+                <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-0.5">
                   {/* Month label */}
-                  <div className="h-6 flex items-center justify-center text-xs text-gray-700 font-medium">
+                  <div className="h-4 flex items-center justify-center text-xs text-gray-500 font-medium">
                     {monthInfo.month}
                   </div>
 
                   {/* Month grid */}
-                  <div className="flex gap-1">
+                  <div className="flex gap-0.5">
                     {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
-                      <div key={weekIndex} className="flex flex-col gap-1">
+                      <div key={weekIndex} className="flex flex-col gap-0.5">
                         {grid.map((dayRow, dayIndex) => {
                           const date = dayRow[weekIndex]
                           const dateStr = date?.toISOString().split("T")[0] || ""
@@ -207,7 +207,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3 h-3 rounded-[3px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
+                              className={`w-2.5 h-2.5 rounded-[2px] border cursor-pointer transition-all duration-200 hover:ring-1 hover:ring-blue-300 ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
