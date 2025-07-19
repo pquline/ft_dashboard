@@ -194,6 +194,10 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             console.log(`  seconds = ${seconds}`);
                             console.log(`  formatSeconds(${seconds}) = "${formatSeconds(seconds)}"`);
                             console.log(`  attendanceData object size:`, Object.keys(attendanceData).length);
+                            console.log(`  Has October 8th key:`, '2024-10-08' in attendanceData);
+                            console.log(`  Direct access:`, attendanceData['2024-10-08']);
+                            console.log(`  Type of attendanceData:`, typeof attendanceData);
+                            console.log(`  Is attendanceData null/undefined:`, attendanceData === null || attendanceData === undefined);
                           }
 
                           return (
