@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { AttendanceData } from "@/types/attendance";
+import { AttendancePeriod } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { parseISODuration, formatDuration, getDailyAttendance, filterDailyAttendancesToMainMonth } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
-  data: AttendanceData;
+  currentPeriod: AttendancePeriod | undefined;
 }
 
 // Helper function to format seconds as hours and minutes
@@ -46,30 +46,29 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   }
 }
 
-export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
-  const attendance = data.attendance || [];
+export function AttendanceHeatmapCard({ currentPeriod }: AttendanceHeatmapCardProps) {
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
 
   // Process attendance data using the same logic as other components
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
-    attendance.forEach(period => {
-      // Use the same getDailyAttendance function as other components
-      const dailyData = getDailyAttendance(period)
+    if (!currentPeriod) return dataMap
 
-      // Filter to main month like other components do
-      const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
+    // Use the same getDailyAttendance function as other components
+    const dailyData = getDailyAttendance(currentPeriod)
 
-      filteredData.forEach(day => {
-        const dateStr = day.date
-        const totalSeconds = day.total // This is already in seconds from getDailyAttendance
-        dataMap[dateStr] = (dataMap[dateStr] || 0) + totalSeconds
-      })
+    // Filter to main month like other components do
+    const filteredData = filterDailyAttendancesToMainMonth(currentPeriod, dailyData)
+
+    filteredData.forEach(day => {
+      const dateStr = day.date
+      const totalSeconds = day.total // This is already in seconds from getDailyAttendance
+      dataMap[dateStr] = totalSeconds // No aggregation needed, just one period
     })
 
     return dataMap
-  }, [attendance])
+  }, [currentPeriod])
 
   // Calculate the maximum attendance value for gradient scaling
   const maxAttendance = useMemo(() => {
@@ -77,9 +76,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     return values.length > 0 ? Math.max(...values) : 0
   }, [attendanceData])
 
-  // Calculate start and end dates from the data
+  // Calculate start and end dates from the current period
   const { startDate, endDate } = useMemo(() => {
-    if (attendance.length === 0) {
+    if (!currentPeriod) {
       const today = new Date()
       return {
         startDate: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),
@@ -87,22 +86,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       }
     }
 
-    let earliestDate = new Date()
-    let latestDate = new Date(0)
+    const fromDate = new Date(currentPeriod.from_date)
+    const toDate = new Date(currentPeriod.to_date)
 
-    attendance.forEach(period => {
-      const dailyData = getDailyAttendance(period)
-      const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
-
-      filteredData.forEach(day => {
-        const date = new Date(day.date)
-        if (date < earliestDate) earliestDate = date
-        if (date > latestDate) latestDate = date
-      })
-    })
-
-    return { startDate: earliestDate, endDate: latestDate }
-  }, [attendance])
+    return { startDate: fromDate, endDate: toDate }
+  }, [currentPeriod])
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
