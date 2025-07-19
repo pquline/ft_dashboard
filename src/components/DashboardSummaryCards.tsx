@@ -32,6 +32,14 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
 
+  // Gauge chart calculations
+  const gaugeRadius = 35;
+  const gaugeCircumference = 2 * Math.PI * gaugeRadius;
+  const gaugeStrokeWidth = 8;
+  const gaugeAngle = 180; // 180 degrees for semi-circle
+  const gaugeArcLength = (gaugeAngle / 360) * gaugeCircumference;
+  const remainingArcLength = (remainingPercentage / 100) * gaugeArcLength;
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
       {/* Total Hours Card */}
@@ -84,32 +92,58 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
             </p>
           </div>
 
-          {/* Horizontal Bar Chart */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>0h</span>
-              <span>140h</span>
-            </div>
-            <div className="relative h-6 bg-muted/30 rounded-lg overflow-hidden">
-              {/* Completed hours bar */}
-              <div
-                className="absolute left-0 top-0 h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
-                style={{ width: `${(totalHours / 140) * 100}%` }}
-              />
-              {/* Remaining hours indicator */}
-              <div
-                className="absolute top-0 h-full w-1 bg-blue-500 transition-all duration-500"
-                style={{ left: `${(totalHours / 140) * 100}%` }}
-              />
-              {/* Current position marker */}
-              <div
-                className="absolute top-1/2 transform -translate-y-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm transition-all duration-500"
-                style={{ left: `calc(${(totalHours / 140) * 100}% - 6px)` }}
-              />
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-green-600 font-medium">Completed: {totalHours.toFixed(1)}h</span>
-              <span className="text-blue-600 font-medium">Remaining: {remainingHours.toFixed(1)}h</span>
+          {/* Gauge Chart */}
+          <div className="flex justify-center">
+            <div className="relative">
+              <svg className="w-20 h-12" viewBox="0 0 80 50">
+                {/* Background gauge arc */}
+                <path
+                  d={`M 10 40 A ${gaugeRadius} ${gaugeRadius} 0 0 1 70 40`}
+                  stroke="currentColor"
+                  strokeWidth={gaugeStrokeWidth}
+                  fill="transparent"
+                  className="text-muted/30"
+                />
+                {/* Remaining hours gauge arc */}
+                <path
+                  d={`M 10 40 A ${gaugeRadius} ${gaugeRadius} 0 0 1 70 40`}
+                  stroke="currentColor"
+                  strokeWidth={gaugeStrokeWidth}
+                  fill="transparent"
+                  strokeDasharray={gaugeArcLength}
+                  strokeDashoffset={gaugeArcLength - remainingArcLength}
+                  strokeLinecap="round"
+                  className="text-blue-500 transition-all duration-500"
+                />
+                {/* Gauge needle/indicator */}
+                <line
+                  x1="40"
+                  y1="40"
+                  x2="40"
+                  y2="15"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="text-blue-500 origin-bottom transition-transform duration-500"
+                  style={{
+                    transform: `rotate(${(remainingPercentage / 100) * 180 - 90}deg)`,
+                    transformOrigin: '40px 40px'
+                  }}
+                />
+                {/* Center dot */}
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="3"
+                  fill="currentColor"
+                  className="text-blue-500"
+                />
+              </svg>
+
+              {/* Gauge labels */}
+              <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                <span>140h</span>
+                <span>0h</span>
+              </div>
             </div>
           </div>
         </CardContent>
