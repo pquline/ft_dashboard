@@ -198,6 +198,12 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             console.log(`  Direct access:`, attendanceData['2024-10-08']);
                             console.log(`  Type of attendanceData:`, typeof attendanceData);
                             console.log(`  Is attendanceData null/undefined:`, attendanceData === null || attendanceData === undefined);
+
+                            // Debug the title attribute specifically
+                            const titleText = date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : "";
+                            console.log(`  Title attribute: "${titleText}"`);
+                            console.log(`  formatDate(date): "${formatDate(date)}"`);
+                            console.log(`  formatSeconds(seconds): "${formatSeconds(seconds)}"`);
                           }
 
                           return (
