@@ -170,27 +170,14 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
         <div className="overflow-x-auto">
-          <div className="inline-flex gap-1">
-            {/* Day labels */}
-            <div className="flex flex-col gap-1 mr-2">
-              <div className="h-5.5"></div> {/* Space for month labels */}
-              {daysOfWeek.map((day) => (
-                <div
-                  key={day}
-                  className="h-3 flex items-center text-xs text-gray-500 w-4"
-                >
-                  {day}
-                </div>
-              ))}
-            </div>
-
+          <div className="inline-flex gap-1 p-8">
             {/* Calendar grid */}
-            {monthsToDisplay.map((monthInfo, index) => {
+            {monthsToDisplay.map((monthInfo) => {
               const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
 
               return (
                 <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
-                  {/* Month label */}
+                  {/* Month labels */}
                   <div className="h-6 flex items-center justify-center text-xs text-gray-500 font-medium">
                     {monthInfo.month}
                   </div>
@@ -207,7 +194,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3 h-3 rounded-[3px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 relative flex items-center justify-center ${
+                              className={`w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-primary/70 relative flex items-center justify-center ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
@@ -224,7 +211,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                               title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
                             >
                               {date && (
-                                <span className="text-[8px] text-white/70 font-medium leading-none">
+                                <span className="text-[9px] text-white/70 font-medium leading-none">
                                   {date.getDate()}
                                 </span>
                               )}
