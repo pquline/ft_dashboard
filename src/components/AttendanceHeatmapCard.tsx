@@ -32,7 +32,7 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   if (seconds === 0) {
     return {
       backgroundColor: 'transparent',
-      borderColor: 'rgba(255, 255, 255, 0.1)' // Very subtle white border for 0 attendance
+      borderColor: 'rgba(255, 255, 255, 0.05)' // Very subtle white border for 0 attendance
     }
   }
 
@@ -43,8 +43,8 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   // More hours = less transparent (higher opacity)
   const opacity = Math.max(0.1, Math.min(1, 0.1 + (intensity * 0.9))) // 0.1 to 1.0 opacity
 
-  // Border opacity also varies with intensity
-  const borderOpacity = Math.max(0.2, Math.min(1, 0.2 + (intensity * 0.8))) // 0.2 to 1.0 border opacity
+  // Border opacity also varies with intensity but is lighter overall
+  const borderOpacity = Math.max(0.05, Math.min(0.4, 0.05 + (intensity * 0.35))) // 0.05 to 0.4 border opacity
 
   return {
     backgroundColor: `color-mix(in srgb, var(--primary) ${opacity * 100}%, transparent)`,
