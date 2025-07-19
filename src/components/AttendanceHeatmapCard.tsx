@@ -32,7 +32,7 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   if (seconds === 0) {
     return {
       backgroundColor: 'transparent',
-      borderColor: 'hsl(var(--primary) / 0.1)' // Very subtle border for 0 attendance
+      borderColor: 'oklch(var(--primary) / 0.1)' // Very subtle border for 0 attendance
     }
   }
 
@@ -47,8 +47,8 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   const borderOpacity = Math.max(0.2, Math.min(1, 0.2 + (intensity * 0.8))) // 0.2 to 1.0 border opacity
 
   return {
-    backgroundColor: `hsl(var(--primary) / ${opacity})`,
-    borderColor: `hsl(var(--primary) / ${borderOpacity})`,
+    backgroundColor: `oklch(var(--primary) / ${opacity})`,
+    borderColor: `oklch(var(--primary) / ${borderOpacity})`,
   }
 }
 
