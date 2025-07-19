@@ -96,82 +96,58 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-  // Create a continuous grid for the entire date range
-  const getContinuousGrid = () => {
+  const getMonthsWithData = () => {
+    const monthsToShow: { month: string; year: number; monthIndex: number; actualYear: number }[] = []
+
+    const current = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+    const end = new Date(endDate.getFullYear(), endDate.getMonth(), 1)
+
+    while (current <= end) {
+      monthsToShow.push({
+        month: months[current.getMonth()],
+        year: current.getFullYear(),
+        monthIndex: current.getMonth(),
+        actualYear: current.getFullYear(),
+      })
+      current.setMonth(current.getMonth() + 1)
+    }
+
+    return monthsToShow
+  }
+
+  const monthsToDisplay = getMonthsWithData()
+  const getMonthGrid = (year: number, monthIndex: number) => {
+    const firstDay = new Date(year, monthIndex, 1)
+    const lastDay = new Date(year, monthIndex + 1, 0)
+    const startDayOfWeek = firstDay.getDay()
+    const daysInMonth = lastDay.getDate()
+
     const grid: (Date | null)[][] = Array(7)
       .fill(null)
       .map(() => [])
-
     let week = 0
-    let currentDate = new Date(startDate)
 
-    // Find the first day of the week that contains our start date
-    const firstDayOfWeek = currentDate.getDay()
-    for (let i = 0; i < firstDayOfWeek; i++) {
+    for (let i = 0; i < startDayOfWeek; i++) {
       grid[i][week] = null
     }
 
-    // Fill in all dates from start to end
-    while (currentDate <= endDate) {
-      const dayOfWeek = currentDate.getDay()
+    for (let day = 1; day <= daysInMonth; day++) {
+      const currentDate = new Date(year, monthIndex, day)
+      const dayOfWeek = (startDayOfWeek + day - 1) % 7
 
-      // Start a new week if needed
-      if (dayOfWeek === 0 && week > 0) {
+      if (dayOfWeek === 0 && day > 1) {
         week++
       }
 
-      grid[dayOfWeek][week] = new Date(currentDate)
-
-      // Move to next day
-      currentDate.setDate(currentDate.getDate() + 1)
-    }
-
-    return { grid, totalWeeks: week + 1 }
-  }
-
-  const { grid: continuousGrid, totalWeeks } = getContinuousGrid()
-
-  // Group the continuous grid by months
-  const getMonthGroups = () => {
-    const groups: { month: string; year: number; monthIndex: number; startWeek: number; endWeek: number }[] = []
-
-    let currentWeek = 0
-    let currentMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
-    const endMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1)
-
-    while (currentMonth <= endMonth) {
-      const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
-      const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
-
-      // Find which weeks this month spans in our continuous grid
-      let monthStartWeek = currentWeek
-      let monthEndWeek = currentWeek
-
-      // Count weeks until we reach the end of this month
-      let tempDate = new Date(monthStart)
-      while (tempDate <= monthEnd && tempDate <= endDate) {
-        if (tempDate.getDay() === 6) { // Saturday, end of week
-          monthEndWeek = currentWeek
-          currentWeek++
-        }
-        tempDate.setDate(tempDate.getDate() + 1)
+      if (currentDate >= startDate && currentDate <= endDate) {
+        grid[dayOfWeek][week] = currentDate
+      } else {
+        grid[dayOfWeek][week] = null
       }
-
-      groups.push({
-        month: months[currentMonth.getMonth()],
-        year: currentMonth.getFullYear(),
-        monthIndex: currentMonth.getMonth(),
-        startWeek: monthStartWeek,
-        endWeek: monthEndWeek
-      })
-
-      currentMonth.setMonth(currentMonth.getMonth() + 1)
     }
 
-    return groups
+    return { grid, weeksInMonth: week + 1 }
   }
-
-  const monthGroups = getMonthGroups()
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
@@ -202,7 +178,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                 <div
                   key={day}
                   className="h-3 flex items-center text-xs text-gray-500 w-8"
-                  style={{ display: index % 2 === 1 ? "flex" : "none" }}
                 >
                   {day}
                 </div>
@@ -210,12 +185,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
             </div>
 
             {/* Calendar grid */}
-            {monthGroups.map((monthInfo, index) => {
-              const { startWeek, endWeek } = monthInfo
-              const monthGrid = continuousGrid.slice(startWeek, endWeek + 1)
+            {monthsToDisplay.map((monthInfo, index) => {
+              const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
 
               return (
-                <div key={`${monthInfo.year}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
+                <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
                   {/* Month label */}
                   <div className="h-6 flex items-center justify-center text-xs text-gray-700 font-medium">
                     {monthInfo.month}
@@ -223,15 +197,16 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
                   {/* Month grid */}
                   <div className="flex gap-1">
-                    {monthGrid.map((dayRow, dayIndex) => (
-                      <div key={dayIndex} className="flex flex-col gap-1">
-                        {dayRow.map((date, weekIndex) => {
+                    {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
+                      <div key={weekIndex} className="flex flex-col gap-1">
+                        {grid.map((dayRow, dayIndex) => {
+                          const date = dayRow[weekIndex]
                           const dateStr = date?.toISOString().split("T")[0] || ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
 
                           return (
                             <div
-                              key={weekIndex}
+                              key={dayIndex}
                               className={`w-3 h-3 rounded-[3px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
