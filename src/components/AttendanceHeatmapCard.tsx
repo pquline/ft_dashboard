@@ -58,15 +58,14 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       // Use the same getDailyAttendance function as other components
       const dailyData = getDailyAttendance(period)
 
-      // Filter to main month like other components do
-      const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
-
-      filteredData.forEach(day => {
+      // For the heatmap, we want all days from all periods, not just the main month
+      // This gives us the complete picture without artificial filtering
+      dailyData.forEach(day => {
         const dateStr = day.date
         const totalSeconds = day.total // This is already in seconds from getDailyAttendance
 
-        // Only add if this date doesn't already have data from this period
-        // This prevents duplicate counting within the same period
+        // For the heatmap, we want to show the highest attendance for each day
+        // across all periods, but we need to be careful about overlap
         if (!dataMap[dateStr] || dataMap[dateStr] < totalSeconds) {
           dataMap[dateStr] = totalSeconds
         }
