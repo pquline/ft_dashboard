@@ -169,8 +169,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
-        <div className="overflow-x-auto">
-          <div className="inline-flex gap-1 p-8">
+        <div className="overflow-x-auto flex justify-center">
+          <div className="inline-flex gap-1">
             {/* Calendar grid */}
             {monthsToDisplay.map((monthInfo) => {
               const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
@@ -211,7 +211,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                               title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
                             >
                               {date && (
-                                <span className="text-[9px] text-white/70 font-medium leading-none">
+                                <span className="text-[9px] text-foreground/70 font-medium leading-none">
                                   {date.getDate()}
                                 </span>
                               )}
