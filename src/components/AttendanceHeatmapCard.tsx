@@ -102,20 +102,14 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       }
     }
 
-    // Determine the current academic year based on today's date
+    // Calculate a rolling 13-month window from today
     const today = new Date()
-    const currentYear = today.getFullYear()
-    const currentMonth = today.getMonth() // 0-indexed
 
-    // If we're in January-July, the academic year started last August
-    // If we're in August-December, the academic year started this August
-    const academicYearStart = currentMonth < 7 ? currentYear - 1 : currentYear
+    // Start date: 1st of the month 13 months ago
+    const startDate = new Date(today.getFullYear(), today.getMonth() - 13, 1)
 
-    // Start date: August 1st of the academic year start
-    const startDate = new Date(academicYearStart, 7, 1) // August is month 7 (0-indexed)
-
-    // End date: July 31st of the academic year end
-    const endDate = new Date(academicYearStart + 1, 6, 31) // July is month 6 (0-indexed), 31st day
+    // End date: Last day of current month
+    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0) // 0th day of next month = last day of current month
 
     return { startDate, endDate }
   }, [attendance])
