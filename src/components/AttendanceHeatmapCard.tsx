@@ -38,13 +38,24 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
+    // Debug: Log the number of periods being processed
+    console.log(`Heatmap processing ${attendance.length} periods`);
+
     attendance.forEach(period => {
       // Use the same processed data as the bars chart
       const processedDailyData = getDailyAttendance(period)
 
+      // Debug: Log period info
+      console.log(`Period ${period.from_date} to ${period.to_date}: ${processedDailyData.length} days`);
+
       processedDailyData.forEach(day => {
         const dateStr = day.date
         const totalSeconds = day.total
+
+        // Debug logging for production issues
+        if (totalSeconds > 86400) {
+          console.warn(`High attendance detected for ${dateStr}: ${totalSeconds}s (${(totalSeconds/3600).toFixed(2)}h) from period ${period.from_date} to ${period.to_date}`);
+        }
 
         // Cap at 24 hours (86400 seconds) per day to prevent unrealistic values
         const cappedSeconds = Math.min(totalSeconds, 86400)

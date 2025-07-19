@@ -203,6 +203,9 @@ export function getDailyAttendance(period: AttendancePeriod) {
   if (period.entries) {
     const dailyTotals = new Map<string, { total: number; onSite: number; offSite: number }>();
 
+    // Debug: Log entries info
+    console.log(`getDailyAttendance: Period ${period.from_date} has ${period.entries.length} entries`);
+
     const entriesByDate = new Map<string, Array<{ beginAt: string; endAt: string; source: string; duration: number }>>();
 
     period.entries
@@ -233,6 +236,11 @@ export function getDailyAttendance(period: AttendancePeriod) {
       const prioritizedEntries = prioritizeSessions(entries);
 
       const totalDuration = prioritizedEntries.reduce((sum, entry) => sum + entry.duration, 0);
+
+      // Debug: Log high duration days
+      if (totalDuration > 86400) {
+        console.warn(`getDailyAttendance: High duration for ${dateString}: ${totalDuration}s (${(totalDuration/3600).toFixed(2)}h) from ${entries.length} entries`);
+      }
 
       dailyTotals.set(dateString, {
         total: totalDuration,
