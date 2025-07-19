@@ -28,8 +28,16 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
   const onSitePercentage = totalMinutes > 0 ? (onSiteMinutes / totalMinutes) * 100 : 0;
   const offSitePercentage = totalMinutes > 0 ? (offSiteMinutes / totalMinutes) * 100 : 0;
 
+  // Calculate remaining hours (140 hours target - total hours)
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
+  const completedPercentage = (totalHours / 140) * 100;
+
+  // Circular progress chart calculations
+  const radius = 30;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDasharray = circumference;
+  const strokeDashoffset = circumference - (completedPercentage / 100) * circumference;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
@@ -71,22 +79,53 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
           </div>
         </CardHeader>
         <CardContent className="relative z-10">
-          <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-              {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+                {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
+              </div>
+              <div className="text-xs text-blue-500 font-medium mt-1">
+                {remainingPercentage.toFixed(0)}% remaining
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                To reach 140h target
+              </p>
             </div>
-            <div className="text-xs text-blue-500 font-medium">
-              {remainingPercentage.toFixed(0)}%
+
+            {/* Circular Progress Chart */}
+            <div className="relative">
+              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 80 80">
+                {/* Background circle */}
+                <circle
+                  cx="40"
+                  cy="40"
+                  r={radius}
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="transparent"
+                  className="text-muted/30"
+                />
+                {/* Progress circle */}
+                <circle
+                  cx="40"
+                  cy="40"
+                  r={radius}
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="transparent"
+                  strokeDasharray={strokeDasharray}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  className="text-blue-500 transition-all duration-500"
+                />
+              </svg>
+              {/* Center text */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-xs font-semibold text-blue-500">
+                  {completedPercentage.toFixed(0)}%
+                </span>
+              </div>
             </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            To reach 140h target
-          </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${remainingPercentage}%` }}
-            ></div>
           </div>
         </CardContent>
       </Card>
