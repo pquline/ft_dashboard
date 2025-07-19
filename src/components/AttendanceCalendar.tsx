@@ -102,7 +102,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
       };
     }).filter(session => session.duration > 0);
 
-        // Apply priority system to sessions
+            // Apply priority system to sessions
     const sessionEntries = sessions.map(session => ({
       beginAt: session.beginAt,
       endAt: session.endAt,
@@ -112,17 +112,15 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
 
     const prioritizedEntries = prioritizeSessions(sessionEntries);
 
-        // Map back to session objects
-    const prioritizedSessions = prioritizedEntries
-      .map((entry: { beginAt: string; endAt: string; source: string; duration: number }) => {
-        const originalSession = sessions.find(s =>
-          s.beginAt === entry.beginAt &&
-          s.endAt === entry.endAt &&
-          s.source === entry.source
-        );
-        return originalSession;
-      })
-      .filter((session): session is NonNullable<typeof session> => session !== undefined);
+    // Convert prioritized entries back to session objects
+    const prioritizedSessions = prioritizedEntries.map((entry: { beginAt: string; endAt: string; source: string; duration: number }) => ({
+      type: 'on_site' as const,
+      duration: entry.duration,
+      source: entry.source,
+      campusId: 0, // We don't have this info for split sessions
+      beginAt: entry.beginAt,
+      endAt: entry.endAt,
+    }));
 
     return prioritizedSessions;
   }, [selectedDate, period.entries]);
