@@ -18,7 +18,6 @@ function getSourcePriority(source: string): number {
 }
 
 export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: string; source: string; duration: number }>) {
-  // Sort sessions by priority (highest first), then by start time
   const sortedSessions = sessions.sort((a, b) => {
     const priorityDiff = getSourcePriority(b.source) - getSourcePriority(a.source);
     if (priorityDiff !== 0) return priorityDiff;
@@ -32,7 +31,6 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
     const sessionStart = new Date(session.beginAt).getTime();
     const sessionEnd = new Date(session.endAt).getTime();
 
-    // Find non-overlapping portions of this session
     let remainingRanges = [{ start: sessionStart, end: sessionEnd }];
 
     for (const coveredRange of coveredTimeRanges) {
@@ -57,10 +55,9 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
       remainingRanges = newRemainingRanges;
     }
 
-    // Add non-overlapping portions to prioritized sessions
     for (const range of remainingRanges) {
       if (range.end > range.start) {
-        const duration = (range.end - range.start) / 1000; // Convert to seconds
+        const duration = (range.end - range.start) / 1000;
         prioritizedSessions.push({
           beginAt: new Date(range.start).toISOString(),
           endAt: new Date(range.end).toISOString(),
@@ -70,7 +67,6 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
       }
     }
 
-    // Add this session's full range to covered ranges
     coveredTimeRanges.push({ start: sessionStart, end: sessionEnd });
   }
 
@@ -78,7 +74,6 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
 }
 
 export function parseISODuration(duration: string): number {
-  // Handle formats like P1D (1 day), P1DT2H (1 day 2 hours), PT2H30M (2 hours 30 minutes), etc.
   const match = duration.match(/P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/)
   if (!match) return 0
 

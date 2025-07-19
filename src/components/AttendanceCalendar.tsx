@@ -90,7 +90,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
     const sessions = filteredSessions.map(session => {
       const beginAt = new Date(session.time_period.begin_at);
       const endAt = new Date(session.time_period.end_at);
-      const duration = (endAt.getTime() - beginAt.getTime()) / 1000; // duration in seconds
+      const duration = (endAt.getTime() - beginAt.getTime()) / 1000;
 
       return {
         type: 'on_site' as const,
@@ -112,12 +112,11 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
 
     const prioritizedEntries = prioritizeSessions(sessionEntries);
 
-    // Convert prioritized entries back to session objects
     const prioritizedSessions = prioritizedEntries.map((entry: { beginAt: string; endAt: string; source: string; duration: number }) => ({
       type: 'on_site' as const,
       duration: entry.duration,
       source: entry.source,
-      campusId: 0, // We don't have this info for split sessions
+      campusId: 0,
       beginAt: entry.beginAt,
       endAt: entry.endAt,
     }));
