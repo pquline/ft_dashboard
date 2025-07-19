@@ -86,6 +86,14 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       seconds
     })));
 
+    // Debug: Log sample dates to check format
+    const sampleDates = ['2024-10-04', '2024-10-08', '2024-11-02', '2024-12-01'];
+    console.log('Sample date lookups:', sampleDates.map(date => ({
+      date,
+      found: dataMap[date] || 'NOT FOUND',
+      hours: dataMap[date] ? (dataMap[date] / 3600).toFixed(2) : 'N/A'
+    })));
+
     return dataMap
   }, [attendance])
 
@@ -218,6 +226,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             String(date.getMonth() + 1).padStart(2, '0') + '-' +
                             String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
+
+                          // Debug: Log date matching for specific dates
+                          if (date && (date.getDate() === 4 || date.getDate() === 8) && date.getMonth() === 9 && date.getFullYear() === 2024) {
+                            console.log(`Rendering ${dateStr}: found ${seconds}s (${(seconds/3600).toFixed(2)}h) in attendanceData`);
+                          }
 
                           return (
                             <div
