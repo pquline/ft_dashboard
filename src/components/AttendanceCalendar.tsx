@@ -112,15 +112,17 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
 
     const prioritizedEntries = prioritizeSessions(sessionEntries);
 
-    // Map back to session objects
-    const prioritizedSessions = prioritizedEntries.map((entry: { beginAt: string; endAt: string; source: string; duration: number }) => {
-      const originalSession = sessions.find(s =>
-        s.beginAt === entry.beginAt &&
-        s.endAt === entry.endAt &&
-        s.source === entry.source
-      );
-      return originalSession!;
-    });
+        // Map back to session objects
+    const prioritizedSessions = prioritizedEntries
+      .map((entry: { beginAt: string; endAt: string; source: string; duration: number }) => {
+        const originalSession = sessions.find(s =>
+          s.beginAt === entry.beginAt &&
+          s.endAt === entry.endAt &&
+          s.source === entry.source
+        );
+        return originalSession;
+      })
+      .filter((session): session is NonNullable<typeof session> => session !== undefined);
 
     return prioritizedSessions;
   }, [selectedDate, period.entries]);
@@ -251,13 +253,15 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                   <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Daily Totals by Source</h4>
                   <div className="flex flex-wrap gap-4 items-center">
                     {(() => {
-                      const sourceTotals = selectedDateSessions.reduce((acc: Record<string, number>, session: any) => {
-                        if (!acc[session.source]) {
-                          acc[session.source] = 0;
-                        }
-                        acc[session.source] += session.duration;
-                        return acc;
-                      }, {} as Record<string, number>);
+                      const sourceTotals = selectedDateSessions
+                        .filter((session: any) => session && session.source && typeof session.duration === 'number')
+                        .reduce((acc: Record<string, number>, session: any) => {
+                          if (!acc[session.source]) {
+                            acc[session.source] = 0;
+                          }
+                          acc[session.source] += session.duration;
+                          return acc;
+                        }, {} as Record<string, number>);
                       return Object.entries(sourceTotals).map(([source, totalDuration]) => (
                         <div key={source} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30 backdrop-blur-md">
                           <Badge variant="outline" className="text-xs px-2 py-1 border-orange-500/40 text-orange-500 bg-orange-500/10">{source}</Badge>
@@ -281,7 +285,9 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {selectedDateSessions.map((session: any, index: number) => (
+                      {selectedDateSessions
+                        .filter((session: any) => session && session.source && typeof session.duration === 'number')
+                        .map((session: any, index: number) => (
                         <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
                           <TableCell>
                             <Badge variant="outline" className="glass-hover">
