@@ -28,7 +28,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
   const onSitePercentage = totalMinutes > 0 ? (onSiteMinutes / totalMinutes) * 100 : 0;
   const offSitePercentage = totalMinutes > 0 ? (offSiteMinutes / totalMinutes) * 100 : 0;
 
-  // Calculate remaining hours (140 hours target - total hours)
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
 
@@ -63,20 +62,49 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
         </CardContent>
       </Card>
 
-      {/* Work Distribution Card */}
+      {/* Remaining Hours Card */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">Work Distribution</CardTitle>
-          <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors duration-300">
-            <MapPin className="h-4 w-4 text-purple-500" />
+          <CardTitle className="text-sm font-semibold text-foreground/80">Remaining Hours</CardTitle>
+          <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
+            <Target className="h-4 w-4 text-blue-500" />
           </div>
         </CardHeader>
         <CardContent className="relative z-10">
           <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+              {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
+            </div>
+            <div className="text-xs text-blue-500 font-medium">
+              {remainingPercentage.toFixed(0)}%
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            To reach 140h target
+          </p>
+          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${remainingPercentage}%` }}
+            ></div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Work Distribution Card */}
+      <Card className="card-modern glass-hover group overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+          <CardTitle className="text-sm font-semibold text-foreground/80">Work Distribution</CardTitle>
+          <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
+            <MapPin className="h-4 w-4 text-green-500" />
+          </div>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
               {onSite}
             </div>
-            <div className="text-xs text-purple-500 font-medium">
+            <div className="text-xs text-green-500 font-medium">
               {onSitePercentage.toFixed(0)}%
             </div>
           </div>
@@ -94,35 +122,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
                 style={{ width: `${offSitePercentage}%` }}
               ></div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Remaining Hours Card */}
-      <Card className="card-modern glass-hover group overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">Remaining Hours</CardTitle>
-          <div className="p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors duration-300">
-            <Target className="h-4 w-4 text-orange-500" />
-          </div>
-        </CardHeader>
-        <CardContent className="relative z-10">
-          <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
-              {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
-            </div>
-            <div className="text-xs text-orange-500 font-medium">
-              {remainingPercentage.toFixed(0)}%
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            To reach 140h target
-          </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${remainingPercentage}%` }}
-            ></div>
           </div>
         </CardContent>
       </Card>
