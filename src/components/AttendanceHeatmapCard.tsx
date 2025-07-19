@@ -169,15 +169,15 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
-        <div className="w-full">
-          <div className="flex gap-0.5">
+        <div className="overflow-x-auto">
+          <div className="inline-flex gap-1">
             {/* Day labels */}
-            <div className="flex flex-col gap-0.5 mr-1">
+            <div className="flex flex-col gap-0.5 mr-2">
               <div className="h-4"></div> {/* Space for month labels */}
               {daysOfWeek.map((day) => (
                 <div
                   key={day}
-                  className="h-2.5 flex items-center text-xs text-gray-500 w-3"
+                  className="h-2 flex items-center text-xs text-gray-500 w-4"
                 >
                   {day}
                 </div>
@@ -196,7 +196,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                   </div>
 
                   {/* Month grid */}
-                  <div className="flex gap-0.5">
+                  <div className="flex gap-1">
                     {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
                       <div key={weekIndex} className="flex flex-col gap-0.5">
                         {grid.map((dayRow, dayIndex) => {
@@ -207,7 +207,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-2.5 h-2.5 rounded-[2px] border cursor-pointer transition-all duration-200 hover:ring-1 hover:ring-blue-300 ${
+                              className={`w-3 h-2 rounded-[2px] border cursor-pointer transition-all duration-200 hover:ring-1 hover:ring-blue-300 ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
