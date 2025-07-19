@@ -133,7 +133,10 @@ export function getDailyAttendance(period: AttendancePeriod) {
       .filter(entry => entry.source !== 'locations')
       .forEach(entry => {
         const date = new Date(entry.time_period.begin_at);
-        const dateString = date.toISOString().split('T')[0];
+        // Use local date instead of UTC to avoid timezone shift
+        const dateString = date.getFullYear() + '-' +
+          String(date.getMonth() + 1).padStart(2, '0') + '-' +
+          String(date.getDate()).padStart(2, '0');
 
         const beginAt = new Date(entry.time_period.begin_at);
         const endAt = new Date(entry.time_period.end_at);
