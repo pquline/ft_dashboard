@@ -56,6 +56,7 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendance = data.attendance || [];
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null)
 
   // Process attendance data using the same logic as other components
   const attendanceData = useMemo(() => {
@@ -241,8 +242,16 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
-                              onMouseEnter={() => date && setHoveredDate(dateStr)}
-                              onMouseLeave={() => setHoveredDate(null)}
+                              onMouseEnter={(e) => {
+                                if (date) {
+                                  setHoveredDate(dateStr)
+                                  setMousePosition({ x: e.clientX, y: e.clientY })
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                setHoveredDate(null)
+                                setMousePosition(null)
+                              }}
                               title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
                             />
                           )
@@ -256,9 +265,16 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
           </div>
         </div>
 
-        {/* Tooltip */}
-        {hoveredDate && (
-          <div className="border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl glass-tooltip">
+        {/* Floating Tooltip */}
+        {hoveredDate && mousePosition && (
+          <div
+            className="fixed z-50 border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl glass-tooltip pointer-events-none"
+            style={{
+              left: mousePosition.x + 10,
+              top: mousePosition.y - 10,
+              transform: 'translateY(-100%)'
+            }}
+          >
             <div className="font-medium">{formatDate(new Date(hoveredDate))}</div>
             <div className="text-muted-foreground">Attendance: {formatSeconds(attendanceData[hoveredDate] || 0)}</div>
           </div>
