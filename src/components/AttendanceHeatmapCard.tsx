@@ -46,8 +46,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         const dateStr = day.date
         const totalSeconds = day.total
 
-        if (!dataMap[dateStr] || dataMap[dateStr] < totalSeconds) {
-          dataMap[dateStr] = totalSeconds
+        // Cap at 24 hours (86400 seconds) per day to prevent unrealistic values
+        const cappedSeconds = Math.min(totalSeconds, 86400)
+
+        if (!dataMap[dateStr] || dataMap[dateStr] < cappedSeconds) {
+          dataMap[dateStr] = cappedSeconds
         }
       })
     })
