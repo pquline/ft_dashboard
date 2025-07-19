@@ -54,24 +54,27 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
-    attendance.forEach(period => {
-      // Use the same getDailyAttendance function as other components
-      const dailyData = getDailyAttendance(period)
+    console.log("Processing attendance data:", attendance)
 
-      // For the heatmap, we want all days from all periods, not just the main month
-      // This gives us the complete picture without artificial filtering
-      dailyData.forEach(day => {
+    attendance.forEach(period => {
+      console.log("Processing period:", period.from_date, "to", period.to_date)
+
+      // Try using the raw daily_attendances first to see what we get
+      console.log("Raw daily_attendances:", period.daily_attendances)
+
+      period.daily_attendances?.forEach(day => {
         const dateStr = day.date
-        const totalSeconds = day.total // This is already in seconds from getDailyAttendance
+        const totalSeconds = parseISODuration(day.total_attendance)
+        console.log(`Date: ${dateStr}, Raw duration: ${day.total_attendance}, Seconds: ${totalSeconds}`)
 
         // For the heatmap, we want to show the highest attendance for each day
-        // across all periods, but we need to be careful about overlap
         if (!dataMap[dateStr] || dataMap[dateStr] < totalSeconds) {
           dataMap[dateStr] = totalSeconds
         }
       })
     })
 
+    console.log("Final attendance data map:", dataMap)
     return dataMap
   }, [attendance])
 
