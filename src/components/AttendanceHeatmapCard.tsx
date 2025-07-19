@@ -52,6 +52,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         const dateStr = day.date
         const totalSeconds = day.total
 
+        // Debug: Log each day being processed
+        console.log(`Processing day ${dateStr}: ${totalSeconds}s (${(totalSeconds/3600).toFixed(2)}h)`);
+
         // Debug logging for production issues
         if (totalSeconds > 86400) {
           console.warn(`High attendance detected for ${dateStr}: ${totalSeconds}s (${(totalSeconds/3600).toFixed(2)}h) from period ${period.from_date} to ${period.to_date}`);
@@ -62,6 +65,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
         if (!dataMap[dateStr] || dataMap[dateStr] < cappedSeconds) {
           dataMap[dateStr] = cappedSeconds
+          console.log(`Stored ${dateStr}: ${cappedSeconds}s (${(cappedSeconds/3600).toFixed(2)}h)`);
+        } else {
+          console.log(`Skipped ${dateStr}: existing value ${dataMap[dateStr]}s is higher than ${cappedSeconds}s`);
         }
       })
     })
