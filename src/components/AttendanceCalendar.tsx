@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { formatDuration, getPeriodMonthName, prioritizeSessions, getDailyAttendance } from '@/lib/utils';
+import { formatDuration, getPeriodMonthName, prioritizeSessions } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
@@ -29,17 +29,17 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
     const { year, month } = getMainMonth(period);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Use the same prioritized data as the heatmap and charts
-    const processedDailyData = getDailyAttendance(period);
     const attendanceMap = new Map<string, { total: number; onSite: number; offSite: number }>();
 
-    processedDailyData.forEach((day: any) => {
+    period.daily_attendances.forEach(day => {
       const d = new Date(day.date);
       if (d.getFullYear() === year && d.getMonth() === month) {
+        const totalOnSite = parseISODuration(day.total_on_site_attendance);
+        const totalOffSite = parseISODuration(day.total_off_site_attendance);
         attendanceMap.set(day.date, {
-          total: day.total,
-          onSite: day.onSite,
-          offSite: day.offSite
+          total: totalOnSite + totalOffSite,
+          onSite: totalOnSite,
+          offSite: totalOffSite
         });
       }
     });
