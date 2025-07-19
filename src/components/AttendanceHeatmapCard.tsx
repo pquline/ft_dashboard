@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { AttendancePeriod } from "@/types/attendance";
+import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { parseISODuration, formatDuration, getDailyAttendance, filterDailyAttendancesToMainMonth } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
-  currentPeriod: AttendancePeriod | undefined;
+  data: AttendanceData;
 }
 
 // Helper function to format seconds as hours and minutes
@@ -46,29 +46,35 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   }
 }
 
-export function AttendanceHeatmapCard({ currentPeriod }: AttendanceHeatmapCardProps) {
+export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
+  const attendance = data.attendance || [];
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
 
   // Process attendance data using the same logic as other components
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
-    if (!currentPeriod) return dataMap
+    attendance.forEach(period => {
+      // Use the same getDailyAttendance function as other components
+      const dailyData = getDailyAttendance(period)
 
-    // Use the same getDailyAttendance function as other components
-    const dailyData = getDailyAttendance(currentPeriod)
+      // Filter to main month like other components do
+      const filteredData = filterDailyAttendancesToMainMonth(period, dailyData)
 
-    // Filter to main month like other components do
-    const filteredData = filterDailyAttendancesToMainMonth(currentPeriod, dailyData)
+      filteredData.forEach(day => {
+        const dateStr = day.date
+        const totalSeconds = day.total // This is already in seconds from getDailyAttendance
 
-    filteredData.forEach(day => {
-      const dateStr = day.date
-      const totalSeconds = day.total // This is already in seconds from getDailyAttendance
-      dataMap[dateStr] = totalSeconds // No aggregation needed, just one period
+        // Only add if this date doesn't already have data from this period
+        // This prevents duplicate counting within the same period
+        if (!dataMap[dateStr] || dataMap[dateStr] < totalSeconds) {
+          dataMap[dateStr] = totalSeconds
+        }
+      })
     })
 
     return dataMap
-  }, [currentPeriod])
+  }, [attendance])
 
   // Calculate the maximum attendance value for gradient scaling
   const maxAttendance = useMemo(() => {
@@ -76,9 +82,9 @@ export function AttendanceHeatmapCard({ currentPeriod }: AttendanceHeatmapCardPr
     return values.length > 0 ? Math.max(...values) : 0
   }, [attendanceData])
 
-  // Calculate start and end dates from the current period
+  // Calculate start and end dates from all periods
   const { startDate, endDate } = useMemo(() => {
-    if (!currentPeriod) {
+    if (attendance.length === 0) {
       const today = new Date()
       return {
         startDate: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),
@@ -86,11 +92,19 @@ export function AttendanceHeatmapCard({ currentPeriod }: AttendanceHeatmapCardPr
       }
     }
 
-    const fromDate = new Date(currentPeriod.from_date)
-    const toDate = new Date(currentPeriod.to_date)
+    let earliestDate = new Date()
+    let latestDate = new Date(0)
 
-    return { startDate: fromDate, endDate: toDate }
-  }, [currentPeriod])
+    attendance.forEach(period => {
+      const fromDate = new Date(period.from_date)
+      const toDate = new Date(period.to_date)
+
+      if (fromDate < earliestDate) earliestDate = fromDate
+      if (toDate > latestDate) latestDate = toDate
+    })
+
+    return { startDate: earliestDate, endDate: latestDate }
+  }, [attendance])
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]

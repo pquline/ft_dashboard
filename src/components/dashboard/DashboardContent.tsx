@@ -79,7 +79,7 @@ export function DashboardContent({
 
           {/* Attendance Heatmap */}
           <div className="grid grid-cols-1 gap-8">
-            <AttendanceHeatmapCard currentPeriod={currentPeriod} />
+            <AttendanceHeatmapCard data={data} />
           </div>
         </div>
       </div>
