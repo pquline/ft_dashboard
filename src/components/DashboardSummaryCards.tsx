@@ -32,14 +32,6 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
 
-  // Gauge chart calculations
-  const gaugeRadius = 35;
-  const gaugeCircumference = 2 * Math.PI * gaugeRadius;
-  const gaugeStrokeWidth = 8;
-  const gaugeAngle = 180; // 180 degrees for semi-circle
-  const gaugeArcLength = (gaugeAngle / 360) * gaugeCircumference;
-  const remainingArcLength = (remainingPercentage / 100) * gaugeArcLength;
-
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
       {/* Total Hours Card */}
@@ -80,71 +72,22 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
           </div>
         </CardHeader>
         <CardContent className="relative z-10">
-          <div className="text-center mb-4">
+          <div className="flex items-baseline space-x-2">
             <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
               {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
             </div>
-            <div className="text-xs text-blue-500 font-medium mt-1">
+            <div className="text-xs mt-1 text-blue-500">
               {remainingPercentage.toFixed(0)}% remaining
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              To reach 140h target
-            </p>
           </div>
-
-          {/* Gauge Chart */}
-          <div className="flex justify-center">
-            <div className="relative">
-              <svg className="w-20 h-12" viewBox="0 0 80 50">
-                {/* Background gauge arc */}
-                <path
-                  d={`M 10 40 A ${gaugeRadius} ${gaugeRadius} 0 0 1 70 40`}
-                  stroke="currentColor"
-                  strokeWidth={gaugeStrokeWidth}
-                  fill="transparent"
-                  className="text-muted/30"
-                />
-                {/* Remaining hours gauge arc */}
-                <path
-                  d={`M 10 40 A ${gaugeRadius} ${gaugeRadius} 0 0 1 70 40`}
-                  stroke="currentColor"
-                  strokeWidth={gaugeStrokeWidth}
-                  fill="transparent"
-                  strokeDasharray={gaugeArcLength}
-                  strokeDashoffset={gaugeArcLength - remainingArcLength}
-                  strokeLinecap="round"
-                  className="text-blue-500 transition-all duration-500"
-                />
-                {/* Gauge needle/indicator */}
-                <line
-                  x1="40"
-                  y1="40"
-                  x2="40"
-                  y2="15"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="text-blue-500 origin-bottom transition-transform duration-500"
-                  style={{
-                    transform: `rotate(${(remainingPercentage / 100) * 180 - 90}deg)`,
-                    transformOrigin: '40px 40px'
-                  }}
-                />
-                {/* Center dot */}
-                <circle
-                  cx="40"
-                  cy="40"
-                  r="3"
-                  fill="currentColor"
-                  className="text-blue-500"
-                />
-              </svg>
-
-              {/* Gauge labels */}
-              <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                <span>140h</span>
-                <span>0h</span>
-              </div>
-            </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            To reach 140h target
+          </p>
+          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${remainingPercentage}%` }}
+            ></div>
           </div>
         </CardContent>
       </Card>
