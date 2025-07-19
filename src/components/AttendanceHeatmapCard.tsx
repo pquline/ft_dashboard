@@ -48,7 +48,7 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 
   return {
     backgroundColor: `color-mix(in srgb, var(--primary) ${opacity * 100}%, transparent)`,
-    borderColor: `color-mix(in srgb, var(--primary) ${borderOpacity * 100}%, transparent)`,
+    borderColor: `color-mix(in srgb, var(--primary) ${borderOpacity * 100}%, white)`, // Mix with white for lighter borders
   }
 }
 
