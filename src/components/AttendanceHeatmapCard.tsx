@@ -94,6 +94,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       hours: dataMap[date] ? (dataMap[date] / 3600).toFixed(2) : 'N/A'
     })));
 
+    // Debug: Log the actual dataMap object
+    console.log('dataMap object:', dataMap);
+
     return dataMap
   }, [attendance])
 
@@ -245,6 +248,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           // Debug: Log date matching for specific dates
                           if (date && (date.getDate() === 4 || date.getDate() === 8) && date.getMonth() === 9 && date.getFullYear() === 2024) {
                             console.log(`Rendering ${dateStr}: found ${seconds}s (${(seconds/3600).toFixed(2)}h) in attendanceData`);
+                            console.log(`attendanceData[${dateStr}] =`, attendanceData[dateStr]);
+                            console.log(`dateStr = "${dateStr}"`);
                             const style = getAttendanceStyle(seconds, maxAttendance);
                             console.log(`Style for ${dateStr}:`, style);
                           }
