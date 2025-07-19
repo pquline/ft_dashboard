@@ -2,10 +2,9 @@ import React from "react";
 import { AttendanceCalendar } from "@/components/AttendanceCalendar";
 import { DashboardSummaryCards } from "@/components/DashboardSummaryCards";
 import { DailyAttendanceChart } from "@/components/charts/DailyAttendanceChart";
-import { SourcesDistributionChart } from "@/components/charts/SourcesDistributionChart";
-import { SourcesDetailsTable } from "@/components/tables/SourcesDetailsTable";
 import { getMainMonth } from "@/lib/utils";
 import { AttendanceData, AttendancePeriod } from "@/types/attendance";
+import { AttendanceHeatmapCard } from "@/components/AttendanceHeatmapCard";
 
 interface DashboardContentProps {
   data: AttendanceData;
@@ -18,11 +17,6 @@ interface DashboardContentProps {
     attendance: number;
     onSite: number;
     offSite: number;
-  }>;
-  sourceData: Array<{
-    name: string;
-    value: number;
-    type: "none";
   }>;
   onMonthChange: (newMonth: string) => void;
   isLoading?: boolean;
@@ -37,7 +31,6 @@ export function DashboardContent({
   onSite,
   offSite,
   chartData,
-  sourceData,
   onMonthChange,
 }: Omit<DashboardContentProps, 'currentPeriod'> & { currentPeriod: AttendancePeriod }) {
   return (
@@ -78,16 +71,9 @@ export function DashboardContent({
             />
           )}
 
-          {/* Sources Breakdown */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <SourcesDistributionChart
-              sourceData={sourceData}
-              currentPeriod={currentPeriod}
-            />
-
-            <SourcesDetailsTable
-              currentPeriod={currentPeriod}
-            />
+          {/* Attendance Heatmap */}
+          <div className="grid grid-cols-1 gap-8">
+            <AttendanceHeatmapCard data={data} />
           </div>
         </div>
       </div>

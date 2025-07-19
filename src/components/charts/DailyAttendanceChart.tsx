@@ -57,7 +57,7 @@ export function DailyAttendanceChart({
             : "selected month"}
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          Hours spent on campus per day
+          Attendance per day in {getPeriodMonthName(currentPeriod.from_date, currentPeriod.to_date)}
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
@@ -109,11 +109,24 @@ export function DailyAttendanceChart({
                       typeof value === "number"
                         ? value
                         : parseFloat(String(value));
-                    const hours = Math.floor(numValue);
-                    const minutes = Math.round(
-                      (numValue - hours) * 60
-                    );
-                    return `${hours}h ${minutes}m`;
+                    const totalSeconds = numValue * 3600;
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = Math.floor(totalSeconds % 60);
+
+                    if (hours > 0) {
+                      if (seconds > 0) {
+                        return `${hours}h ${minutes}m ${seconds}s`;
+                      }
+                      return `${hours}h ${minutes}m`;
+                    }
+                    if (minutes > 0) {
+                      if (seconds > 0) {
+                        return `${minutes}m ${seconds}s`;
+                      }
+                      return `${minutes}m`;
+                    }
+                    return `${seconds}s`;
                   }}
                 />
               }

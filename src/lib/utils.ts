@@ -6,8 +6,74 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Source priority: sipass > desk-made > discord > others
+const SOURCE_PRIORITY: Record<string, number> = {
+  'sipass': 3,
+  'desk-made': 2,
+  'discord': 1,
+};
+
+function getSourcePriority(source: string): number {
+  return SOURCE_PRIORITY[source] || 0;
+}
+
+export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: string; source: string; duration: number }>) {
+  const sortedSessions = sessions.sort((a, b) => {
+    const priorityDiff = getSourcePriority(b.source) - getSourcePriority(a.source);
+    if (priorityDiff !== 0) return priorityDiff;
+    return new Date(a.beginAt).getTime() - new Date(b.beginAt).getTime();
+  });
+
+  const prioritizedSessions: typeof sessions = [];
+  const coveredTimeRanges: Array<{ start: number; end: number }> = [];
+
+  for (const session of sortedSessions) {
+    const sessionStart = new Date(session.beginAt).getTime();
+    const sessionEnd = new Date(session.endAt).getTime();
+
+    let remainingRanges = [{ start: sessionStart, end: sessionEnd }];
+
+    for (const coveredRange of coveredTimeRanges) {
+      const newRemainingRanges: Array<{ start: number; end: number }> = [];
+
+      for (const range of remainingRanges) {
+        // If no overlap, keep the entire range
+        if (range.end <= coveredRange.start || range.start >= coveredRange.end) {
+          newRemainingRanges.push(range);
+          continue;
+        }
+
+        // Split the range around the covered portion
+        if (range.start < coveredRange.start) {
+          newRemainingRanges.push({ start: range.start, end: coveredRange.start });
+        }
+        if (range.end > coveredRange.end) {
+          newRemainingRanges.push({ start: coveredRange.end, end: range.end });
+        }
+      }
+
+      remainingRanges = newRemainingRanges;
+    }
+
+    for (const range of remainingRanges) {
+      if (range.end > range.start) {
+        const duration = (range.end - range.start) / 1000;
+        prioritizedSessions.push({
+          beginAt: new Date(range.start).toISOString(),
+          endAt: new Date(range.end).toISOString(),
+          source: session.source,
+          duration
+        });
+      }
+    }
+
+    coveredTimeRanges.push({ start: sessionStart, end: sessionEnd });
+  }
+
+  return prioritizedSessions;
+}
+
 export function parseISODuration(duration: string): number {
-  // Handle formats like P1D (1 day), P1DT2H (1 day 2 hours), PT2H30M (2 hours 30 minutes), etc.
   const match = duration.match(/P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?/)
   if (!match) return 0
 
@@ -22,11 +88,21 @@ export function parseISODuration(duration: string): number {
 export function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = Math.floor(seconds % 60)
 
   if (hours > 0) {
+    if (remainingSeconds > 0) {
+      return `${hours}h ${minutes}m ${remainingSeconds}s`
+    }
     return `${hours}h ${minutes}m`
   }
-  return `${minutes}m`
+  if (minutes > 0) {
+    if (remainingSeconds > 0) {
+      return `${minutes}m ${remainingSeconds}s`
+    }
+    return `${minutes}m`
+  }
+  return `${remainingSeconds}s`
 }
 
 export function formatHours(seconds: number): string {
@@ -124,32 +200,47 @@ export function calculateOffSiteAttendanceForSource(period: AttendancePeriod, so
 }
 
 export function getDailyAttendance(period: AttendancePeriod) {
-  // If we have individual entries, calculate daily totals from them (same as Sessions card)
   if (period.entries) {
     const dailyTotals = new Map<string, { total: number; onSite: number; offSite: number }>();
 
-    // Filter out 'locations' entries and calculate daily totals
+    const entriesByDate = new Map<string, Array<{ beginAt: string; endAt: string; source: string; duration: number }>>();
+
     period.entries
       .filter(entry => entry.source !== 'locations')
       .forEach(entry => {
         const date = new Date(entry.time_period.begin_at);
-        const dateString = date.toISOString().split('T')[0];
+        const dateString = date.getFullYear() + '-' +
+          String(date.getMonth() + 1).padStart(2, '0') + '-' +
+          String(date.getDate()).padStart(2, '0');
 
         const beginAt = new Date(entry.time_period.begin_at);
         const endAt = new Date(entry.time_period.end_at);
-        const duration = (endAt.getTime() - beginAt.getTime()) / 1000; // duration in seconds
+        const duration = (endAt.getTime() - beginAt.getTime()) / 1000;
 
-        if (!dailyTotals.has(dateString)) {
-          dailyTotals.set(dateString, { total: 0, onSite: 0, offSite: 0 });
+        if (!entriesByDate.has(dateString)) {
+          entriesByDate.set(dateString, []);
         }
 
-        const current = dailyTotals.get(dateString)!;
-        current.total += duration;
-        // For now, assume all sessions are on-site (this matches the Sessions card logic)
-        current.onSite += duration;
+        entriesByDate.get(dateString)!.push({
+          beginAt: entry.time_period.begin_at,
+          endAt: entry.time_period.end_at,
+          source: entry.source,
+          duration
+        });
       });
 
-    // Map the calculated totals to the daily_attendances structure
+    entriesByDate.forEach((entries, dateString) => {
+      const prioritizedEntries = prioritizeSessions(entries);
+
+      const totalDuration = prioritizedEntries.reduce((sum, entry) => sum + entry.duration, 0);
+
+      dailyTotals.set(dateString, {
+        total: totalDuration,
+        onSite: totalDuration,
+        offSite: 0
+      });
+    });
+
     return period.daily_attendances.map(day => {
       const calculated = dailyTotals.get(day.date) || { total: 0, onSite: 0, offSite: 0 };
       return {
@@ -161,7 +252,6 @@ export function getDailyAttendance(period: AttendancePeriod) {
     });
   }
 
-  // Fallback: use the scaling approach if no entries are available
   const filteredDetailedAttendance = period.detailed_attendance.filter(detail => detail.name !== 'locations');
 
   const totalFilteredDuration = filteredDetailedAttendance.reduce((total, detail) =>

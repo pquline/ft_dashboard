@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, MapPin, Wifi } from 'lucide-react';
+import { Clock, MapPin, Target } from 'lucide-react';
 import { getPeriodMonthName } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
 
@@ -12,7 +12,6 @@ interface DashboardSummaryCardsProps {
 }
 
 export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }: DashboardSummaryCardsProps) {
-  // Parse time values for comparison
   const parseTime = (timeStr: string) => {
     const match = timeStr.match(/(\d+)h\s*(\d+)m/);
     if (match) {
@@ -25,10 +24,13 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
   const onSiteMinutes = parseTime(onSite);
   const offSiteMinutes = parseTime(offSite);
 
-  // Calculate percentages for visual indicators
   const totalHours = totalMinutes / 60;
   const onSitePercentage = totalMinutes > 0 ? (onSiteMinutes / totalMinutes) * 100 : 0;
   const offSitePercentage = totalMinutes > 0 ? (offSiteMinutes / totalMinutes) * 100 : 0;
+
+  // Calculate remaining hours (140 hours target - total hours)
+  const remainingHours = Math.max(0, 140 - totalHours);
+  const remainingPercentage = (remainingHours / 140) * 100;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
@@ -61,10 +63,58 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
         </CardContent>
       </Card>
 
-      {/* On Campus Card */}
+      {/* Remaining Hours Card */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">On Campus</CardTitle>
+          <CardTitle className="text-sm font-semibold text-foreground/80">Remaining Hours</CardTitle>
+          <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
+            <Target className="h-4 w-4 text-blue-500" />
+          </div>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+              {(() => {
+                const remainingSeconds = remainingHours * 3600;
+                const hours = Math.floor(remainingSeconds / 3600);
+                const minutes = Math.floor((remainingSeconds % 3600) / 60);
+                const seconds = Math.floor(remainingSeconds % 60);
+
+                if (hours > 0) {
+                  if (seconds > 0) {
+                    return `${hours}h ${minutes}m ${seconds}s`;
+                  }
+                  return `${hours}h ${minutes}m`;
+                }
+                if (minutes > 0) {
+                  if (seconds > 0) {
+                    return `${minutes}m ${seconds}s`;
+                  }
+                  return `${minutes}m`;
+                }
+                return `${seconds}s`;
+              })()}
+            </div>
+            <div className="text-xs mt-1 text-blue-500">
+              {remainingPercentage.toFixed(0)}% remaining
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            To reach 140h target
+          </p>
+          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${remainingPercentage}%` }}
+            ></div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Work Distribution Card */}
+      <Card className="card-modern glass-hover group overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+          <CardTitle className="text-sm font-semibold text-foreground/80">Work Distribution</CardTitle>
           <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
             <MapPin className="h-4 w-4 text-green-500" />
           </div>
@@ -79,42 +129,19 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Physical presence
+            On campus • {offSite} remote ({offSitePercentage.toFixed(0)}%)
           </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${onSitePercentage}%` }}
-            ></div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Remote Card */}
-      <Card className="card-modern glass-hover group overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">Remote</CardTitle>
-          <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
-            <Wifi className="h-4 w-4 text-blue-500" />
-          </div>
-        </CardHeader>
-        <CardContent className="relative z-10">
-          <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-              {offSite}
+          <div className="mt-3 w-full bg-muted/50 rounded-full h-2 overflow-hidden">
+            <div className="flex h-2">
+              <div
+                className="bg-gradient-to-r from-green-500 to-green-600 h-2 transition-all duration-500"
+                style={{ width: `${onSitePercentage}%` }}
+              ></div>
+              <div
+                className="bg-gradient-to-r from-red-500 to-red-600 h-2 transition-all duration-500"
+                style={{ width: `${offSitePercentage}%` }}
+              ></div>
             </div>
-            <div className="text-xs text-blue-500 font-medium">
-              {offSitePercentage.toFixed(0)}%
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Virtual work
-          </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${offSitePercentage}%` }}
-            ></div>
           </div>
         </CardContent>
       </Card>

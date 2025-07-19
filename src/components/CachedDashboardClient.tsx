@@ -109,7 +109,6 @@ export function CachedDashboardClient({
         onSite={dashboardState.onSite}
         offSite={dashboardState.offSite}
         chartData={dashboardState.chartData}
-        sourceData={dashboardState.sourceData}
         onMonthChange={dashboardState.handleMonthChange}
         isLoading={isLoading}
         isCacheValid={isCacheValid}
