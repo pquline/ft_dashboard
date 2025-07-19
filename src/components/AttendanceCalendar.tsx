@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { formatDuration, getPeriodMonthName } from '@/lib/utils';
+import { formatDuration, getPeriodMonthName, prioritizeSessions } from '@/lib/utils';
 import { AttendancePeriod } from '@/types/attendance';
 
 interface AttendanceCalendarProps {
@@ -101,7 +101,28 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
         endAt: session.time_period.end_at,
       };
     }).filter(session => session.duration > 0);
-    return sessions;
+
+        // Apply priority system to sessions
+    const sessionEntries = sessions.map(session => ({
+      beginAt: session.beginAt,
+      endAt: session.endAt,
+      source: session.source,
+      duration: session.duration
+    }));
+
+    const prioritizedEntries = prioritizeSessions(sessionEntries);
+
+    // Map back to session objects
+    const prioritizedSessions = prioritizedEntries.map((entry: { beginAt: string; endAt: string; source: string; duration: number }) => {
+      const originalSession = sessions.find(s =>
+        s.beginAt === entry.beginAt &&
+        s.endAt === entry.endAt &&
+        s.source === entry.source
+      );
+      return originalSession!;
+    });
+
+    return prioritizedSessions;
   }, [selectedDate, period.entries]);
 
   function getMainMonth(period: AttendancePeriod): { year: number; month: number } {
@@ -230,7 +251,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                   <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Daily Totals by Source</h4>
                   <div className="flex flex-wrap gap-4 items-center">
                     {(() => {
-                      const sourceTotals = selectedDateSessions.reduce((acc, session) => {
+                      const sourceTotals = selectedDateSessions.reduce((acc: Record<string, number>, session: any) => {
                         if (!acc[session.source]) {
                           acc[session.source] = 0;
                         }
@@ -240,7 +261,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                       return Object.entries(sourceTotals).map(([source, totalDuration]) => (
                         <div key={source} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30 backdrop-blur-md">
                           <Badge variant="outline" className="text-xs px-2 py-1 border-orange-500/40 text-orange-500 bg-orange-500/10">{source}</Badge>
-                          <span className="text-sm text-foreground ml-1">{formatDuration(totalDuration)}</span>
+                          <span className="text-sm text-foreground ml-1">{formatDuration(totalDuration as number)}</span>
                         </div>
                       ));
                     })()}
@@ -260,7 +281,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {selectedDateSessions.map((session, index) => (
+                      {selectedDateSessions.map((session: any, index: number) => (
                         <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
                           <TableCell>
                             <Badge variant="outline" className="glass-hover">
