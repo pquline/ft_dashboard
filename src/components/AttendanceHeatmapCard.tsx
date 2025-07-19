@@ -168,7 +168,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                       <div key={weekIndex} className="flex flex-col gap-1">
                         {grid.map((dayRow, dayIndex) => {
                           const date = dayRow[weekIndex]
-                          const dateStr = date?.toISOString().split("T")[0] || ""
+                          // Use local date instead of UTC to avoid timezone shift
+                          const dateStr = date ?
+                            date.getFullYear() + '-' +
+                            String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                            String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
 
                           return (
