@@ -102,18 +102,14 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       }
     }
 
-    // Start date: one year and one month before today
+    // Start date: August 1st of last year
     const today = new Date()
-    const startDate = new Date(today.getFullYear() - 1, today.getMonth() + 1, today.getDate())
+    const startDate = new Date(today.getFullYear() - 1, 7, 1) // August is month 7 (0-indexed)
 
-    // End date is the latest date from all periods
-    let latestDate = new Date(0)
-    attendance.forEach(period => {
-      const toDate = new Date(period.to_date)
-      if (toDate > latestDate) latestDate = toDate
-    })
+    // End date: July 31st of this year
+    const endDate = new Date(today.getFullYear(), 6, 31) // July is month 6 (0-indexed), 31st day
 
-    return { startDate, endDate: latestDate }
+    return { startDate, endDate }
   }, [attendance])
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
