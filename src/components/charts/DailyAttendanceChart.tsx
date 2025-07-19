@@ -109,11 +109,24 @@ export function DailyAttendanceChart({
                       typeof value === "number"
                         ? value
                         : parseFloat(String(value));
-                    const hours = Math.floor(numValue);
-                    const minutes = Math.floor(
-                      (numValue - hours) * 60
-                    );
-                    return `${hours}h ${minutes}m`;
+                    const totalSeconds = numValue * 3600;
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = Math.floor(totalSeconds % 60);
+
+                    if (hours > 0) {
+                      if (seconds > 0) {
+                        return `${hours}h ${minutes}m ${seconds}s`;
+                      }
+                      return `${hours}h ${minutes}m`;
+                    }
+                    if (minutes > 0) {
+                      if (seconds > 0) {
+                        return `${minutes}m ${seconds}s`;
+                      }
+                      return `${minutes}m`;
+                    }
+                    return `${seconds}s`;
                   }}
                 />
               }
