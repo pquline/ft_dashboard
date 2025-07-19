@@ -172,12 +172,12 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         <div className="overflow-x-auto">
           <div className="inline-flex gap-1">
             {/* Day labels */}
-            <div className="flex flex-col gap-0.5 mr-2">
-              <div className="h-6"></div> {/* Space for month labels */}
+            <div className="flex flex-col gap-1 mr-2">
+              <div className="h-5.5"></div> {/* Space for month labels */}
               {daysOfWeek.map((day) => (
                 <div
                   key={day}
-                  className="h-2 flex items-center text-xs text-gray-500 w-4"
+                  className="h-3 flex items-center text-xs text-gray-500 w-4"
                 >
                   {day}
                 </div>
@@ -207,7 +207,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                           return (
                             <div
                               key={dayIndex}
-                              className={`w-3 h-3 rounded-[3px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
+                              className={`w-3 h-3 rounded-[3px] border cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 relative flex items-center justify-center ${
                                 date ? "" : "bg-transparent border-transparent"
                               }`}
                               style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
@@ -222,7 +222,13 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                                 setMousePosition(null)
                               }}
                               title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
-                            />
+                            >
+                              {date && (
+                                <span className="text-[8px] text-white/70 font-medium leading-none">
+                                  {date.getDate()}
+                                </span>
+                              )}
+                            </div>
                           )
                         })}
                       </div>
