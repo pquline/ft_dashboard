@@ -74,7 +74,7 @@ export function DashboardSummaryCards({ total, onSite, offSite, currentPeriod }:
         <CardContent className="relative z-10">
           <div className="flex items-baseline space-x-2">
             <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-              {Math.floor(remainingHours)}h {Math.round((remainingHours % 1) * 60)}m
+              {Math.floor(remainingHours)}h {Math.floor((remainingHours % 1) * 60)}m
             </div>
             <div className="text-xs mt-1 text-blue-500">
               {remainingPercentage.toFixed(0)}% remaining

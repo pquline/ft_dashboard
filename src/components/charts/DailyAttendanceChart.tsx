@@ -110,7 +110,7 @@ export function DailyAttendanceChart({
                         ? value
                         : parseFloat(String(value));
                     const hours = Math.floor(numValue);
-                    const minutes = Math.round(
+                    const minutes = Math.floor(
                       (numValue - hours) * 60
                     );
                     return `${hours}h ${minutes}m`;
