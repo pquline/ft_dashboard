@@ -102,12 +102,20 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       }
     }
 
-    // Start date: August 1st of last year
+    // Determine the current academic year based on today's date
     const today = new Date()
-    const startDate = new Date(today.getFullYear() - 1, 7, 1) // August is month 7 (0-indexed)
+    const currentYear = today.getFullYear()
+    const currentMonth = today.getMonth() // 0-indexed
 
-    // End date: July 31st of this year
-    const endDate = new Date(today.getFullYear(), 6, 31) // July is month 6 (0-indexed), 31st day
+    // If we're in January-July, the academic year started last August
+    // If we're in August-December, the academic year started this August
+    const academicYearStart = currentMonth < 7 ? currentYear - 1 : currentYear
+
+    // Start date: August 1st of the academic year start
+    const startDate = new Date(academicYearStart, 7, 1) // August is month 7 (0-indexed)
+
+    // End date: July 31st of the academic year end
+    const endDate = new Date(academicYearStart + 1, 6, 31) // July is month 6 (0-indexed), 31st day
 
     return { startDate, endDate }
   }, [attendance])
