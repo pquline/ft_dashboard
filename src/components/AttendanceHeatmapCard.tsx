@@ -4,7 +4,7 @@ import { useMemo } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { parseISODuration, formatDuration, getDailyAttendance } from "@/lib/utils";
+import { formatDuration, getDailyAttendance } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
   data: AttendanceData;

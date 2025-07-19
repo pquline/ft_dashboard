@@ -102,7 +102,6 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
       };
     }).filter(session => session.duration > 0);
 
-            // Apply priority system to sessions
     const sessionEntries = sessions.map(session => ({
       beginAt: session.beginAt,
       endAt: session.endAt,
@@ -251,8 +250,8 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                   <div className="flex flex-wrap gap-4 items-center">
                     {(() => {
                       const sourceTotals = selectedDateSessions
-                        .filter((session: any) => session && session.source && typeof session.duration === 'number')
-                        .reduce((acc: Record<string, number>, session: any) => {
+                        .filter((session) => session && session.source && typeof session.duration === 'number')
+                        .reduce((acc: Record<string, number>, session) => {
                           if (!acc[session.source]) {
                             acc[session.source] = 0;
                           }
@@ -283,8 +282,8 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
                     </TableHeader>
                     <TableBody>
                       {selectedDateSessions
-                        .filter((session: any) => session && session.source && typeof session.duration === 'number')
-                        .map((session: any, index: number) => (
+                        .filter((session) => session && session.source && typeof session.duration === 'number')
+                        .map((session, index: number) => (
                         <TableRow key={index} className="hover:bg-muted/30 transition-colors duration-200">
                           <TableCell>
                             <Badge variant="outline" className="glass-hover">
