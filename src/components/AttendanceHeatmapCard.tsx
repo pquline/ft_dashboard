@@ -3,37 +3,24 @@
 import { useState, useMemo } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { parseISODuration, formatDuration } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
   data: AttendanceData;
 }
 
-// Helper function to convert duration string to minutes
-const durationToMinutes = (duration: string): number => {
-  const match = duration.match(/(\d+)h\s*(\d+)m/)
-  if (match) {
-    const hours = parseInt(match[1], 10)
-    const minutes = parseInt(match[2], 10)
-    return hours * 60 + minutes
-  }
-  return 0
+// Helper function to format seconds as hours and minutes
+const formatSeconds = (seconds: number): string => {
+  return formatDuration(seconds)
 }
 
-// Helper function to format minutes as hours and minutes
-const formatMinutes = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  if (hours === 0) return `${mins}m`
-  if (mins === 0) return `${hours}h`
-  return `${hours}h ${mins}m`
-}
-
-const getAttendanceColor = (minutes: number) => {
-  if (minutes === 0) return "bg-gray-100"
-  if (minutes <= 60) return "bg-green-100" // 0-1 hour
-  if (minutes <= 240) return "bg-green-200" // 1-4 hours
-  if (minutes <= 360) return "bg-green-300" // 4-6 hours
-  if (minutes <= 480) return "bg-green-400" // 6-8 hours
+const getAttendanceColor = (seconds: number) => {
+  const hours = seconds / 3600
+  if (seconds === 0) return "bg-gray-100"
+  if (hours <= 1) return "bg-green-100" // 0-1 hour
+  if (hours <= 4) return "bg-green-200" // 1-4 hours
+  if (hours <= 6) return "bg-green-300" // 4-6 hours
+  if (hours <= 8) return "bg-green-400" // 6-8 hours
   return "bg-green-500" // 8+ hours
 }
 
@@ -41,18 +28,25 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const attendance = data.attendance || [];
   const [hoveredDate, setHoveredDate] = useState<string | null>(null)
 
-  // Process attendance data to create a map of date -> total minutes
+  // Process attendance data to create a map of date -> total seconds
   const attendanceData = useMemo(() => {
     const dataMap: { [key: string]: number } = {}
 
+    console.log("Processing attendance data:", attendance)
+
     attendance.forEach(period => {
+      console.log("Processing period:", period.from_date, "to", period.to_date)
+      console.log("Daily attendances:", period.daily_attendances)
+
       period.daily_attendances?.forEach(daily => {
         const dateStr = daily.date
-        const totalMinutes = durationToMinutes(daily.total_attendance)
-        dataMap[dateStr] = (dataMap[dateStr] || 0) + totalMinutes
+        const totalSeconds = parseISODuration(daily.total_attendance)
+        console.log(`Date: ${dateStr}, Duration: ${daily.total_attendance}, Seconds: ${totalSeconds}`)
+        dataMap[dateStr] = (dataMap[dateStr] || 0) + totalSeconds
       })
     })
 
+    console.log("Final attendance data map:", dataMap)
     return dataMap
   }, [attendance])
 
@@ -80,8 +74,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     return { startDate: earliestDate, endDate: latestDate }
   }, [attendance])
 
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+  const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
   // Get only the months that have actual data
   const getMonthsWithData = () => {
@@ -197,17 +191,17 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                         {grid.map((dayRow, dayIndex) => {
                           const date = dayRow[weekIndex]
                           const dateStr = date?.toISOString().split("T")[0] || ""
-                          const minutes = date ? attendanceData[dateStr] || 0 : 0
+                          const seconds = date ? attendanceData[dateStr] || 0 : 0
 
                           return (
                             <div
                               key={dayIndex}
                               className={`w-3 h-3 rounded-sm border border-gray-200 cursor-pointer transition-all duration-200 hover:ring-2 hover:ring-blue-300 ${
-                                date ? getAttendanceColor(minutes) : "bg-transparent border-transparent"
+                                date ? getAttendanceColor(seconds) : "bg-transparent border-transparent"
                               }`}
                               onMouseEnter={() => date && setHoveredDate(dateStr)}
                               onMouseLeave={() => setHoveredDate(null)}
-                              title={date ? `${formatDate(date)}: ${formatMinutes(minutes)} attendance` : ""}
+                              title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
                             />
                           )
                         })}
@@ -225,7 +219,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
           <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
             <div className="text-sm">
               <div className="font-medium text-gray-900">{formatDate(new Date(hoveredDate))}</div>
-              <div className="text-gray-600">Attendance: {formatMinutes(attendanceData[hoveredDate] || 0)}</div>
+              <div className="text-gray-600">Attendance: {formatSeconds(attendanceData[hoveredDate] || 0)}</div>
             </div>
           </div>
         )}
