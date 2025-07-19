@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { parseISODuration, formatDuration, getDailyAttendance, filterDailyAttendancesToMainMonth } from "@/lib/utils";
 
 interface AttendanceHeatmapCardProps {
@@ -48,7 +49,7 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 
   return {
     backgroundColor: `color-mix(in srgb, var(--primary) ${opacity * 100}%, transparent)`,
-    borderColor: `color-mix(in srgb, var(--primary) ${borderOpacity * 100}%, transparent)`, // Back to transparent mixing
+    borderColor: `color-mix(in srgb, var(--primary) ${borderOpacity * 250}%, transparent)`,
   }
 }
 
@@ -257,11 +258,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
         {/* Tooltip */}
         {hoveredDate && (
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
-            <div className="text-sm">
-              <div className="font-medium text-gray-900">{formatDate(new Date(hoveredDate))}</div>
-              <div className="text-gray-600">Attendance: {formatSeconds(attendanceData[hoveredDate] || 0)}</div>
-            </div>
+          <div className="border-border/40 bg-white/40 dark:bg-neutral-900/40 backdrop-blur-md grid min-w-[8rem] items-start gap-1.5 rounded-xl border px-3 py-2 text-xs shadow-2xl glass-tooltip">
+            <div className="font-medium">{formatDate(new Date(hoveredDate))}</div>
+            <div className="text-muted-foreground">Attendance: {formatSeconds(attendanceData[hoveredDate] || 0)}</div>
           </div>
         )}
       </CardContent>
