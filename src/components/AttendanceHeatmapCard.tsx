@@ -169,7 +169,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 relative z-10">
-        <div className="overflow-x-auto flex justify-center">
+        <div className="overflow-x-auto flex justify-center py-4">
           <div className="inline-flex gap-1">
             {/* Calendar grid */}
             {monthsToDisplay.map((monthInfo) => {
