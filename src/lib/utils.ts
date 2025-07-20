@@ -18,6 +18,9 @@ function getSourcePriority(source: string): number {
 }
 
 export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: string; source: string; duration: number }>) {
+  if (sessions.length === 0) return [];
+  if (sessions.length === 1) return sessions;
+
   const sortedSessions = sessions.sort((a, b) => {
     const priorityDiff = getSourcePriority(b.source) - getSourcePriority(a.source);
     if (priorityDiff !== 0) return priorityDiff;
@@ -30,6 +33,9 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
   for (const session of sortedSessions) {
     const sessionStart = new Date(session.beginAt).getTime();
     const sessionEnd = new Date(session.endAt).getTime();
+
+    // Skip invalid sessions
+    if (sessionEnd <= sessionStart) continue;
 
     let remainingRanges = [{ start: sessionStart, end: sessionEnd }];
 
@@ -53,6 +59,9 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
       }
 
       remainingRanges = newRemainingRanges;
+
+      // Early exit if no ranges left
+      if (remainingRanges.length === 0) break;
     }
 
     for (const range of remainingRanges) {
