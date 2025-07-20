@@ -65,7 +65,7 @@ const DayCell = React.memo(({
       title={title}
     >
       <span className="text-[9px] text-foreground/70 font-medium leading-none">
-        {date.getDate()}
+        {date.getUTCDate()}
       </span>
     </div>
   )
@@ -191,10 +191,10 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
   // Memoize the grid generation function
   const getMonthGrid = useCallback((year: number, monthIndex: number) => {
-    const firstDay = new Date(year, monthIndex, 1);
-    const lastDay = new Date(year, monthIndex + 1, 0);
-    const startDayOfWeek = firstDay.getDay();
-    const daysInMonth = lastDay.getDate();
+    const firstDay = new Date(Date.UTC(year, monthIndex, 1));
+    const lastDay = new Date(Date.UTC(year, monthIndex + 1, 0));
+    const startDayOfWeek = firstDay.getUTCDay();
+    const daysInMonth = lastDay.getUTCDate();
 
     const grid: (Date | null)[][] = Array(7)
       .fill(null)
@@ -206,7 +206,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const currentDate = new Date(year, monthIndex, day);
+      const currentDate = new Date(Date.UTC(year, monthIndex, day));
       const dayOfWeek = (startDayOfWeek + day - 1) % 7;
 
       if (dayOfWeek === 0 && day > 1) {
@@ -229,6 +229,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       year: "numeric",
       month: "long",
       day: "numeric",
+      timeZone: "UTC"
     });
   }, []);
 
@@ -249,11 +250,11 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
             <div key={weekIndex} className="flex flex-col gap-1">
               {grid.map((dayRow, dayIndex) => {
                 const date = dayRow[weekIndex];
-                // Use local date instead of UTC to avoid timezone shift
+                // Use UTC date for consistency
                 const dateStr = date ?
-                  date.getFullYear() + '-' +
-                  String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                  String(date.getDate()).padStart(2, '0') : "";
+                  date.getUTCFullYear() + '-' +
+                  String(date.getUTCMonth() + 1).padStart(2, '0') + '-' +
+                  String(date.getUTCDate()).padStart(2, '0') : "";
                 const seconds = date ? processedData[dateStr] || 0 : 0;
 
                 return (
