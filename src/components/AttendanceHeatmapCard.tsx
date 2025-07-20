@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useCallback, useState, useEffect } from "react"
+import { useMemo, useCallback, useState, useEffect, useRef } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -34,6 +34,7 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 
 export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const attendance = useMemo(() => data.attendance || [], [data.attendance]);
 
   // Lazy load the heatmap when it comes into view
@@ -48,9 +49,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       { threshold: 0.1 }
     );
 
-    const element = document.querySelector('[data-heatmap-container]');
-    if (element) {
-      observer.observe(element);
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
 
     return () => observer.disconnect();
@@ -192,81 +192,69 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     )
   }, [maxAttendance, formatDate])
 
-  // Show loading state while not visible
-  if (!isVisible) {
-    return (
-      <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
-        <CardHeader className="pb-4 relative z-10">
-          <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-            Attendance Heatmap
-          </CardTitle>
-          <CardDescription className="text-muted-foreground/80">
-            Loading attendance data...
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-0 relative z-10">
-          <div className="h-32 flex items-center justify-center">
-            <div className="text-muted-foreground">Loading heatmap...</div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
+    <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right" ref={containerRef}>
       <CardHeader className="pb-4 relative z-10">
         <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
           Attendance Heatmap
         </CardTitle>
         <CardDescription className="text-muted-foreground/80">
-          Attendance per day ({startDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} - {endDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })})
+          {isVisible
+            ? `Attendance per day (${startDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} - ${endDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })})`
+            : "Loading attendance data..."
+          }
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-0 relative z-10" data-heatmap-container>
-        <div className="overflow-x-auto flex justify-center py-4">
-          <div className="inline-flex gap-1">
-            {/* Calendar grid */}
-            {monthsToDisplay.map((monthInfo) => {
-              const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
-
-              return (
-                <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
-                  {/* Month labels */}
-                  <div className="h-6 flex items-center justify-center text-xs text-gray-500 font-medium">
-                    {monthInfo.month}
-                  </div>
-
-                  {/* Month grid */}
-                  <div className="flex gap-1">
-                    {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
-                      <div key={weekIndex} className="flex flex-col gap-1">
-                        {grid.map((dayRow, dayIndex) => {
-                          const date = dayRow[weekIndex]
-                          // Use local date instead of UTC to avoid timezone shift
-                          const dateStr = date ?
-                            date.getFullYear() + '-' +
-                            String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                            String(date.getDate()).padStart(2, '0') : ""
-                          const seconds = date ? attendanceData[dateStr] || 0 : 0
-
-                          return (
-                            <DayCell
-                              key={dayIndex}
-                              date={date}
-                              dateStr={dateStr}
-                              seconds={seconds}
-                            />
-                          )
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
+      <CardContent className="pt-0 relative z-10">
+        {!isVisible ? (
+          <div className="h-32 flex items-center justify-center">
+            <div className="text-muted-foreground">Loading heatmap...</div>
           </div>
-        </div>
+        ) : (
+          <div className="overflow-x-auto flex justify-center py-4">
+            <div className="inline-flex gap-1">
+              {/* Calendar grid */}
+              {monthsToDisplay.map((monthInfo) => {
+                const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex)
+
+                return (
+                  <div key={`${monthInfo.actualYear}-${monthInfo.monthIndex}`} className="flex flex-col gap-1">
+                    {/* Month labels */}
+                    <div className="h-6 flex items-center justify-center text-xs text-gray-500 font-medium">
+                      {monthInfo.month}
+                    </div>
+
+                    {/* Month grid */}
+                    <div className="flex gap-1">
+                      {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
+                        <div key={weekIndex} className="flex flex-col gap-1">
+                          {grid.map((dayRow, dayIndex) => {
+                            const date = dayRow[weekIndex]
+                            // Use local date instead of UTC to avoid timezone shift
+                            const dateStr = date ?
+                              date.getFullYear() + '-' +
+                              String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                              String(date.getDate()).padStart(2, '0') : ""
+                            const seconds = date ? attendanceData[dateStr] || 0 : 0
+
+                            return (
+                              <DayCell
+                                key={dayIndex}
+                                date={date}
+                                dateStr={dateStr}
+                                seconds={seconds}
+                              />
+                            )
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
