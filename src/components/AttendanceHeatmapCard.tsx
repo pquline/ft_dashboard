@@ -14,7 +14,6 @@ const formatSeconds = (seconds: number): string => {
   return formatDuration(seconds)
 }
 
-// Pre-compute styles to avoid repeated calculations
 const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   if (seconds === 0) {
     return {
@@ -33,7 +32,6 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
   }
 }
 
-// Memoized day cell component outside to prevent recreation
 const DayCell = React.memo(({
   date,
   seconds,
@@ -81,10 +79,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const attendance = useMemo(() => data.attendance || [], [data.attendance]);
 
-  // Memoize the months array to prevent it from changing on every render
   const months = useMemo(() => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], []);
 
-  // Lazy load the heatmap when it comes into view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -103,13 +99,12 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     return () => observer.disconnect();
   }, []);
 
-  // Process data in chunks to avoid blocking the main thread
   useEffect(() => {
     if (isVisible && !isDataProcessed && attendance.length > 0) {
       const processDataInChunks = () => {
         const dataMap: { [key: string]: number } = {};
         let processedCount = 0;
-        const chunkSize = 1; // Process one period at a time
+        const chunkSize = 1;
 
         const processNextChunk = () => {
           const startIndex = processedCount;
@@ -133,10 +128,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
           processedCount = endIndex;
 
           if (processedCount < attendance.length) {
-            // Process next chunk in next frame
             requestAnimationFrame(processNextChunk);
           } else {
-            // All data processed
             setProcessedData(dataMap);
             setIsDataProcessed(true);
           }
@@ -145,7 +138,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         processNextChunk();
       };
 
-      // Start processing in next frame
       requestAnimationFrame(processDataInChunks);
     }
   }, [isVisible, isDataProcessed, attendance]);
@@ -171,7 +163,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     return { startDate, endDate };
   }, [attendance]);
 
-  // Memoize the months to display
   const monthsToDisplay = useMemo(() => {
     const monthsToShow: { month: string; year: number; monthIndex: number; actualYear: number }[] = [];
 
@@ -191,7 +182,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     return monthsToShow;
   }, [startDate, endDate, months]);
 
-  // Memoize the grid generation function
   const getMonthGrid = useCallback((year: number, monthIndex: number) => {
     const firstDay = new Date(Date.UTC(year, monthIndex, 1));
     const lastDay = new Date(Date.UTC(year, monthIndex + 1, 0));
@@ -235,7 +225,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     });
   }, []);
 
-  // Memoize the month component to reduce re-renders
   const MonthComponent = useCallback(({ monthInfo }: { monthInfo: { month: string; year: number; monthIndex: number; actualYear: number } }) => {
     const { grid, weeksInMonth } = getMonthGrid(monthInfo.actualYear, monthInfo.monthIndex);
 
@@ -252,7 +241,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
             <div key={weekIndex} className="flex flex-col gap-1">
               {grid.map((dayRow: (Date | null)[], dayIndex: number) => {
                 const date = dayRow[weekIndex];
-                // Use UTC date for consistency
                 const dateStr = date ?
                   date.getUTCFullYear() + '-' +
                   String(date.getUTCMonth() + 1).padStart(2, '0') + '-' +
