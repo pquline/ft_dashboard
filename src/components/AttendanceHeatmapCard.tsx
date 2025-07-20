@@ -104,7 +104,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       const processDataInChunks = () => {
         const dataMap: { [key: string]: number } = {};
         let processedCount = 0;
-        const chunkSize = 1;
+        const chunkSize = 25;
 
         const processNextChunk = () => {
           const startIndex = processedCount;
