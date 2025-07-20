@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useCallback, useState, useEffect } from "react"
 import { AttendanceData } from "@/types/attendance";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -33,12 +33,33 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 }
 
 export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
-  console.log('AttendanceHeatmapCard received data with', data.attendance?.length || 0, 'periods');
+  const [isVisible, setIsVisible] = useState(false);
   const attendance = useMemo(() => data.attendance || [], [data.attendance]);
 
+  // Lazy load the heatmap when it comes into view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const element = document.querySelector('[data-heatmap-container]');
+    if (element) {
+      observer.observe(element);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Memoize the expensive attendance data processing
   const attendanceData = useMemo(() => {
-    console.log('attendanceData useMemo called with attendance:', attendance.length, 'periods');
-    console.log('attendance periods:', attendance.map(p => `${p.from_date} to ${p.to_date}`));
+    if (!isVisible) return {};
+
     const dataMap: { [key: string]: number } = {}
 
     attendance.forEach(period => {
@@ -58,11 +79,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
       })
     })
 
-    console.log('attendanceData useMemo returning dataMap with keys:', Object.keys(dataMap).slice(0, 10));
-    console.log('Sample data:', { '2024-10-08': dataMap['2024-10-08'] });
-
     return dataMap
-  }, [attendance])
+  }, [attendance, isVisible])
 
   const maxAttendance = useMemo(() => {
     const values = Object.values(attendanceData)
@@ -88,7 +106,8 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-  const getMonthsWithData = () => {
+  // Memoize the months to display
+  const monthsToDisplay = useMemo(() => {
     const monthsToShow: { month: string; year: number; monthIndex: number; actualYear: number }[] = []
 
     const current = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
@@ -105,10 +124,10 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     }
 
     return monthsToShow
-  }
+  }, [startDate, endDate, months])
 
-  const monthsToDisplay = getMonthsWithData()
-  const getMonthGrid = (year: number, monthIndex: number) => {
+  // Memoize the grid generation function
+  const getMonthGrid = useCallback((year: number, monthIndex: number) => {
     const firstDay = new Date(year, monthIndex, 1)
     const lastDay = new Date(year, monthIndex + 1, 0)
     const startDayOfWeek = firstDay.getDay()
@@ -139,18 +158,62 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     }
 
     return { grid, weeksInMonth: week + 1 }
-  }
+  }, [startDate, endDate])
 
-  const formatDate = (date: Date) => {
+  const formatDate = useCallback((date: Date) => {
     return date.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     })
-  }
+  }, [])
+
+  // Memoize the day cell component to prevent unnecessary re-renders
+  const DayCell = useCallback(({ date, dateStr, seconds }: { date: Date | null; dateStr: string; seconds: number }) => {
+    if (!date) {
+      return (
+        <div
+          className="w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-20 hover:scale-110 relative flex items-center justify-center backdrop-blur-sm bg-transparent border-transparent"
+        />
+      )
+    }
 
     return (
+      <div
+        className="w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-20 hover:scale-110 relative flex items-center justify-center backdrop-blur-sm"
+        style={getAttendanceStyle(seconds, maxAttendance)}
+        title={`${formatDate(date)}: ${formatSeconds(seconds)} attendance`}
+      >
+        <span className="text-[9px] text-foreground/70 font-medium leading-none">
+          {date.getDate()}
+        </span>
+      </div>
+    )
+  }, [maxAttendance, formatDate])
+
+  // Show loading state while not visible
+  if (!isVisible) {
+    return (
+      <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
+        <CardHeader className="pb-4 relative z-10">
+          <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+            Attendance Heatmap
+          </CardTitle>
+          <CardDescription className="text-muted-foreground/80">
+            Loading attendance data...
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="pt-0 relative z-10">
+          <div className="h-32 flex items-center justify-center">
+            <div className="text-muted-foreground">Loading heatmap...</div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
         <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
@@ -160,7 +223,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
           Attendance per day ({startDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} - {endDate.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })})
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-0 relative z-10">
+      <CardContent className="pt-0 relative z-10" data-heatmap-container>
         <div className="overflow-x-auto flex justify-center py-4">
           <div className="inline-flex gap-1">
             {/* Calendar grid */}
@@ -187,42 +250,13 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                             String(date.getDate()).padStart(2, '0') : ""
                           const seconds = date ? attendanceData[dateStr] || 0 : 0
 
-                          // Debug: Check what's actually happening during rendering
-                          if (date && date.getDate() === 8 && date.getMonth() === 9 && date.getFullYear() === 2024) {
-                            console.log(`October 8th rendering check:`);
-                            console.log(`  dateStr = "${dateStr}"`);
-                            console.log(`  attendanceData object keys:`, Object.keys(attendanceData).slice(0, 5));
-                            console.log(`  attendanceData[${dateStr}] =`, attendanceData[dateStr]);
-                            console.log(`  seconds = ${seconds}`);
-                            console.log(`  formatSeconds(${seconds}) = "${formatSeconds(seconds)}"`);
-                            console.log(`  attendanceData object size:`, Object.keys(attendanceData).length);
-                            console.log(`  Has October 8th key:`, '2024-10-08' in attendanceData);
-                            console.log(`  Direct access:`, attendanceData['2024-10-08']);
-                            console.log(`  Type of attendanceData:`, typeof attendanceData);
-                            console.log(`  Is attendanceData null/undefined:`, attendanceData === null || attendanceData === undefined);
-
-                            // Debug the title attribute specifically
-                            const titleText = date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : "";
-                            console.log(`  Title attribute: "${titleText}"`);
-                            console.log(`  formatDate(date): "${formatDate(date)}"`);
-                            console.log(`  formatSeconds(seconds): "${formatSeconds(seconds)}"`);
-                          }
-
                           return (
-                            <div
+                            <DayCell
                               key={dayIndex}
-                              className={`w-3.5 h-3.5 rounded-[4px] border cursor-pointer transition-all duration-20 hover:scale-110 relative flex items-center justify-center backdrop-blur-sm ${
-                                date ? "" : "bg-transparent border-transparent"
-                              }`}
-                              style={date ? getAttendanceStyle(seconds, maxAttendance) : {}}
-                              title={date ? `${formatDate(date)}: ${formatSeconds(seconds)} attendance` : ""}
-                            >
-                              {date && (
-                                <span className="text-[9px] text-foreground/70 font-medium leading-none">
-                                  {date.getDate()}
-                                </span>
-                              )}
-                            </div>
+                              date={date}
+                              dateStr={dateStr}
+                              seconds={seconds}
+                            />
                           )
                         })}
                       </div>

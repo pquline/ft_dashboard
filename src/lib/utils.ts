@@ -18,6 +18,9 @@ function getSourcePriority(source: string): number {
 }
 
 export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: string; source: string; duration: number }>) {
+  if (sessions.length === 0) return [];
+  if (sessions.length === 1) return sessions;
+
   const sortedSessions = sessions.sort((a, b) => {
     const priorityDiff = getSourcePriority(b.source) - getSourcePriority(a.source);
     if (priorityDiff !== 0) return priorityDiff;
@@ -30,6 +33,9 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
   for (const session of sortedSessions) {
     const sessionStart = new Date(session.beginAt).getTime();
     const sessionEnd = new Date(session.endAt).getTime();
+
+    // Skip invalid sessions
+    if (sessionEnd <= sessionStart) continue;
 
     let remainingRanges = [{ start: sessionStart, end: sessionEnd }];
 
@@ -53,6 +59,9 @@ export function prioritizeSessions(sessions: Array<{ beginAt: string; endAt: str
       }
 
       remainingRanges = newRemainingRanges;
+
+      // Early exit if no ranges left
+      if (remainingRanges.length === 0) break;
     }
 
     for (const range of remainingRanges) {
@@ -203,9 +212,6 @@ export function getDailyAttendance(period: AttendancePeriod) {
   if (period.entries) {
     const dailyTotals = new Map<string, { total: number; onSite: number; offSite: number }>();
 
-    // Debug: Log entries info
-    console.log(`getDailyAttendance: Period ${period.from_date} has ${period.entries.length} entries`);
-
     const entriesByDate = new Map<string, Array<{ beginAt: string; endAt: string; source: string; duration: number }>>();
 
     period.entries
@@ -236,14 +242,6 @@ export function getDailyAttendance(period: AttendancePeriod) {
       const prioritizedEntries = prioritizeSessions(entries);
 
       const totalDuration = prioritizedEntries.reduce((sum, entry) => sum + entry.duration, 0);
-
-      // Debug: Log all daily totals to see what's happening
-      console.log(`getDailyAttendance: ${dateString}: ${totalDuration}s (${(totalDuration/3600).toFixed(2)}h) from ${entries.length} entries`);
-
-      // Debug: Log high duration days
-      if (totalDuration > 86400) {
-        console.warn(`getDailyAttendance: High duration for ${dateString}: ${totalDuration}s (${(totalDuration/3600).toFixed(2)}h) from ${entries.length} entries`);
-      }
 
       dailyTotals.set(dateString, {
         total: totalDuration,
