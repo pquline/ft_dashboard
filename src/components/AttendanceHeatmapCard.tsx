@@ -36,17 +36,21 @@ const getAttendanceStyle = (seconds: number, maxSeconds: number) => {
 // Memoized day cell component outside to prevent recreation
 const DayCell = React.memo(({
   date,
-  dateStr,
   seconds,
   maxAttendance,
   formatDate
 }: {
   date: Date | null;
-  dateStr: string;
   seconds: number;
   maxAttendance: number;
   formatDate: (date: Date) => string;
 }) => {
+  const style = useMemo(() => getAttendanceStyle(seconds, maxAttendance), [seconds, maxAttendance]);
+  const title = useMemo(() => {
+    if (!date) return "";
+    return `${formatDate(date)}: ${formatSeconds(seconds)} attendance`;
+  }, [formatDate, date, seconds]);
+
   if (!date) {
     return (
       <div
@@ -54,9 +58,6 @@ const DayCell = React.memo(({
       />
     )
   }
-
-  const style = useMemo(() => getAttendanceStyle(seconds, maxAttendance), [seconds, maxAttendance]);
-  const title = useMemo(() => `${formatDate(date)}: ${formatSeconds(seconds)} attendance`, [formatDate, date, seconds]);
 
   return (
     <div
@@ -79,6 +80,9 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
   const [processedData, setProcessedData] = useState<{ [key: string]: number }>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const attendance = useMemo(() => data.attendance || [], [data.attendance]);
+
+  // Memoize the months array to prevent it from changing on every render
+  const months = useMemo(() => ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], []);
 
   // Lazy load the heatmap when it comes into view
   useEffect(() => {
@@ -167,8 +171,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
     return { startDate, endDate };
   }, [attendance]);
 
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
   // Memoize the months to display
   const monthsToDisplay = useMemo(() => {
     const monthsToShow: { month: string; year: number; monthIndex: number; actualYear: number }[] = [];
@@ -248,7 +250,7 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
         <div className="flex gap-1">
           {Array.from({ length: weeksInMonth }, (_, weekIndex) => (
             <div key={weekIndex} className="flex flex-col gap-1">
-              {grid.map((dayRow, dayIndex) => {
+              {grid.map((dayRow: (Date | null)[], dayIndex: number) => {
                 const date = dayRow[weekIndex];
                 // Use UTC date for consistency
                 const dateStr = date ?
@@ -261,7 +263,6 @@ export function AttendanceHeatmapCard({ data }: AttendanceHeatmapCardProps) {
                   <DayCell
                     key={dayIndex}
                     date={date}
-                    dateStr={dateStr}
                     seconds={seconds}
                     maxAttendance={maxAttendance}
                     formatDate={formatDate}
