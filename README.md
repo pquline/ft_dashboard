@@ -64,7 +64,7 @@ A modern, interactive dashboard for 42 students to view and analyze their attend
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:pquline/ft_dashboard.git
    cd ft_dashboard
    ```
 
@@ -168,8 +168,7 @@ We welcome contributions! Please follow these guidelines:
 1. **Fork the repository** and create a feature branch
 2. **Make your changes** following the existing code style
 3. **Use conventional commits** for commit messages
-4. **Update the CHANGELOG.md** with your changes
-5. **Open a pull request** with a clear description
+4. **Open a pull request** with a clear description
 
 ### Commit Convention
 ```
@@ -194,7 +193,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Next.js Documentation](https://nextjs.org/docs) - Framework documentation
 - [shadcn/ui](https://ui.shadcn.com/) - Component library
 - [Recharts](https://recharts.org/) - Chart library
-
-## 📈 Version History
-
-See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes and releases.
