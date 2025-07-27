@@ -4,7 +4,6 @@ import { DashboardSummaryCards } from "@/components/DashboardSummaryCards";
 import { DailyAttendanceChart } from "@/components/charts/DailyAttendanceChart";
 import { getMainMonth } from "@/lib/utils";
 import { AttendanceData, AttendancePeriod } from "@/types/attendance";
-import { AttendanceHeatmapCard } from "@/components/AttendanceHeatmapCard";
 
 interface DashboardContentProps {
   data: AttendanceData;
@@ -72,9 +71,9 @@ export function DashboardContent({
           )}
 
                     {/* Attendance Heatmap */}
-          <div className="grid grid-cols-1 gap-8">
+          {/* <div className="grid grid-cols-1 gap-8">
             <AttendanceHeatmapCard data={data} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
