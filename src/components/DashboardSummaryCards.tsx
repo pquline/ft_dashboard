@@ -43,30 +43,12 @@ export function DashboardSummaryCards({
     return `${mins}m`;
   };
 
-  const formatHoursPrecise = (minutes: number): string => {
-    const hours = Math.floor(minutes / 60);
-    const mins = Math.floor(minutes % 60);
-    const seconds = Math.floor((minutes % 1) * 60);
-
-    if (hours > 0) {
-      if (mins > 0) {
-        return `${hours}h ${mins}m ${seconds}s`;
-      }
-      return `${hours}h ${seconds}s`;
-    }
-    if (mins > 0) {
-      return `${mins}m ${seconds}s`;
-    }
-    return `${seconds}s`;
-  };
-
   const totalMinutes = parseTime(total);
   const holidayHours = holidayDays * 5;
   const holidayMinutes = holidayHours * 60;
   const effectiveTotalMinutes = totalMinutes + holidayMinutes;
   const totalHours = effectiveTotalMinutes / 60;
   const remainingHours = Math.max(0, 140 - totalHours);
-  const remainingPercentage = (remainingHours / 140) * 100;
 
   const handleStartEditingHolidays = () => {
     setTempHolidayDays(holidayDays.toString());
