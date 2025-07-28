@@ -56,7 +56,6 @@ export function DashboardSummaryCards({
 
   const handleStartEditingHolidays = () => {
     setTempHolidayDays(holidayDays.toString());
-    setTempHolidayHours(holidayHours.toString());
     setIsEditingHolidays(true);
   };
 
@@ -71,7 +70,7 @@ export function DashboardSummaryCards({
 
   const handleCancelEditingHolidays = () => {
     setIsEditingHolidays(false);
-    setTempHolidayHours("");
+    setTempHolidayDays("");
   };
 
   const getRemainingWorkDays = (): number => {
