@@ -166,8 +166,8 @@ export function DashboardSummaryCards({
           {/* Remaining Hours Progress Bar */}
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
-              <span className="text-red-600">Workdays Left</span>
-              <span className="text-red-600">{remainingWorkDays} remaining</span>
+              <span className="text-red-500">Workdays Left</span>
+              <span className="text-red-500">{remainingWorkDays} workdays</span>
             </div>
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
@@ -205,8 +205,8 @@ export function DashboardSummaryCards({
           {/* Combined Progress Bar */}
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
-              <span className="text-green-600">Work Hours</span>
-              <span className="text-purple-600">Holiday Hours</span>
+              <span className="text-green-500">Work Hours</span>
+              <span className="text-purple-500">Holiday Hours</span>
             </div>
             <div className="w-full bg-muted/50 rounded-full h-2 flex overflow-hidden">
               {/* Work Hours (Green) */}
@@ -292,8 +292,8 @@ export function DashboardSummaryCards({
               {/* Holiday Allowance Progress Bar */}
               <div className="mt-3 space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="text-purple-600">Annual Allowance</span>
-                  <span className="text-purple-600">{holidayDays}/35 days</span>
+                  <span className="text-purple-500">Annual Allowance</span>
+                  <span className="text-purple-500">{holidayDays}/35 days</span>
                 </div>
                 <div className="w-full bg-muted/50 rounded-full h-2">
                   <div
