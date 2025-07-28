@@ -177,19 +177,16 @@ export function DashboardSummaryCards({
               <span className="text-green-600">Work Hours</span>
               <span className="text-purple-600">Holiday Hours</span>
             </div>
-            <div className="w-full bg-muted/50 rounded-full h-2 relative overflow-hidden">
+            <div className="w-full bg-muted/50 rounded-full h-2 flex overflow-hidden">
               {/* Work Hours (Green) */}
               <div
-                className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-l-full transition-all duration-500"
+                className="bg-gradient-to-r from-green-500 to-green-600 h-2 transition-all duration-500"
                 style={{ width: `${Math.min((totalMinutes / 60 / 140) * 100, 100)}%` }}
               ></div>
-              {/* Holiday Hours (Purple) - positioned after work hours */}
+              {/* Holiday Hours (Purple) */}
               <div
-                className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 transition-all duration-500 absolute top-0"
-                style={{
-                  left: `${Math.min((totalMinutes / 60 / 140) * 100, 100)}%`,
-                  width: `${Math.min((holidayMinutes / 60 / 140) * 100, 100)}%`
-                }}
+                className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 transition-all duration-500"
+                style={{ width: `${Math.min((holidayMinutes / 60 / 140) * 100, 100)}%` }}
               ></div>
             </div>
           </div>
