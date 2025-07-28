@@ -139,11 +139,19 @@ export function DashboardSummaryCards({
           <p className="text-xs text-muted-foreground mt-1">
             {remainingWorkDays} workdays left before the end of the month
           </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${remainingPercentage}%` }}
-            ></div>
+
+          {/* Remaining Hours Progress Bar */}
+          <div className="mt-3 space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="text-red-600">Progress to 140h</span>
+              <span className="text-red-600">{((totalHours / 140) * 100).toFixed(0)}%</span>
+            </div>
+            <div className="w-full bg-muted/50 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${remainingPercentage}%` }}
+              ></div>
+            </div>
           </div>
         </CardContent>
       </Card>
