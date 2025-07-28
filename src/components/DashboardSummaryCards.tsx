@@ -149,7 +149,7 @@ export function DashboardSummaryCards({
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${remainingPercentage}%` }}
+                style={{ width: `${Math.min((totalHours / 140) * 100, 100)}%` }}
               ></div>
             </div>
           </div>
