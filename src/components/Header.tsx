@@ -3,12 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -16,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart, ChevronDown, LogOut, Moon, RefreshCw, Sun } from "lucide-react";
+import { BarChart, LogOut, Moon, RefreshCw, Sun } from "lucide-react";
 import { useCachedData } from "@/hooks/useCachedData";
 import { clearAllUserCookies } from "@/lib/utils";
 
