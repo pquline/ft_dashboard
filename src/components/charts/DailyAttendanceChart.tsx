@@ -47,7 +47,7 @@ export function DailyAttendanceChart({
   return (
     <Card className="card-modern glass-hover group overflow-hidden animate-slide-in-right">
       <CardHeader className="pb-4 relative z-10">
-        <CardTitle className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+        <CardTitle>
           Daily Attendance in{" "}
           {currentPeriod
             ? getPeriodMonthName(

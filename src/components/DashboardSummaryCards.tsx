@@ -125,7 +125,7 @@ export function DashboardSummaryCards({
       {/* Remaining Hours Card - Red */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">
+          <CardTitle>
             Remaining Hours
           </CardTitle>
           <div className="p-2 rounded-lg bg-red-500/10 group-hover:bg-red-500/20 transition-colors duration-300">
@@ -164,7 +164,7 @@ export function DashboardSummaryCards({
       {/* Total Hours Card - Green */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">
+          <CardTitle>
             Total Hours
           </CardTitle>
           <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
@@ -209,7 +209,7 @@ export function DashboardSummaryCards({
       {/* Holiday Days Card - Purple */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">
+          <CardTitle>
             Holidays
           </CardTitle>
           <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors duration-300">
