@@ -236,7 +236,7 @@ export function DashboardSummaryCards({
           ) : (
             <div className="space-y-3">
               {/* Days Section */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between m-0">
                 <div className="flex items-baseline space-x-2">
                   <div className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
                     {holidayDays} day{holidayDays === 1 ? "" : "s"}
@@ -254,6 +254,10 @@ export function DashboardSummaryCards({
                 </button>
               </div>
 
+              <p className="text-xs text-muted-foreground mt-1">
+                One day is 5 hours
+              </p>
+
               {/* Holiday Allowance Progress Bar */}
               <div className="mt-3 space-y-2">
                 <div className="flex justify-between text-xs">
@@ -268,9 +272,6 @@ export function DashboardSummaryCards({
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground mt-1">
-                One day is 5 hours
-              </p>
             </div>
           )}
         </CardContent>
