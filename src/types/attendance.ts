@@ -50,3 +50,10 @@ export interface AttendanceData {
 }
 
 export type SourceType = 'sipass' | 'desk-made' | 'discord' | 'locations' | 'all';
+
+export interface DashboardSummaryCardsProps {
+  total: string;
+  onSite: string;
+  offSite: string;
+  currentPeriod?: AttendancePeriod;
+}

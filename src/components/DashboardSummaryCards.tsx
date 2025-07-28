@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, Target, Calendar, Edit2, Check, X } from "lucide-react";
-import { AttendancePeriod } from "@/types/attendance";
-
-interface DashboardSummaryCardsProps {
-  total: string;
-  onSite: string;
-  offSite: string;
-  currentPeriod?: AttendancePeriod;
-}
+import { getCookie, setCookie } from "@/lib/utils";
+import { DashboardSummaryCardsProps } from "@/types/attendance";
 
 export function DashboardSummaryCards({
   total,
   currentPeriod,
 }: DashboardSummaryCardsProps) {
-  const [holidayHours, setHolidayHours] = useState<number>(0);
+  const [holidayDays, setHolidayDays] = useState<number>(0);
   const [isEditingHolidays, setIsEditingHolidays] = useState(false);
-  const [tempHolidayHours, setTempHolidayHours] = useState<string>("");
+  const [tempHolidayDays, setTempHolidayDays] = useState<string>("");
+
+  useEffect(() => {
+    const savedHolidayDays = getCookie("holidayDays");
+    if (savedHolidayDays !== null) {
+      const parsed = parseFloat(savedHolidayDays);
+      if (!isNaN(parsed) && parsed >= 0) {
+        setHolidayDays(parsed);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    setCookie("holidayDays", holidayDays.toString());
+  }, [holidayDays]);
 
   const parseTime = (timeStr: string) => {
     const match = timeStr.match(/(\d+)h\s*(\d+)m/);
@@ -37,26 +45,28 @@ export function DashboardSummaryCards({
 
   const totalMinutes = parseTime(total);
 
-  // Calcul du total effectif (heures travaillées + heures de congés)
-  const effectiveTotalMinutes = totalMinutes + holidayHours * 60;
+  const holidayHours = holidayDays * 5;
+  const holidayMinutes = holidayHours * 60;
+
+  const effectiveTotalMinutes = totalMinutes + holidayMinutes;
   const totalHours = effectiveTotalMinutes / 60;
 
-  // Calculate remaining hours (140 hours target - total effective hours)
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
 
   const handleStartEditingHolidays = () => {
+    setTempHolidayDays(holidayDays.toString());
     setTempHolidayHours(holidayHours.toString());
     setIsEditingHolidays(true);
   };
 
   const handleSaveHolidays = () => {
-    const parsed = parseFloat(tempHolidayHours);
+    const parsed = parseFloat(tempHolidayDays);
     if (!isNaN(parsed) && parsed >= 0) {
-      setHolidayHours(parsed);
+      setHolidayDays(parsed);
     }
     setIsEditingHolidays(false);
-    setTempHolidayHours("");
+    setTempHolidayDays("");
   };
 
   const handleCancelEditingHolidays = () => {
@@ -70,10 +80,11 @@ export function DashboardSummaryCards({
     const today = new Date();
     const endDate = new Date(currentPeriod.to_date);
 
-    today.setHours(0, 0, 0, 0);
+    const startDate = new Date(today);
+    startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
 
-    if (today > endDate) return 0;
+    if (startDate > endDate) return 0;
 
     let workDays = 0;
     const current = new Date(today);
@@ -90,12 +101,12 @@ export function DashboardSummaryCards({
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 animate-fade-in-up">
-      {/* Holiday Hours Card */}
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
+      {/* Holiday Days Card */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">
-            Holiday Hours
+            Holidays
           </CardTitle>
           <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors duration-300">
             <Calendar className="h-4 w-4 text-purple-500" />
@@ -104,11 +115,11 @@ export function DashboardSummaryCards({
         <CardContent className="relative z-10">
           <div className="flex items-center justify-between">
             {isEditingHolidays ? (
-              <div className="flex items-center space-x-2 w-full">
+              <div className="flex items-center space-x-1 w-full">
                 <input
                   type="number"
-                  value={tempHolidayHours}
-                  onChange={(e) => setTempHolidayHours(e.target.value)}
+                  value={tempHolidayDays}
+                  onChange={(e) => setTempHolidayDays(e.target.value)}
                   className="flex-1 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="0"
                   min="0"
@@ -132,7 +143,7 @@ export function DashboardSummaryCards({
               <div className="flex items-center justify-between w-full">
                 <div className="flex items-baseline space-x-2">
                   <div className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
-                    {holidayHours}h
+                    {holidayDays} day{holidayDays === 0 ? "" : "s"}
                   </div>
                 </div>
                 <button
@@ -145,7 +156,7 @@ export function DashboardSummaryCards({
             )}
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Holiday hours taken
+            {holidayHours} hour{holidayHours === 0 ? "" : "s"} taken
           </p>
         </CardContent>
       </Card>
@@ -170,7 +181,8 @@ export function DashboardSummaryCards({
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {total} worked + {holidayHours}h holiday
+            {total} worked + {holidayDays} day{holidayDays !== 1 ? "s" : ""}{" "}
+            holiday
           </p>
           <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
             <div
@@ -182,62 +194,11 @@ export function DashboardSummaryCards({
       </Card>
 
       {/* Remaining Hours Card */}
-      <Card className="card-modern glass-hover group overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">
-            Remaining Hours
-          </CardTitle>
-          <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
-            <Target className="h-4 w-4 text-blue-500" />
-          </div>
-        </CardHeader>
-        <CardContent className="relative z-10">
-          <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-              {(() => {
-                const remainingSeconds = remainingHours * 3600;
-                const hours = Math.floor(remainingSeconds / 3600);
-                const minutes = Math.floor((remainingSeconds % 3600) / 60);
-                const seconds = Math.floor(remainingSeconds % 60);
-
-                if (hours > 0) {
-                  if (seconds > 0) {
-                    return `${hours}h ${minutes}m ${seconds}s`;
-                  }
-                  return `${hours}h ${minutes}m`;
-                }
-                if (minutes > 0) {
-                  if (seconds > 0) {
-                    return `${minutes}m ${seconds}s`;
-                  }
-                  return `${minutes}m`;
-                }
-                return `${seconds}s`;
-              })()}
-            </div>
-            <div className="text-xs mt-1 text-blue-500">
-              {remainingPercentage.toFixed(0)}% remaining
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            To reach 140h target
-          </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${remainingPercentage}%` }}
-            ></div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Remaining hours per day Card */}
       {(() => {
         const remainingWorkDays = getRemainingWorkDays();
         const hoursPerWorkDay =
           remainingWorkDays > 0 ? remainingHours / remainingWorkDays : 0;
 
-        // Formatage des heures par jour
         const formatHoursPerDay = (): string => {
           if (hoursPerWorkDay === 0) return "0h 0m";
 
@@ -254,7 +215,7 @@ export function DashboardSummaryCards({
           <Card className="card-modern glass-hover group overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
               <CardTitle className="text-sm font-semibold text-foreground/80">
-                Remaining Hours/Day
+                Remaining Hours
               </CardTitle>
               <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
                 <Target className="h-4 w-4 text-green-500" />
@@ -262,21 +223,43 @@ export function DashboardSummaryCards({
             </CardHeader>
             <CardContent className="relative z-10">
               <div className="flex items-baseline space-x-2">
-                <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
-                  {formatHoursPerDay()}
+                <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+                  {(() => {
+                    const remainingSeconds = remainingHours * 3600;
+                    const hours = Math.floor(remainingSeconds / 3600);
+                    const minutes = Math.floor((remainingSeconds % 3600) / 60);
+
+                    if (hours > 0) {
+                      return `${hours}h${minutes}`;
+                    }
+                    if (minutes > 0) {
+                      return `${minutes}m`;
+                    }
+                  })()}
                 </div>
-                <div className="text-xs mt-1 text-green-500">per workday</div>
+                <div className="text-xs mt-1 text-blue-500">
+                  {remainingPercentage.toFixed(0)}% remaining
+                </div>
               </div>
+
+              {/* Hours per day section */}
+              <div className="mt-3 border-t border-muted/20">
+                <div className="flex items-baseline space-x-2">
+                  <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+                    {formatHoursPerDay()}
+                  </div>
+                  <div className="text-xs text-blue-500">per workday</div>
+                </div>
+              </div>
+
               <p className="text-xs text-muted-foreground mt-1">
-                {remainingWorkDays} workdays remaining •{" "}
-                {remainingHours.toFixed(1)}h total
+                {remainingWorkDays} workdays remaining to reach 140h
               </p>
+
               <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
                 <div
-                  className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.min((hoursPerWorkDay / 8) * 100, 100)}%`,
-                  }}
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${remainingPercentage}%` }}
                 ></div>
               </div>
             </CardContent>

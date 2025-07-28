@@ -20,7 +20,7 @@ export function Footer() {
             </span>
           </div>
 
-          <div className="flex items-center space-x-6 text-sm">
+          {/* <div className="flex items-center space-x-6 text-sm">
             <Link
               href="/legal/privacy"
               className="text-foreground/90 hover:text-primary transition-colors duration-200"
@@ -33,7 +33,7 @@ export function Footer() {
             >
               Terms
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
