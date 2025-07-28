@@ -133,7 +133,7 @@ export function DashboardSummaryCards({
               {formatHours(remainingHours * 60)}
             </div>
             <div className="text-xs mt-1 text-red-500">
-              {remainingPercentage.toFixed(0)}% remaining
+              {formatHours(remainingHours * 60 / remainingWorkDays) || 0} per workday
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
@@ -171,30 +171,25 @@ export function DashboardSummaryCards({
             {formatHours(totalMinutes)} (work) + {formatHours(holidayMinutes)} (holidays)
           </p>
 
-          {/* Work Hours Progress */}
+          {/* Combined Progress Bar */}
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
               <span className="text-green-600">Work Hours</span>
-              <span className="text-green-600">{((totalMinutes / 60 / 140) * 100).toFixed(1)}%</span>
+              <span className="text-purple-600">Holiday Hours</span>
             </div>
-            <div className="w-full bg-muted/50 rounded-full h-1.5">
+            <div className="w-full bg-muted/50 rounded-full h-2 relative overflow-hidden">
+              {/* Work Hours (Green) */}
               <div
-                className="bg-gradient-to-r from-green-500 to-green-600 h-1.5 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-l-full transition-all duration-500"
                 style={{ width: `${Math.min((totalMinutes / 60 / 140) * 100, 100)}%` }}
               ></div>
-            </div>
-          </div>
-
-          {/* Holiday Hours Progress */}
-          <div className="mt-2 space-y-2">
-            <div className="flex justify-between text-xs">
-              <span className="text-purple-600">Holiday Hours</span>
-              <span className="text-purple-600">{((holidayMinutes / 60 / 140) * 100).toFixed(1)}%</span>
-            </div>
-            <div className="w-full bg-muted/50 rounded-full h-1.5">
+              {/* Holiday Hours (Purple) - positioned after work hours */}
               <div
-                className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min((holidayMinutes / 60 / 140) * 100, 100)}%` }}
+                className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 transition-all duration-500 absolute top-0"
+                style={{
+                  left: `${Math.min((totalMinutes / 60 / 140) * 100, 100)}%`,
+                  width: `${Math.min((holidayMinutes / 60 / 140) * 100, 100)}%`
+                }}
               ></div>
             </div>
           </div>
@@ -249,6 +244,9 @@ export function DashboardSummaryCards({
                   <div className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
                     {holidayDays} day{holidayDays === 1 ? "" : "s"}
                   </div>
+			      <div className="text-xs mt-1 text-purple-500">
+                    {formatHours(holidayMinutes)}
+                  </div>
                 </div>
                 <button
                   onClick={handleStartEditingHolidays}
@@ -258,42 +256,9 @@ export function DashboardSummaryCards({
                   <Edit2 className="h-4 w-4" />
                 </button>
               </div>
-
-              {/* Hours Section */}
-              <div className="flex items-baseline space-x-2">
-                <div className="text-xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
-                  {formatHours(holidayMinutes)}
-                </div>
-                <div className="text-xs text-purple-500">hours</div>
-              </div>
-
-              {/* Days Progress */}
-              <div className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span className="text-purple-600">Days Used</span>
-                  <span className="text-purple-600">{holidayDays}/25</span>
-                </div>
-                <div className="w-full bg-muted/50 rounded-full h-1.5">
-                  <div
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min((holidayDays / 25) * 100, 100)}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Hours Progress */}
-              <div className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span className="text-purple-600">Hours Used</span>
-                  <span className="text-purple-600">{formatHours(holidayMinutes)}/125h</span>
-                </div>
-                <div className="w-full bg-muted/50 rounded-full h-1.5">
-                  <div
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min((holidayMinutes / 60 / 125) * 100, 100)}%` }}
-                  ></div>
-                </div>
-              </div>
+			  <p className="text-xs text-muted-foreground mt-1">
+                One day is 5 hours
+              </p>
             </div>
           )}
         </CardContent>
