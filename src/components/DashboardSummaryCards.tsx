@@ -144,7 +144,7 @@ export function DashboardSummaryCards({
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
               <span className="text-red-600">Progress to 140h</span>
-              <span className="text-red-600">{((totalHours / 140) * 100).toFixed(0)}%</span>
+              <span className="text-red-600">{remainingPercentage.toFixed(0)}% remaining</span>
             </div>
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
