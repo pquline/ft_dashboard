@@ -12,7 +12,6 @@ export function DashboardSummaryCards({
   const [isEditingHolidays, setIsEditingHolidays] = useState(false);
   const [tempHolidayDays, setTempHolidayDays] = useState<string>("");
 
-  // Load holiday days from cookie
   useEffect(() => {
     const savedHolidayDays = getCookie("holidayDays");
     if (savedHolidayDays !== null) {
@@ -23,7 +22,6 @@ export function DashboardSummaryCards({
     }
   }, []);
 
-  // Save holiday days to cookie whenever it changes
   useEffect(() => {
     setCookie("holidayDays", holidayDays.toString());
   }, [holidayDays]);
@@ -40,27 +38,25 @@ export function DashboardSummaryCards({
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     if (hours > 0) {
-      return mins > 0 ? `${hours}h${mins}m` : `${hours}h`;
+      return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
     }
     return `${mins}m`;
   };
 
   const totalMinutes = parseTime(total);
 
-  // Convert holiday days to hours (1 day = 5 hours) then to minutes
   const holidayHours = holidayDays * 5;
   const holidayMinutes = holidayHours * 60;
 
-  // Calculate effective total (worked hours + holiday hours)
   const effectiveTotalMinutes = totalMinutes + holidayMinutes;
   const totalHours = effectiveTotalMinutes / 60;
 
-  // Calculate remaining hours (140 hours target - total effective hours)
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
 
   const handleStartEditingHolidays = () => {
     setTempHolidayDays(holidayDays.toString());
+    setTempHolidayHours(holidayHours.toString());
     setIsEditingHolidays(true);
   };
 
@@ -75,7 +71,7 @@ export function DashboardSummaryCards({
 
   const handleCancelEditingHolidays = () => {
     setIsEditingHolidays(false);
-    setTempHolidayDays("");
+    setTempHolidayHours("");
   };
 
   const getRemainingWorkDays = (): number => {
@@ -84,7 +80,6 @@ export function DashboardSummaryCards({
     const today = new Date();
     const endDate = new Date(currentPeriod.to_date);
 
-    // Create copies to avoid mutation
     const startDate = new Date(today);
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
@@ -111,7 +106,7 @@ export function DashboardSummaryCards({
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">
-            Holiday
+            Holidays
           </CardTitle>
           <div className="p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors duration-300">
             <Calendar className="h-4 w-4 text-purple-500" />
@@ -163,12 +158,6 @@ export function DashboardSummaryCards({
           <p className="text-xs text-muted-foreground mt-1">
             {holidayHours} hour{holidayHours === 0 ? "" : "s"} taken
           </p>
-          {/* <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${holidayHours / 70}` }}
-            ></div>
-          </div> */}
         </CardContent>
       </Card>
 
@@ -176,7 +165,7 @@ export function DashboardSummaryCards({
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">
-            Total
+            Total Hours
           </CardTitle>
           <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
             <Clock className="h-4 w-4 text-primary" />
@@ -210,15 +199,14 @@ export function DashboardSummaryCards({
         const hoursPerWorkDay =
           remainingWorkDays > 0 ? remainingHours / remainingWorkDays : 0;
 
-        // Format hours per day
         const formatHoursPerDay = (): string => {
-          if (hoursPerWorkDay === 0) return "0h0";
+          if (hoursPerWorkDay === 0) return "0h 0m";
 
           const wholeHours = Math.floor(hoursPerWorkDay);
           const minutes = Math.round((hoursPerWorkDay - wholeHours) * 60);
 
           if (wholeHours > 0) {
-            return `${wholeHours}h${minutes}`;
+            return `${wholeHours}h ${minutes}m`;
           }
           return `${minutes}m`;
         };
@@ -227,10 +215,10 @@ export function DashboardSummaryCards({
           <Card className="card-modern glass-hover group overflow-hidden">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
               <CardTitle className="text-sm font-semibold text-foreground/80">
-                Remaining
+                Remaining Hours
               </CardTitle>
-              <div className="p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors duration-300">
-                <Target className="h-4 w-4 text-blue-500" />
+              <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
+                <Target className="h-4 w-4 text-green-500" />
               </div>
             </CardHeader>
             <CardContent className="relative z-10">
