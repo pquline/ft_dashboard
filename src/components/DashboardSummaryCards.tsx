@@ -129,7 +129,7 @@ export function DashboardSummaryCards({
         </CardHeader>
         <CardContent className="relative z-10">
           <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
+            <div className="text-2xl font-bold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
               {formatHours(remainingHours * 60)}
             </div>
             <div className="text-xs mt-1 text-red-500">
@@ -160,7 +160,7 @@ export function DashboardSummaryCards({
         </CardHeader>
         <CardContent className="relative z-10">
           <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
+            <div className="text-2xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
               {formatHours(effectiveTotalMinutes)}
             </div>
             <div className="text-xs mt-1 text-green-500">
