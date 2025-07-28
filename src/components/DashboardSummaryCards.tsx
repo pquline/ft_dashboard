@@ -138,7 +138,7 @@ export function DashboardSummaryCards({
               {formatHours(remainingHours * 60)}
             </div>
             <div className="text-xs mt-1 text-red-500">
-              {formatHours(remainingHours * 60 / remainingWorkDays) || 0} per workday
+              {formatHours(Math.round(remainingHours * 60 / remainingWorkDays)) || 0} per workday
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
