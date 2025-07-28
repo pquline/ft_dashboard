@@ -43,14 +43,28 @@ export function DashboardSummaryCards({
     return `${mins}m`;
   };
 
-  const totalMinutes = parseTime(total);
+  const formatHoursPrecise = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = Math.floor(minutes % 60);
+    const seconds = Math.floor((minutes % 1) * 60);
 
+    if (hours > 0) {
+      if (mins > 0) {
+        return `${hours}h ${mins}m ${seconds}s`;
+      }
+      return `${hours}h ${seconds}s`;
+    }
+    if (mins > 0) {
+      return `${mins}m ${seconds}s`;
+    }
+    return `${seconds}s`;
+  };
+
+  const totalMinutes = parseTime(total);
   const holidayHours = holidayDays * 5;
   const holidayMinutes = holidayHours * 60;
-
   const effectiveTotalMinutes = totalMinutes + holidayMinutes;
   const totalHours = effectiveTotalMinutes / 60;
-
   const remainingHours = Math.max(0, 140 - totalHours);
   const remainingPercentage = (remainingHours / 140) * 100;
 
@@ -99,9 +113,95 @@ export function DashboardSummaryCards({
     return workDays;
   };
 
+  const remainingWorkDays = getRemainingWorkDays();
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in-up">
-      {/* Holiday Days Card */}
+      {/* Remaining Hours Card - Red */}
+      <Card className="card-modern glass-hover group overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+          <CardTitle className="text-sm font-semibold text-foreground/80">
+            Remaining Hours
+          </CardTitle>
+          <div className="p-2 rounded-lg bg-red-500/10 group-hover:bg-red-500/20 transition-colors duration-300">
+            <Target className="h-4 w-4 text-red-500" />
+          </div>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
+              {formatHours(remainingHours * 60)}
+            </div>
+            <div className="text-xs mt-1 text-red-500">
+              {remainingPercentage.toFixed(0)}% remaining
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            {remainingWorkDays} workdays left before the end of the month
+          </p>
+          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
+            <div
+              className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${remainingPercentage}%` }}
+            ></div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Total Hours Card - Green */}
+      <Card className="card-modern glass-hover group overflow-hidden">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+          <CardTitle className="text-sm font-semibold text-foreground/80">
+            Total Hours
+          </CardTitle>
+          <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
+            <Clock className="h-4 w-4 text-green-500" />
+          </div>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          <div className="flex items-baseline space-x-2">
+            <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent">
+              {formatHours(effectiveTotalMinutes)}
+            </div>
+            <div className="text-xs mt-1 text-green-500">
+              {((totalHours / 140) * 100).toFixed(0)}% of 140 hours
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            {formatHours(totalMinutes)} (work) + {formatHours(holidayMinutes)} (holidays)
+          </p>
+
+          {/* Work Hours Progress */}
+          <div className="mt-3 space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="text-green-600">Work Hours</span>
+              <span className="text-green-600">{((totalMinutes / 60 / 140) * 100).toFixed(1)}%</span>
+            </div>
+            <div className="w-full bg-muted/50 rounded-full h-1.5">
+              <div
+                className="bg-gradient-to-r from-green-500 to-green-600 h-1.5 rounded-full transition-all duration-500"
+                style={{ width: `${Math.min((totalMinutes / 60 / 140) * 100, 100)}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Holiday Hours Progress */}
+          <div className="mt-2 space-y-2">
+            <div className="flex justify-between text-xs">
+              <span className="text-purple-600">Holiday Hours</span>
+              <span className="text-purple-600">{((holidayMinutes / 60 / 140) * 100).toFixed(1)}%</span>
+            </div>
+            <div className="w-full bg-muted/50 rounded-full h-1.5">
+              <div
+                className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-500"
+                style={{ width: `${Math.min((holidayMinutes / 60 / 140) * 100, 100)}%` }}
+              ></div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Holiday Days Card - Purple */}
       <Card className="card-modern glass-hover group overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
           <CardTitle className="text-sm font-semibold text-foreground/80">
@@ -112,14 +212,14 @@ export function DashboardSummaryCards({
           </div>
         </CardHeader>
         <CardContent className="relative z-10">
-          <div className="flex items-center justify-between">
-            {isEditingHolidays ? (
-              <div className="flex items-center space-x-1 w-full">
+          {isEditingHolidays ? (
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
                 <input
                   type="number"
                   value={tempHolidayDays}
                   onChange={(e) => setTempHolidayDays(e.target.value)}
-                  className="flex-1 px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="flex-1 px-3 py-2 text-sm border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/50 dark:bg-gray-800/50"
                   placeholder="0"
                   min="0"
                   step="0.5"
@@ -127,144 +227,77 @@ export function DashboardSummaryCards({
                 />
                 <button
                   onClick={handleSaveHolidays}
-                  className="p-1 text-green-500 hover:bg-green-500/10 rounded"
+                  className="p-2 text-green-500 hover:bg-green-500/10 rounded-lg transition-colors duration-200"
+                  title="Save"
                 >
                   <Check className="h-4 w-4" />
                 </button>
                 <button
                   onClick={handleCancelEditingHolidays}
-                  className="p-1 text-red-500 hover:bg-red-500/10 rounded"
+                  className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors duration-200"
+                  title="Cancel"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
-            ) : (
-              <div className="flex items-center justify-between w-full">
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {/* Days Section */}
+              <div className="flex items-center justify-between">
                 <div className="flex items-baseline space-x-2">
                   <div className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
-                    {holidayDays} day{holidayDays === 0 ? "" : "s"}
+                    {holidayDays} day{holidayDays === 1 ? "" : "s"}
                   </div>
                 </div>
                 <button
                   onClick={handleStartEditingHolidays}
-                  className="p-1 text-purple-500 hover:bg-purple-500/10 rounded transition-colors"
+                  className="p-2 text-purple-500 hover:bg-purple-500/10 rounded-lg transition-colors duration-200"
+                  title="Edit holidays"
                 >
                   <Edit2 className="h-4 w-4" />
                 </button>
               </div>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            {holidayHours} hour{holidayHours === 0 ? "" : "s"} taken
-          </p>
-        </CardContent>
-      </Card>
 
-      {/* Total Hours Card */}
-      <Card className="card-modern glass-hover group overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-          <CardTitle className="text-sm font-semibold text-foreground/80">
-            Total Hours
-          </CardTitle>
-          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
-            <Clock className="h-4 w-4 text-primary" />
-          </div>
-        </CardHeader>
-        <CardContent className="relative z-10">
-          <div className="flex items-baseline space-x-2">
-            <div className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-              {formatHours(effectiveTotalMinutes)}
-            </div>
-            <div className="text-xs mt-1 text-primary">
-              {((totalHours / 140) * 100).toFixed(0)}% of 140 hours
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            {total} worked + {holidayDays} day{holidayDays !== 1 ? "s" : ""}{" "}
-            holiday
-          </p>
-          <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-            <div
-              className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full transition-all duration-500"
-              style={{ width: `${Math.min((totalHours / 140) * 100, 100)}%` }}
-            ></div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Remaining Hours Card */}
-      {(() => {
-        const remainingWorkDays = getRemainingWorkDays();
-        const hoursPerWorkDay =
-          remainingWorkDays > 0 ? remainingHours / remainingWorkDays : 0;
-
-        const formatHoursPerDay = (): string => {
-          if (hoursPerWorkDay === 0) return "0h 0m";
-
-          const wholeHours = Math.floor(hoursPerWorkDay);
-          const minutes = Math.round((hoursPerWorkDay - wholeHours) * 60);
-
-          if (wholeHours > 0) {
-            return `${wholeHours}h ${minutes}m`;
-          }
-          return `${minutes}m`;
-        };
-
-        return (
-          <Card className="card-modern glass-hover group overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-              <CardTitle className="text-sm font-semibold text-foreground/80">
-                Remaining Hours
-              </CardTitle>
-              <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
-                <Target className="h-4 w-4 text-green-500" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative z-10">
+              {/* Hours Section */}
               <div className="flex items-baseline space-x-2">
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-                  {(() => {
-                    const remainingSeconds = remainingHours * 3600;
-                    const hours = Math.floor(remainingSeconds / 3600);
-                    const minutes = Math.floor((remainingSeconds % 3600) / 60);
-
-                    if (hours > 0) {
-                      return `${hours}h${minutes}`;
-                    }
-                    if (minutes > 0) {
-                      return `${minutes}m`;
-                    }
-                  })()}
+                <div className="text-xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
+                  {formatHours(holidayMinutes)}
                 </div>
-                <div className="text-xs mt-1 text-blue-500">
-                  {remainingPercentage.toFixed(0)}% remaining
-                </div>
+                <div className="text-xs text-purple-500">hours</div>
               </div>
 
-              {/* Hours per day section */}
-              <div className="mt-3 border-t border-muted/20">
-                <div className="flex items-baseline space-x-2">
-                  <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-                    {formatHoursPerDay()}
-                  </div>
-                  <div className="text-xs text-blue-500">per workday</div>
+              {/* Days Progress */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-purple-600">Days Used</span>
+                  <span className="text-purple-600">{holidayDays}/25</span>
+                </div>
+                <div className="w-full bg-muted/50 rounded-full h-1.5">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min((holidayDays / 25) * 100, 100)}%` }}
+                  ></div>
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground mt-1">
-                {remainingWorkDays} workdays remaining to reach 140h
-              </p>
-
-              <div className="mt-3 w-full bg-muted/50 rounded-full h-2">
-                <div
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${remainingPercentage}%` }}
-                ></div>
+              {/* Hours Progress */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-purple-600">Hours Used</span>
+                  <span className="text-purple-600">{formatHours(holidayMinutes)}/125h</span>
+                </div>
+                <div className="w-full bg-muted/50 rounded-full h-1.5">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-1.5 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min((holidayMinutes / 60 / 125) * 100, 100)}%` }}
+                  ></div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        );
-      })()}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
