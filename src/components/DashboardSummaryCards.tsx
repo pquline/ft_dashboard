@@ -241,7 +241,7 @@ export function DashboardSummaryCards({
                   <div className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent">
                     {holidayDays} day{holidayDays === 1 ? "" : "s"}
                   </div>
-			      <div className="text-xs mt-1 text-purple-500">
+                  <div className="text-xs mt-1 text-purple-500">
                     {formatHours(holidayMinutes)}
                   </div>
                 </div>
@@ -253,7 +253,22 @@ export function DashboardSummaryCards({
                   <Edit2 className="h-4 w-4" />
                 </button>
               </div>
-			  <p className="text-xs text-muted-foreground mt-1">
+
+              {/* Holiday Allowance Progress Bar */}
+              <div className="mt-3 space-y-2">
+                <div className="flex justify-between text-xs">
+                  <span className="text-purple-600">Annual Allowance</span>
+                  <span className="text-purple-600">{holidayDays}/35 days</span>
+                </div>
+                <div className="w-full bg-muted/50 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min((holidayDays / 35) * 100, 100)}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              <p className="text-xs text-muted-foreground mt-1">
                 One day is 5 hours
               </p>
             </div>
