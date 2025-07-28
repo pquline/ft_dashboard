@@ -413,3 +413,57 @@ export const devLog = {
     }
   }
 };
+
+// Cookie utility functions
+export const setCookie = (name: string, value: string, days: number = 365): void => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+};
+
+export const getCookie = (name: string): string | null => {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+	let c = ca[i];
+	while (c.charAt(0) === " ") c = c.substring(1, c.length);
+	if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+
+export const deleteCookie = (name: string): void => {
+  try {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=`;
+  } catch (error) {
+    console.warn('Cookie deletion failed:', error);
+  }
+};
+
+export const setHolidayDaysCookie = (value: string): void => {
+  try {
+    const now = new Date();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const expires = endOfMonth.toUTCString();
+    document.cookie = `holidayDays=${value};expires=${expires};path=/`;
+  } catch (error) {
+    console.warn('HolidayDays cookie setting failed:', error);
+    setCookie('holidayDays', value, 30);
+  }
+};
+
+export const getHolidayDaysCookie = (): string | null => {
+  return getCookie('holidayDays');
+};
+
+export const deleteHolidayDaysCookie = (): void => {
+  deleteCookie('holidayDays');
+};
+
+export const clearAllUserCookies = (): void => {
+  deleteCookie('session');
+  deleteHolidayDaysCookie();
+};

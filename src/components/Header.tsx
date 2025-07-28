@@ -1,27 +1,22 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSub,
-	DropdownMenuSubContent,
-	DropdownMenuSubTrigger,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { BarChart, LogOut, Moon, Sun, RefreshCw } from "lucide-react";
-import { useTheme } from "next-themes";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BarChart, LogOut, Moon, RefreshCw, Sun } from "lucide-react";
 import { useCachedData } from "@/hooks/useCachedData";
+import { clearAllUserCookies } from "@/lib/utils";
 
 interface HeaderProps {
   login: string;
@@ -53,7 +48,7 @@ export function Header({
 
   const handleLogout = () => {
     clearCache();
-    document.cookie = "session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    clearAllUserCookies();
     window.location.href = "/login";
   };
 
