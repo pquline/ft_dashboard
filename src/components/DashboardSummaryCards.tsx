@@ -172,7 +172,7 @@ export function DashboardSummaryCards({
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(((getTotalWorkDays() - remainingWorkDays) / getTotalWorkDays()) * 100, 100)}%` }}
+                style={{ width: `${Math.min((remainingWorkDays / getTotalWorkDays()) * 100, 100)}%` }}
               ></div>
             </div>
           </div>
