@@ -72,42 +72,94 @@ export function DashboardSkeleton() {
               </CardContent>
             </Card>
 
-            {/* Attendance Calendar Skeleton */}
-            <Card className="card-modern glass-hover group overflow-hidden">
-              <CardHeader className="pb-3">
-                <Skeleton className="h-6 w-48 skeleton-glass" />
-                <Skeleton className="h-4 w-56 skeleton-glass" />
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-4">
-                  {/* Calendar Header */}
-                  <div className="flex items-center justify-between">
-                    <Skeleton className="h-8 w-24 skeleton-glass" />
-                    <div className="flex items-center space-x-2">
-                      <Skeleton className="h-8 w-8 rounded skeleton-glass" />
-                      <Skeleton className="h-8 w-8 rounded skeleton-glass" />
+            {/* Attendance Calendar and Sessions Skeleton */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+              {/* Calendar Card Skeleton */}
+              <div className="lg:col-span-2">
+                <Card className="card-modern glass-hover h-[500px] flex flex-col animate-slide-in-right">
+                  <CardHeader className="pb-3">
+                    <Skeleton className="h-6 w-48 skeleton-glass" />
+                    <Skeleton className="h-4 w-56 skeleton-glass" />
+                  </CardHeader>
+                  <CardContent className="flex-1 flex items-center justify-center h-full">
+                    <div className="space-y-4">
+                      {/* Calendar Header */}
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-8 w-24 skeleton-glass" />
+                        <div className="flex items-center space-x-2">
+                          <Skeleton className="h-8 w-8 rounded skeleton-glass" />
+                          <Skeleton className="h-8 w-8 rounded skeleton-glass" />
+                        </div>
+                      </div>
+
+                      {/* Calendar Grid */}
+                      <div className="grid grid-cols-7 gap-1">
+                        {/* Day headers */}
+                        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                          <div key={i} className="h-8 flex items-center justify-center">
+                            <Skeleton className="h-4 w-4 rounded skeleton-glass" />
+                          </div>
+                        ))}
+
+                        {/* Calendar days */}
+                        {Array.from({ length: 35 }, (_, i) => (
+                          <div key={i} className="h-9 w-9 flex items-center justify-center">
+                            <Skeleton className="h-7 w-7 rounded skeleton-glass" />
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-                  {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {/* Day headers */}
-                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-                      <div key={i} className="h-8 flex items-center justify-center">
-                        <Skeleton className="h-4 w-4 rounded skeleton-glass" />
+              {/* Sessions Card Skeleton */}
+              <div className="lg:col-span-3">
+                <Card className="card-modern glass-hover h-[500px] flex flex-col animate-slide-in-right">
+                  <CardHeader className="pb-3">
+                    <Skeleton className="h-6 w-24 skeleton-glass" />
+                    <Skeleton className="h-4 w-48 skeleton-glass" />
+                  </CardHeader>
+                  <CardContent className="pt-0 flex-1 overflow-auto space-y-4">
+                    {/* Daily Totals by Source Skeleton */}
+                    <div className='border rounded-md border-border/50 p-3 glass'>
+                      <Skeleton className="h-4 w-32 mb-3 skeleton-glass" />
+                      <div className="flex flex-wrap gap-4 items-center">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="glass-hover flex items-center gap-2 px-4 py-2 rounded-md bg-muted/30 border border-border/30 backdrop-blur-md">
+                            <Skeleton className="h-5 w-16 rounded skeleton-glass" />
+                            <Skeleton className="h-4 w-12 skeleton-glass" />
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
 
-                    {/* Calendar days */}
-                    {Array.from({ length: 35 }, (_, i) => (
-                      <div key={i} className="h-12 flex items-center justify-center">
-                        <Skeleton className="h-8 w-8 rounded skeleton-glass" />
+                    {/* Individual Sessions Table Skeleton */}
+                    <div className='border rounded-md border-border/50 p-2 glass'>
+                      <Skeleton className="h-4 w-36 mb-3 skeleton-glass" />
+                      <div className="space-y-3">
+                        {/* Table Header */}
+                        <div className="grid grid-cols-4 gap-4">
+                          <Skeleton className="h-4 w-16 skeleton-glass" />
+                          <Skeleton className="h-4 w-12 skeleton-glass" />
+                          <Skeleton className="h-4 w-12 skeleton-glass" />
+                          <Skeleton className="h-4 w-20 skeleton-glass" />
+                        </div>
+                        {/* Table Rows */}
+                        {[1, 2, 3, 4].map((i) => (
+                          <div key={i} className="grid grid-cols-4 gap-4">
+                            <Skeleton className="h-6 w-16 rounded skeleton-glass" />
+                            <Skeleton className="h-4 w-16 skeleton-glass" />
+                            <Skeleton className="h-4 w-16 skeleton-glass" />
+                            <Skeleton className="h-4 w-20 skeleton-glass" />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>
