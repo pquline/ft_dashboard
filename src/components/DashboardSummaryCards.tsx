@@ -113,6 +113,29 @@ export function DashboardSummaryCards({
     return workDays;
   };
 
+  const getTotalWorkDays = (): number => {
+    if (!currentPeriod) return 0;
+
+    const startDate = new Date(currentPeriod.from_date);
+    const endDate = new Date(currentPeriod.to_date);
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    let workDays = 0;
+    const current = new Date(startDate);
+
+    while (current <= endDate) {
+      const dayOfWeek = current.getDay();
+      if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+        workDays++;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+
+    return workDays;
+  };
+
   const remainingWorkDays = getRemainingWorkDays();
 
   return (
@@ -143,13 +166,13 @@ export function DashboardSummaryCards({
           {/* Remaining Hours Progress Bar */}
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
-              <span className="text-red-600">Progress to 140h</span>
-              <span className="text-red-600">{remainingPercentage.toFixed(0)}% remaining</span>
+              <span className="text-red-600">Workdays Left</span>
+              <span className="text-red-600">{remainingWorkDays} remaining</span>
             </div>
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min((totalHours / 140) * 100, 100)}%` }}
+                style={{ width: `${Math.min(((getTotalWorkDays() - remainingWorkDays) / getTotalWorkDays()) * 100, 100)}%` }}
               ></div>
             </div>
           </div>
