@@ -431,3 +431,39 @@ export const getCookie = (name: string): string | null => {
   }
   return null;
 };
+
+export const deleteCookie = (name: string): void => {
+  try {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${window.location.hostname}`;
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=`;
+  } catch (error) {
+    console.warn('Cookie deletion failed:', error);
+  }
+};
+
+export const setHolidayDaysCookie = (value: string): void => {
+  try {
+    const now = new Date();
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const expires = endOfMonth.toUTCString();
+    document.cookie = `holidayDays=${value};expires=${expires};path=/`;
+  } catch (error) {
+    console.warn('HolidayDays cookie setting failed:', error);
+    setCookie('holidayDays', value, 30);
+  }
+};
+
+export const getHolidayDaysCookie = (): string | null => {
+  return getCookie('holidayDays');
+};
+
+export const deleteHolidayDaysCookie = (): void => {
+  deleteCookie('holidayDays');
+};
+
+export const clearAllUserCookies = (): void => {
+  deleteCookie('session');
+  deleteHolidayDaysCookie();
+};

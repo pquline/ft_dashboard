@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock, Target, Calendar, Edit2, Check, X } from "lucide-react";
-import { getCookie, setCookie } from "@/lib/utils";
+import { getHolidayDaysCookie, setHolidayDaysCookie } from "@/lib/utils";
 import { DashboardSummaryCardsProps } from "@/types/attendance";
 
 export function DashboardSummaryCards({
@@ -13,7 +13,7 @@ export function DashboardSummaryCards({
   const [tempHolidayDays, setTempHolidayDays] = useState<string>("");
 
   useEffect(() => {
-    const savedHolidayDays = getCookie("holidayDays");
+    const savedHolidayDays = getHolidayDaysCookie();
     if (savedHolidayDays !== null) {
       const parsed = parseFloat(savedHolidayDays);
       if (!isNaN(parsed) && parsed >= 0) {
@@ -23,7 +23,7 @@ export function DashboardSummaryCards({
   }, []);
 
   useEffect(() => {
-    setCookie("holidayDays", holidayDays.toString());
+    setHolidayDaysCookie(holidayDays.toString());
   }, [holidayDays]);
 
   const parseTime = (timeStr: string) => {
