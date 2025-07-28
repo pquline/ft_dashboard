@@ -27,26 +27,40 @@ export function DashboardSkeleton() {
       </header>
 
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="space-y-6 mt-6">
+        <div className="space-y-8 mt-8 animate-fade-in-up">
           {/* Summary Cards Skeleton */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="card-glass">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <Skeleton className="h-4 w-16 skeleton-glass" />
-                  <Skeleton className="h-4 w-4 rounded skeleton-glass" />
+              <Card key={i} className="card-modern glass-hover group overflow-hidden">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+                  <Skeleton className="h-4 w-20 skeleton-glass" />
+                  <Skeleton className="h-8 w-8 rounded-lg skeleton-glass" />
                 </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-8 w-20 mb-1 skeleton-glass" />
-                  <Skeleton className="h-3 w-24 skeleton-glass" />
+                <CardContent className="relative z-10">
+                  <div className="flex items-baseline space-x-2">
+                    <Skeleton className="h-8 w-16 skeleton-glass" />
+                    <Skeleton className="h-3 w-20 skeleton-glass" />
+                  </div>
+                  <Skeleton className="h-3 w-32 mt-1 skeleton-glass" />
+
+                  {/* Progress Bar Skeleton */}
+                  <div className="mt-3 space-y-2">
+                    <div className="flex justify-between">
+                      <Skeleton className="h-3 w-16 skeleton-glass" />
+                      <Skeleton className="h-3 w-12 skeleton-glass" />
+                    </div>
+                    <div className="w-full bg-muted/50 rounded-full h-2">
+                      <Skeleton className="h-2 rounded-full skeleton-glass" style={{ width: `${Math.random() * 60 + 20}%` }} />
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
 
           {/* Daily Attendance Chart Skeleton */}
-          <div className="space-y-6">
-            <Card className="card-glass">
+          <div className="space-y-8">
+            <Card className="card-modern glass-hover group overflow-hidden">
               <CardHeader className="pb-3">
                 <Skeleton className="h-6 w-40 skeleton-glass" />
                 <Skeleton className="h-4 w-64 skeleton-glass" />
@@ -58,74 +72,39 @@ export function DashboardSkeleton() {
               </CardContent>
             </Card>
 
-            {/* Sources Breakdown Skeleton */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Pie Chart Skeleton */}
-              <Card className="card-glass">
-                <CardHeader className="pb-3">
-                  <Skeleton className="h-6 w-40 skeleton-glass" />
-                  <Skeleton className="h-4 w-48 skeleton-glass" />
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-center h-[300px]">
-                    <Skeleton className="h-48 w-48 rounded-full skeleton-glass" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Table Skeleton */}
-              <Card className="card-glass">
-                <CardHeader className="pb-3">
-                  <Skeleton className="h-6 w-32 skeleton-glass" />
-                  <Skeleton className="h-4 w-36 skeleton-glass" />
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    {/* Table Header */}
-                    <div className="flex space-x-4">
-                      <Skeleton className="h-4 w-16 skeleton-glass" />
-                      <Skeleton className="h-4 w-12 skeleton-glass" />
-                      <Skeleton className="h-4 w-20 skeleton-glass" />
-                    </div>
-                    {/* Table Rows */}
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="flex space-x-4">
-                        <Skeleton className="h-4 w-20 skeleton-glass" />
-                        <Skeleton className="h-4 w-16 skeleton-glass" />
-                        <Skeleton className="h-4 w-24 skeleton-glass" />
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Daily Attendance Table Skeleton */}
-            <Card className="card-glass">
+            {/* Attendance Calendar Skeleton */}
+            <Card className="card-modern glass-hover group overflow-hidden">
               <CardHeader className="pb-3">
                 <Skeleton className="h-6 w-48 skeleton-glass" />
                 <Skeleton className="h-4 w-56 skeleton-glass" />
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="space-y-3">
-                  {/* Table Header */}
-                  <div className="grid grid-cols-5 gap-4">
-                    <Skeleton className="h-4 w-16 skeleton-glass" />
-                    <Skeleton className="h-4 w-12 skeleton-glass" />
-                    <Skeleton className="h-4 w-20 skeleton-glass" />
-                    <Skeleton className="h-4 w-24 skeleton-glass" />
-                    <Skeleton className="h-4 w-20 skeleton-glass" />
-                  </div>
-                  {/* Table Rows */}
-                  {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-                    <div key={i} className="grid grid-cols-5 gap-4">
-                      <Skeleton className="h-4 w-20 skeleton-glass" />
-                      <Skeleton className="h-4 w-16 skeleton-glass" />
-                      <Skeleton className="h-4 w-24 skeleton-glass" />
-                      <Skeleton className="h-4 w-20 skeleton-glass" />
-                      <Skeleton className="h-4 w-16 skeleton-glass" />
+                <div className="space-y-4">
+                  {/* Calendar Header */}
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-8 w-24 skeleton-glass" />
+                    <div className="flex items-center space-x-2">
+                      <Skeleton className="h-8 w-8 rounded skeleton-glass" />
+                      <Skeleton className="h-8 w-8 rounded skeleton-glass" />
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-1">
+                    {/* Day headers */}
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                      <div key={i} className="h-8 flex items-center justify-center">
+                        <Skeleton className="h-4 w-4 rounded skeleton-glass" />
+                      </div>
+                    ))}
+
+                    {/* Calendar days */}
+                    {Array.from({ length: 35 }, (_, i) => (
+                      <div key={i} className="h-12 flex items-center justify-center">
+                        <Skeleton className="h-8 w-8 rounded skeleton-glass" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -133,7 +112,7 @@ export function DashboardSkeleton() {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-12">
         <Footer />
       </div>
     </div>
