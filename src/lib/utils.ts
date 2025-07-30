@@ -442,25 +442,53 @@ export const deleteCookie = (name: string): void => {
   }
 };
 
-export const setHolidayDaysCookie = (value: string): void => {
+export const getHolidayMonthKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
+export const getHolidayMonthKeyFromPeriod = (period: { from_date: string; to_date: string }): string => {
+  const fromDate = new Date(period.from_date);
+  return getHolidayMonthKey(fromDate);
+};
+
+export const setHolidayDaysCookie = (value: string, monthKey?: string): void => {
   try {
     const now = new Date();
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
-
     const expires = endOfMonth.toUTCString();
-    document.cookie = `holidayDays=${value};expires=${expires};path=/`;
+
+    const cookieKey = monthKey ? `holidayDays-${monthKey}` : 'holidayDays';
+    document.cookie = `${cookieKey}=${value};expires=${expires};path=/`;
   } catch (error) {
     console.warn('HolidayDays cookie setting failed:', error);
-    setCookie('holidayDays', value, 30);
+    const cookieKey = monthKey ? `holidayDays-${monthKey}` : 'holidayDays';
+    setCookie(cookieKey, value, 30);
   }
 };
 
-export const getHolidayDaysCookie = (): string | null => {
-  return getCookie('holidayDays');
+export const getHolidayDaysCookie = (monthKey?: string): string | null => {
+  const cookieKey = monthKey ? `holidayDays-${monthKey}` : 'holidayDays';
+  return getCookie(cookieKey);
 };
 
-export const deleteHolidayDaysCookie = (): void => {
-  deleteCookie('holidayDays');
+export const deleteHolidayDaysCookie = (monthKey?: string): void => {
+  const cookieKey = monthKey ? `holidayDays-${monthKey}` : 'holidayDays';
+  deleteCookie(cookieKey);
+};
+
+export const migrateLegacyHolidayData = (): void => {
+  try {
+    const legacyData = getCookie('holidayDays');
+    if (legacyData) {
+      const currentMonthKey = getHolidayMonthKey(new Date());
+      setHolidayDaysCookie(legacyData, currentMonthKey);
+      deleteCookie('holidayDays');
+    }
+  } catch (error) {
+    console.warn('Holiday data migration failed:', error);
+  }
 };
 
 export const clearAllUserCookies = (): void => {
