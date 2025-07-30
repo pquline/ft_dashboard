@@ -494,6 +494,18 @@ export const migrateLegacyHolidayData = (): void => {
 export const clearAllUserCookies = (): void => {
   deleteCookie('session');
   deleteHolidayDaysCookie();
+  try {
+    const cookies = document.cookie.split(';');
+    cookies.forEach(cookie => {
+      const trimmedCookie = cookie.trim();
+      if (trimmedCookie.startsWith('holidayDays-')) {
+        const cookieName = trimmedCookie.split('=')[0];
+        deleteCookie(cookieName);
+      }
+    });
+  } catch (error) {
+    console.warn('Failed to clear month-specific holiday cookies:', error);
+  }
 };
 
 export const sanitizeNumericInput = (value: string): string => {
