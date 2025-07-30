@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { getHolidayDaysCookie, parsePositiveInteger, sanitizeNumericInput, setHolidayDaysCookie } from "@/lib/utils";
 import { DashboardSummaryCardsProps } from "@/types/attendance";
 import { Calendar, Check, Clock, Edit2, Target, X } from "lucide-react";
@@ -63,6 +65,16 @@ export function DashboardSummaryCards({
   const handleCancelEditingHolidays = () => {
     setIsEditingHolidays(false);
     setTempHolidayDays("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSaveHolidays();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelEditingHolidays();
+    }
   };
 
   const getRemainingWorkDays = (): number => {
@@ -215,30 +227,38 @@ export function DashboardSummaryCards({
         <CardContent className="relative z-10">
           {isEditingHolidays ? (
             <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={tempHolidayDays}
-                  onChange={(e) => setTempHolidayDays(sanitizeNumericInput(e.target.value))}
-                  className="flex-1 px-3 py-2 text-sm border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/50 dark:bg-gray-800/50"
-                  placeholder="0"
-                  autoFocus
-                />
-                <button
-                  onClick={handleSaveHolidays}
-                  className="p-2 text-green-500 hover:bg-green-500/10 rounded-lg transition-colors duration-200"
-                  title="Save"
-                >
-                  <Check className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={handleCancelEditingHolidays}
-                  className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors duration-200"
-                  title="Cancel"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+              <form onSubmit={(e) => { e.preventDefault(); handleSaveHolidays(); }} className="space-y-3">
+                <div className="space-y-2">
+                  <Input
+                    id="holiday-input"
+                    type="text"
+                    value={tempHolidayDays}
+                    onChange={(e) => setTempHolidayDays(sanitizeNumericInput(e.target.value))}
+                    onKeyDown={handleKeyDown}
+                    placeholder="0"
+                    autoFocus
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button
+                    type="submit"
+                    variant="default"
+                    className="flex-1 glass-hover glass hover:cursor-pointer"
+                  >
+                    <Check className="h-4 w-4" />
+                    Save
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleCancelEditingHolidays}
+                    className="flex-1 glass-hover glass hover:cursor-pointer"
+                  >
+                    <X className="h-4 w-4" />
+                    Cancel
+                  </Button>
+                </div>
+              </form>
             </div>
           ) : (
             <div className="space-y-3">
@@ -252,13 +272,14 @@ export function DashboardSummaryCards({
                     {formatHours(holidayMinutes)}
                   </div>
                 </div>
-                <button
+                <Button
                   onClick={handleStartEditingHolidays}
-                  className="p-2 text-purple-500 hover:bg-purple-500/10 rounded-lg transition-colors duration-200"
+                  variant="outline"
                   title="Edit holidays"
+				  className="glass glass-hover hover:cursor-pointer"
                 >
                   <Edit2 className="h-4 w-4" />
-                </button>
+                </Button>
               </div>
 
               <p className="text-xs text-muted-foreground mt-1">
