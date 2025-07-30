@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getHolidayDaysCookie, parsePositiveInteger, sanitizeNumericInput, setHolidayDaysCookie } from "@/lib/utils";
+import { getHolidayDaysCookie, getHolidayMonthKeyFromPeriod, migrateLegacyHolidayData, parsePositiveInteger, sanitizeNumericInput, setHolidayDaysCookie } from "@/lib/utils";
 import { DashboardSummaryCardsProps } from "@/types/attendance";
 import { Calendar, Check, Clock, Edit2, Target, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -15,16 +15,29 @@ export function DashboardSummaryCards({
   const [tempHolidayDays, setTempHolidayDays] = useState<string>("");
 
   useEffect(() => {
-    const savedHolidayDays = getHolidayDaysCookie();
-    if (savedHolidayDays !== null) {
-      const parsed = parsePositiveInteger(savedHolidayDays);
-      setHolidayDays(parsed);
-    }
+    // Migrate legacy data on first load
+    migrateLegacyHolidayData();
   }, []);
 
   useEffect(() => {
-    setHolidayDaysCookie(holidayDays.toString());
-  }, [holidayDays]);
+    if (currentPeriod) {
+      const monthKey = getHolidayMonthKeyFromPeriod(currentPeriod);
+      const savedHolidayDays = getHolidayDaysCookie(monthKey);
+      if (savedHolidayDays !== null) {
+        const parsed = parsePositiveInteger(savedHolidayDays);
+        setHolidayDays(parsed);
+      } else {
+        setHolidayDays(0);
+      }
+    }
+  }, [currentPeriod]);
+
+  useEffect(() => {
+    if (currentPeriod) {
+      const monthKey = getHolidayMonthKeyFromPeriod(currentPeriod);
+      setHolidayDaysCookie(holidayDays.toString(), monthKey);
+    }
+  }, [holidayDays, currentPeriod]);
 
   const parseTime = (timeStr: string) => {
     const match = timeStr.match(/(\d+)h\s*(\d+)m/);
