@@ -1,18 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Calendar, Eye, Lock, Shield, User } from "lucide-react";
+import { ArrowLeft, Calendar, Eye, Lock, Shield, User, BarChart3 } from "lucide-react";
 import Link from "next/link";
 
 export default function PrivacyPolicyPage() {
   const sections = [
     {
-      title: "No Data Collection",
+      title: "Minimal Data Collection",
       icon: User,
       content: [
-        "We do not collect, store, or process any personal data",
+        "We collect minimal, privacy-focused analytics via Umami",
+        "No personal data or personally identifiable information is collected",
         "Session cookies are stored locally in your browser only",
-        "All data is fetched directly from 42 Paris API",
-        "No information is transmitted to or stored on our servers",
+        "All dashboard data is fetched directly from 42 Paris API",
+        "No 42 Paris data is transmitted to or stored on our servers",
+      ],
+    },
+    {
+      title: "Analytics Data Collection",
+      icon: BarChart3,
+      content: [
+        "We use Umami analytics to understand basic website usage patterns",
+        "Only anonymized page views, referrers, and general location data is collected",
+        "No personal identifiers, IP addresses, or user-specific data is stored",
+        "All analytics data is processed by Umami in a privacy-focused manner",
+        "This helps us improve the service while respecting your privacy",
       ],
     },
     {
@@ -21,8 +33,9 @@ export default function PrivacyPolicyPage() {
       content: [
         "Your browser stores a session cookie locally for 24 hours",
         "This cookie is used to authenticate with 42 Paris API",
-        "Data is fetched and displayed temporarily in your browser",
-        "No data is collected, analyzed, or stored by our service",
+        "Dashboard data is fetched and displayed temporarily in your browser",
+        "Analytics data is collected anonymously via Umami for service improvement",
+        "No 42 Paris data is collected, analyzed, or stored by our service",
       ],
     },
     {
@@ -31,8 +44,9 @@ export default function PrivacyPolicyPage() {
       content: [
         "All communication with 42 Paris uses HTTPS encryption",
         "Session cookies are secure and expire automatically",
-        "No data is stored on our servers or infrastructure",
-        "Your data remains under 42 Paris control at all times",
+        "Analytics data is anonymized and contains no personal identifiers",
+        "No 42 Paris data is stored on our servers or infrastructure",
+        "Your 42 Paris data remains under 42 Paris control at all times",
       ],
     },
     {
@@ -40,9 +54,10 @@ export default function PrivacyPolicyPage() {
       icon: Calendar,
       content: [
         "Session cookies expire after 24 hours automatically",
-        "No data is retained after your browser session ends",
-        "No logs, analytics, or tracking data is collected",
+        "No 42 Paris data is retained after your browser session ends",
+        "Anonymous analytics data is retained by Umami for service improvement",
         "No personal information is ever stored on our systems",
+        "You can opt-out of analytics by blocking the analytics script",
       ],
     },
   ];
@@ -90,15 +105,15 @@ export default function PrivacyPolicyPage() {
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
               At ft_dashboard, we are committed to protecting your privacy. This
-              Privacy Policy explains how our service works and why we do not
-              collect, store, or process any of your personal data.
+              Privacy Policy explains how our service works and what minimal data
+              we collect to improve the service while respecting your privacy.
             </p>
             <p>
               Our service acts as a bridge between your browser and the 42 Paris
-              API. We do not collect, store, or process any data. All
-              information is fetched directly from 42 Paris and displayed
-              temporarily in your browser. Your session cookie is stored locally
-              and expires after 24 hours.
+              API. We collect only minimal, anonymized analytics data via Umami to
+              understand usage patterns. All your 42 Paris information is fetched
+              directly from their API and displayed temporarily in your browser.
+              Your session cookie is stored locally and expires after 24 hours.
             </p>
           </CardContent>
         </Card>
@@ -141,15 +156,16 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-foreground/90 relative z-10">
             <p>
-              Since we do not collect, store, or process any personal data,
-              there is no information to access, correct, or delete. All your
-              data remains under the control of 42 Paris and is subject to their
-              privacy policy.
+              Since we only collect anonymized analytics data and no personal
+              information, there is no personal data to access, correct, or delete.
+              All your 42 Paris data remains under the control of 42 Paris and is
+              subject to their privacy policy.
             </p>
             <p>
               You can revoke access at any time by clearing your browser cookies
               or logging out. Your session will automatically expire after 24
-              hours, and no data will be retained by our service.
+              hours. You can also opt-out of analytics by using browser extensions
+              or ad blockers that block analytics scripts.
             </p>
           </CardContent>
         </Card>
