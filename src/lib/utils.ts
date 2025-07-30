@@ -1,6 +1,6 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { type AttendancePeriod } from "@/types/attendance"
+import { type AttendancePeriod } from "@/types/attendance";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -466,4 +466,14 @@ export const deleteHolidayDaysCookie = (): void => {
 export const clearAllUserCookies = (): void => {
   deleteCookie('session');
   deleteHolidayDaysCookie();
+};
+
+export const sanitizeNumericInput = (value: string): string => {
+  return value.replace(/[^0-9]/g, '');
+};
+
+export const parsePositiveInteger = (value: string): number => {
+  const sanitized = sanitizeNumericInput(value);
+  const parsed = parseInt(sanitized, 10);
+  return isNaN(parsed) ? 0 : Math.max(0, parsed);
 };
