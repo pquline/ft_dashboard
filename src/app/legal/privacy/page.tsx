@@ -164,8 +164,7 @@ export default function PrivacyPolicyPage() {
             <p>
               You can revoke access at any time by clearing your browser cookies
               or logging out. Your session will automatically expire after 24
-              hours. You can also opt-out of analytics by using browser extensions
-              or ad blockers that block analytics scripts.
+              hours.
             </p>
           </CardContent>
         </Card>
