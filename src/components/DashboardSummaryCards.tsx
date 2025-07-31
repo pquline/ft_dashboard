@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { getHolidayDaysCookie, getHolidayMonthKeyFromPeriod, migrateLegacyHolidayData, parsePositiveInteger, sanitizeNumericInput, setHolidayDaysCookie } from "@/lib/utils";
 import { DashboardSummaryCardsProps } from "@/types/attendance";
 import { Calendar, Check, Clock, Edit2, Target, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export function DashboardSummaryCards({
   total,
@@ -15,7 +15,6 @@ export function DashboardSummaryCards({
   const [tempHolidayDays, setTempHolidayDays] = useState<string>("");
 
   useEffect(() => {
-    // Migrate legacy data on first load
     migrateLegacyHolidayData();
   }, []);
 
@@ -159,23 +158,23 @@ export function DashboardSummaryCards({
               {formatHours(Math.round(remainingHours * 60))}
             </div>
             <div className="text-xs mt-1 text-red-500">
-              {formatHours(Math.round(remainingHours * 60 / remainingWorkDays)) || 0} per workday
+              {remainingWorkDays > 0 ? formatHours(Math.round(remainingHours * 60 / remainingWorkDays)) : '0m'} per workday
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {remainingWorkDays} workdays left before the end of the month
+            {remainingWorkDays} {remainingWorkDays === 1 ? 'workday' : 'workdays'} left before the end of the month
           </p>
 
           {/* Remaining Hours Progress Bar */}
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
               <span className="text-red-500">Workdays Left</span>
-              <span className="text-red-500">{remainingWorkDays} workdays</span>
+              <span className="text-red-500">{remainingWorkDays} {remainingWorkDays === 1 ? 'workday' : 'workdays'}</span>
             </div>
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min((remainingWorkDays / getTotalWorkDays()) * 100, 100)}%` }}
+                style={{ width: `${Math.min(getTotalWorkDays() > 0 ? (remainingWorkDays / getTotalWorkDays()) * 100 : 0, 100)}%` }}
               ></div>
             </div>
           </div>

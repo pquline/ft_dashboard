@@ -270,7 +270,7 @@ export function AttendanceCalendar({ period, month, onMonthChange }: AttendanceC
 
                 {/* Individual Sessions */}
                 <div className='border rounded-md border-border/50 p-2 glass'>
-                  <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Individual Sessions</h4>
+                  <h4 className="text-sm font-semibold text-foreground/80 mb-3 p-2 pb-0">Individual {selectedDateSessions.length === 1 ? 'Session' : 'Sessions'}</h4>
                   <Table>
                     <TableHeader>
                       <TableRow>
