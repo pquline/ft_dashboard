@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { getHolidayDaysCookie, getHolidayMonthKeyFromPeriod, migrateLegacyHolidayData, parsePositiveInteger, sanitizeNumericInput, setHolidayDaysCookie } from "@/lib/utils";
 import { DashboardSummaryCardsProps } from "@/types/attendance";
 import { Calendar, Check, Clock, Edit2, Target, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export function DashboardSummaryCards({
   total,
@@ -15,7 +15,6 @@ export function DashboardSummaryCards({
   const [tempHolidayDays, setTempHolidayDays] = useState<string>("");
 
   useEffect(() => {
-    // Migrate legacy data on first load
     migrateLegacyHolidayData();
   }, []);
 
@@ -163,14 +162,14 @@ export function DashboardSummaryCards({
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            {remainingWorkDays} workdays left before the end of the month
+            {remainingWorkDays} {remainingWorkDays === 1 ? 'workday' : 'workdays'} left before the end of the month
           </p>
 
           {/* Remaining Hours Progress Bar */}
           <div className="mt-3 space-y-2">
             <div className="flex justify-between text-xs">
               <span className="text-red-500">Workdays Left</span>
-              <span className="text-red-500">{remainingWorkDays} workdays</span>
+              <span className="text-red-500">{remainingWorkDays} {remainingWorkDays === 1 ? 'workday' : 'workdays'}</span>
             </div>
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
