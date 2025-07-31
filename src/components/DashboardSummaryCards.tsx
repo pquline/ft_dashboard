@@ -158,7 +158,7 @@ export function DashboardSummaryCards({
               {formatHours(Math.round(remainingHours * 60))}
             </div>
             <div className="text-xs mt-1 text-red-500">
-              {formatHours(Math.round(remainingHours * 60 / remainingWorkDays)) || 0} per workday
+              {remainingWorkDays > 0 ? formatHours(Math.round(remainingHours * 60 / remainingWorkDays)) : '0m'} per workday
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
@@ -174,7 +174,7 @@ export function DashboardSummaryCards({
             <div className="w-full bg-muted/50 rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${Math.min((remainingWorkDays / getTotalWorkDays()) * 100, 100)}%` }}
+                style={{ width: `${Math.min(getTotalWorkDays() > 0 ? (remainingWorkDays / getTotalWorkDays()) * 100 : 0, 100)}%` }}
               ></div>
             </div>
           </div>
