@@ -52,7 +52,7 @@ export interface AttendanceData {
   requested_user: {
     login: string;
   };
-  last_searches: any | null;
+  last_searches: null;
   attendance: AttendancePeriod[];
 }
 
