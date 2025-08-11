@@ -113,8 +113,12 @@ export function Header({
                 <Avatar>
                   <AvatarImage src={imageUrl} alt={login} />
                   <AvatarFallback>
-                    {login.charAt(0).toUpperCase() +
-                      login.charAt(1).toUpperCase()}
+                    {login && login.length >= 2 
+                      ? login.charAt(0).toUpperCase() + login.charAt(1).toUpperCase()
+                      : login && login.length === 1 
+                        ? login.charAt(0).toUpperCase()
+                        : 'U'
+                    }
                   </AvatarFallback>
                 </Avatar>
               </button>

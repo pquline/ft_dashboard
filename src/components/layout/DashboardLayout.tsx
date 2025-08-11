@@ -27,8 +27,8 @@ export function DashboardLayout({
   return (
     <div className="min-h-screen gradient-bg interactive-bg">
       <Header
-        login={data.login}
-        imageUrl={data.image_url}
+        login={data.logged_user.login}
+        imageUrl={data.logged_user.image_url}
         months={months}
         selectedMonth={selectedMonth}
         onMonthChange={onMonthChange}

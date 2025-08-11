@@ -44,8 +44,15 @@ export interface AttendancePeriod {
 
 export interface AttendanceData {
   $schema: string;
-  login: string;
-  image_url: string;
+  logged_user: {
+    login: string;
+    image_url: string;
+    staff: boolean;
+  };
+  requested_user: {
+    login: string;
+  };
+  last_searches: null;
   attendance: AttendancePeriod[];
 }
 
