@@ -38,8 +38,8 @@ async function DashboardContent() {
     <CachedDashboardClient
       initialData={data}
       defaultMonth={defaultMonth}
-      login={data.login}
-      imageUrl={data.image_url}
+      login={data.logged_user.login}
+      imageUrl={data.logged_user.image_url}
     />
   );
 }
